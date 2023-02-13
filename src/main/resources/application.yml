@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/socceruniform
+    username: uniform
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  output:
+    ansi:
+      enabled: always
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+
+
+logging.level:
+  org.hibernate.SQL: debug
