@@ -26,5 +26,13 @@ public class Category extends DateColumns {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
-    private Category category;
+    private Category parent;
+
+    public Category(String name, Integer depth, Category parent) {
+        this.name = name;
+        this.depth = depth;
+        if(depth > 1) {
+            this.parent = parent;
+        }
+    }
 }

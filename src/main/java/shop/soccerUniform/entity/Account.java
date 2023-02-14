@@ -19,11 +19,11 @@ public class Account extends DateColumns {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MANAGER_ID")
+    @JoinColumn(name = "MANAGER_ID", nullable = false)
     private Manager manager;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORDER_ID")
+    @JoinColumn(name = "ORDER_ID", nullable = false)
     private Order order;
 
     @Column(nullable = false)
@@ -43,4 +43,15 @@ public class Account extends DateColumns {
 
     @Column(nullable = false, name = "TOTAL_FEE")
     private Integer totalFee;
+
+    public Account(Manager manager, Order order, Integer year, Integer month, Integer day, Integer totalPaymentAmount, Integer totalResultAmount, Integer totalFee) {
+        this.manager = manager;
+        this.order = order;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.totalPaymentAmount = totalPaymentAmount;
+        this.totalResultAmount = totalResultAmount;
+        this.totalFee = totalFee;
+    }
 }

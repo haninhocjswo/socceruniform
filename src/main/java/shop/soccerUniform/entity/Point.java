@@ -36,4 +36,11 @@ public class Point extends DateColumns {
     @Column(nullable = false)
     private Integer sort;
 
+    public Point(Member member, Integer point, Integer updatePoint, PointState state, Integer sort) {
+        this.member = member;
+        this.point = point;
+        this.updatePoint = updatePoint;
+        this.state = state;
+        this.sort = sort;
+    }
 }

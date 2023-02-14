@@ -28,4 +28,10 @@ public class ItemOptionStock extends DateColumns {
 
     @Column(nullable = false)
     private Integer stock;
+
+    public ItemOptionStock(ItemOption firstItemOption, ItemOption secondItemOption, Integer stock) {
+        this.firstItemOption = firstItemOption;
+        this.secondItemOption = secondItemOption;
+        this.stock = stock;
+    }
 }

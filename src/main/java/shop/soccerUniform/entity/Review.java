@@ -32,4 +32,11 @@ public class Review extends DateColumns {
     @Lob
     @Column(nullable = false)
     private String content;
+
+    public Review(Item item, Member member, Double star, String content) {
+        this.item = item;
+        this.member = member;
+        this.star = star;
+        this.content = content;
+    }
 }

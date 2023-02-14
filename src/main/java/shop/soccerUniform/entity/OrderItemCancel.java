@@ -36,4 +36,13 @@ public class OrderItemCancel extends DateColumns {
 
     @Column(name = "CANCEL_POINT_SALE_PRICE", nullable = false)
     private Integer cancelPointSalePrice;
+
+    public OrderItemCancel(OrderItem orderItem, Integer cancelQuantity, Integer cancelPrice, Integer cancelSalePrice, Integer cancelEventSalePrice, Integer cancelPointSalePrice) {
+        this.orderItem = orderItem;
+        this.cancelQuantity = cancelQuantity;
+        this.cancelPrice = cancelPrice;
+        this.cancelSalePrice = cancelSalePrice;
+        this.cancelEventSalePrice = cancelEventSalePrice;
+        this.cancelPointSalePrice = cancelPointSalePrice;
+    }
 }

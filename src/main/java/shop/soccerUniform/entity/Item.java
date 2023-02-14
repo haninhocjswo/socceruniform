@@ -45,4 +45,15 @@ public class Item extends DateColumns {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ItemState state;
+
+    public Item(Manager manager, Category category, String manufacturer, String origin, String description, OptionType optionType, Integer price, ItemState state) {
+        this.manager = manager;
+        this.category = category;
+        this.manufacturer = manufacturer;
+        this.origin = origin;
+        this.description = description;
+        this.optionType = optionType;
+        this.price = price;
+        this.state = state;
+    }
 }

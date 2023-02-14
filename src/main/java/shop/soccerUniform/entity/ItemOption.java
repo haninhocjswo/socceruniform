@@ -36,4 +36,13 @@ public class ItemOption extends DateColumns {
 
     @Column(name = "ADD_PRICE", nullable = false)
     private Integer addPrice;
+
+    public ItemOption(Item item, String optionName, String optionSort, String valueName, String valueSort, Integer addPrice) {
+        this.item = item;
+        this.optionName = optionName;
+        this.optionSort = optionSort;
+        this.valueName = valueName;
+        this.valueSort = valueSort;
+        this.addPrice = addPrice;
+    }
 }

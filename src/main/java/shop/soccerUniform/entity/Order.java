@@ -45,4 +45,15 @@ public class Order extends DateColumns {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderState state;
+
+    public Order(Member member, String orderNum, Integer totalSalePrice, Integer totalEventSalePrice, Integer totalPointSalePrice, Delivery delivery, Integer totalPrice, OrderState state) {
+        this.member = member;
+        OrderNum = orderNum;
+        this.totalSalePrice = totalSalePrice;
+        this.totalEventSalePrice = totalEventSalePrice;
+        this.totalPointSalePrice = totalPointSalePrice;
+        this.delivery = delivery;
+        this.totalPrice = totalPrice;
+        this.state = state;
+    }
 }

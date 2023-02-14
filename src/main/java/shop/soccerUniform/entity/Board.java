@@ -42,4 +42,14 @@ public class Board extends DateColumns {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     private Board parent;
+
+    public Board(String title, String content, User writer, BoardType boardType, BoardState state, String password, Board parent) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.boardType = boardType;
+        this.state = state;
+        this.password = password;
+        this.parent = parent;
+    }
 }

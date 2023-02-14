@@ -41,4 +41,14 @@ public class Address extends DateColumns {
 
     @Column(nullable = false)
     private Boolean isBase;
+
+    public Address(Member member, String memo, Integer post, String addr, String detailAddr, AddressState state, Boolean isBase) {
+        this.member = member;
+        this.memo = memo;
+        this.post = post;
+        this.addr = addr;
+        this.detailAddr = detailAddr;
+        this.state = state;
+        this.isBase = isBase;
+    }
 }

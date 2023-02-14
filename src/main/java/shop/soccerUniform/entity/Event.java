@@ -48,4 +48,15 @@ public class Event extends DateColumns {
 
     @Column(name = "END_DATE", nullable = false)
     private LocalDateTime endDate;
+
+    public Event(Admin admin, String title, String content, SaleType saleType, Double saleValue, EventState state, LocalDateTime startDate, LocalDateTime endDate) {
+        this.admin = admin;
+        this.title = title;
+        this.content = content;
+        this.saleType = saleType;
+        this.saleValue = saleValue;
+        this.state = state;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

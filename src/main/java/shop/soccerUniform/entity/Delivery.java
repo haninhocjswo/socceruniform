@@ -42,4 +42,14 @@ public class Delivery extends DateColumns {
 
     @Column(nullable = false, name = "DETAIL_ADDR")
     private String detailAddr;
+
+    public Delivery(Integer deliveryNum, DeliveryCompany deliveryCompany, DeliveryState state, String receiveNum, String post, String addr, String detailAddr) {
+        this.deliveryNum = deliveryNum;
+        this.deliveryCompany = deliveryCompany;
+        this.state = state;
+        this.receiveNum = receiveNum;
+        this.post = post;
+        this.addr = addr;
+        this.detailAddr = detailAddr;
+    }
 }

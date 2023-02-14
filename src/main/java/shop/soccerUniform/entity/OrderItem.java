@@ -53,4 +53,17 @@ public class OrderItem extends DateColumns {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POINT_ID", nullable = true)
     private Point point;
+
+    public OrderItem(Order order, Item item, OrderState state, Integer price, Integer quantity, Integer salePrice, Integer eventSalePrice, Event event, Integer pointSalePrice, Point point) {
+        this.order = order;
+        this.item = item;
+        this.state = state;
+        this.price = price;
+        this.quantity = quantity;
+        this.salePrice = salePrice;
+        this.eventSalePrice = eventSalePrice;
+        this.event = event;
+        this.pointSalePrice = pointSalePrice;
+        this.point = point;
+    }
 }

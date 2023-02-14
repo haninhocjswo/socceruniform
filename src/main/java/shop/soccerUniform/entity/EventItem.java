@@ -25,4 +25,9 @@ public class EventItem extends DateColumns {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
+
+    public EventItem(Event event, Item item) {
+        this.event = event;
+        this.item = item;
+    }
 }

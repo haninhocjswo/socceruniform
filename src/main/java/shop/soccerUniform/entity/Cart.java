@@ -25,4 +25,9 @@ public class Cart extends DateColumns {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
+
+    public Cart(Item item, Member member) {
+        this.item = item;
+        this.member = member;
+    }
 }

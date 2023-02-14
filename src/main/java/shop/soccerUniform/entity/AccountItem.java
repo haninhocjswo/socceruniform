@@ -38,4 +38,13 @@ public class AccountItem extends DateColumns {
 
     @Column(name = "FEE", nullable = false)
     private Integer fee;
+
+    public AccountItem(Account account, OrderItem orderItem, OrderItemCancel orderItemCancel, Integer paymentAmount, Integer resultAmount, Integer fee) {
+        this.account = account;
+        this.orderItem = orderItem;
+        this.orderItemCancel = orderItemCancel;
+        this.paymentAmount = paymentAmount;
+        this.resultAmount = resultAmount;
+        this.fee = fee;
+    }
 }
