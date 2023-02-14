@@ -1,13 +1,17 @@
 package shop.soccerUniform.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import shop.soccerUniform.entity.enumtype.PointState;
 
 import javax.persistence.*;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Table(name = "T_POINT")
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Point extends DateColumns {
 
     @Id
@@ -26,6 +30,7 @@ public class Point extends DateColumns {
     private Integer updatePoint;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PointState state;
 
     @Column(nullable = false)

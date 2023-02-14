@@ -1,13 +1,17 @@
 package shop.soccerUniform.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import shop.soccerUniform.entity.enumtype.AddressState;
 
 import javax.persistence.*;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Table(name = "T_ADDRESS")
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Address extends DateColumns {
 
     @Id
@@ -20,6 +24,9 @@ public class Address extends DateColumns {
     private Member member;
 
     @Column(nullable = false)
+    private String memo;
+
+    @Column(nullable = false)
     private Integer post;
 
     @Column(nullable = false)
@@ -29,6 +36,7 @@ public class Address extends DateColumns {
     private String detailAddr;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AddressState state;
 
     @Column(nullable = false)

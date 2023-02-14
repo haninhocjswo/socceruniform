@@ -1,14 +1,18 @@
 package shop.soccerUniform.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import shop.soccerUniform.entity.enumtype.DeliveryPolicy;
 
 import javax.persistence.*;
+
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Table(name = "T_MANAGER")
 @Getter
 @DiscriminatorValue("MANAGER")
+@NoArgsConstructor(access = PROTECTED)
 public class Manager extends User {
 
     @Column(name = "COMPANY_NAME", nullable = false)
@@ -48,5 +52,22 @@ public class Manager extends User {
     private Double feePolicyPercent;
 
     @Column(name = "DELIVERY_POLICY", nullable = false)
+    @Enumerated(EnumType.STRING)
     private DeliveryPolicy deliveryPolicy;
+
+    public Manager(String companyName, String companyNum, Integer post, String address, String detailAddress, String ceoName, String businessResistNum, String chargeName, String chargePosition, String chargeNum, String chargeMobile, Double feePolicyPercent, DeliveryPolicy deliveryPolicy) {
+        this.companyName = companyName;
+        this.companyNum = companyNum;
+        this.post = post;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.ceoName = ceoName;
+        this.businessResistNum = businessResistNum;
+        this.chargeName = chargeName;
+        this.chargePosition = chargePosition;
+        this.chargeNum = chargeNum;
+        this.chargeMobile = chargeMobile;
+        this.feePolicyPercent = feePolicyPercent;
+        this.deliveryPolicy = deliveryPolicy;
+    }
 }

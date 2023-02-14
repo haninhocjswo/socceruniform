@@ -1,6 +1,8 @@
 package shop.soccerUniform.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import shop.soccerUniform.entity.enumtype.Role;
 import shop.soccerUniform.entity.enumtype.UserState;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.InheritanceType.JOINED;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Table(name = "T_USER")
@@ -18,7 +21,8 @@ import static javax.persistence.InheritanceType.JOINED;
 @ToString(of = {"id", "loginId", "username", "email", "role", "state"})
 @Inheritance(strategy = JOINED)
 @DiscriminatorColumn
-public class User extends DateColumns {
+@NoArgsConstructor(access = PROTECTED)
+public abstract class User extends DateColumns {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -38,9 +42,19 @@ public class User extends DateColumns {
     private String email;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserState state;
 
+    public void putUser(String loginId, String password, String username, String email, Role role, UserState state) {
+        this.loginId = loginId;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.state = state;
+    }
 }

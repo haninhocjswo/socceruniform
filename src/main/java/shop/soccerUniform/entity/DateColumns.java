@@ -1,6 +1,7 @@
 package shop.soccerUniform.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -15,4 +16,9 @@ public class DateColumns {
 
     @Column(name = "MOD_DATE", nullable = false)
     private LocalDateTime modDate;
+
+    public void addDate(LocalDateTime reg, LocalDateTime mod){
+        regDate = reg;
+        modDate = mod;
+    }
 }
