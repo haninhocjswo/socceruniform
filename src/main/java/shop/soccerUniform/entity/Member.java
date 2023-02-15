@@ -31,7 +31,7 @@ public class Member extends User {
     @Column(name = "MOBILE", nullable = false)
     private String mobile;
 
-    @Column(name = "HOME_NUM", nullable = false)
+    @Column(name = "HOME_NUM")
     private String homeNum;
 
     @OneToMany(mappedBy = "member")

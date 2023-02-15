@@ -25,13 +25,22 @@ public class PointRepositoryImpl implements PointQueryRepository {
     }
 
     @Override
-    public List<Point> findByIds(List<Long> memberIds) {
+    public List<Point> findByIdsAndState(List<Long> memberIds, PointState pointState) {
         return queryFactory
                 .selectFrom(point1)
                 .where(
-                        point1.state.eq(PointState.ABLE),
-                        point1.member.id.in(memberIds)
-                )
+                        point1.state.eq(pointState),
+                        point1.member.id.in(memberIds))
                 .fetch();
+    }
+
+    @Override
+    public Point findByIdAndState(Long memberId, PointState pointState) {
+        return queryFactory
+                .selectFrom(point1)
+                .where(
+                        point1.state.eq(pointState),
+                        point1.member.id.eq(memberId))
+                .fetchOne();
     }
 }

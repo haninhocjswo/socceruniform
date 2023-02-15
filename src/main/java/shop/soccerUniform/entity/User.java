@@ -2,14 +2,11 @@ package shop.soccerUniform.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import shop.soccerUniform.entity.enumtype.Role;
 import shop.soccerUniform.entity.enumtype.UserState;
 
 import javax.persistence.*;
-
-import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.InheritanceType.JOINED;
@@ -49,7 +46,7 @@ public abstract class User extends DateColumns {
     @Enumerated(EnumType.STRING)
     private UserState state;
 
-    public void putUser(String loginId, String password, String username, String email, Role role, UserState state) {
+    public void addUser(String loginId, String password, String username, String email, Role role, UserState state) {
         this.loginId = loginId;
         this.password = password;
         this.username = username;

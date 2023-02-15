@@ -5,12 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.Member;
 import shop.soccerUniform.entity.Point;
+import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
+import shop.soccerUniform.entity.enumtype.PointState;
+import shop.soccerUniform.entity.enumtype.Role;
 import shop.soccerUniform.repository.member.MemberRepository;
 import shop.soccerUniform.repository.point.PointRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +27,18 @@ public class MemberServiceImpl implements MemberService {
     private final PointRepository pointRepository;
 
     @Override
+    public void saveMember(MemberForm memberForm) {
+        Member member = new Member(memberForm.getGender(), memberForm.getGrade(), memberForm.getMobile(), memberForm.getHomeNum());
+        member.addUser(memberForm.getLoginId(), memberForm.getPassword(), memberForm.getUsername(), memberForm.getEmail(), Role.ROLE_MEMBER,member.getState());
+        member.addDate(LocalDateTime.now(), LocalDateTime.now());
+        memberRepository.save(member);
+
+        Point point = new Point(member, 0, 0, PointState.ABLE, 1);
+        point.addDate(LocalDateTime.now(), LocalDateTime.now());
+        pointRepository.save(point);
+    }
+
+    @Override
     public List<MembersDTO> members(MemberSearchForm memberSearchForm) {
         List<MembersDTO> members = memberRepository.members(memberSearchForm);
 
@@ -29,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
             List<Long> memberIds = members.stream()
                     .map(m -> m.getMemberId())
                     .collect(Collectors.toList());
-            List<Point> points = pointRepository.findByIds(memberIds);
+            List<Point> points = pointRepository.findByIdsAndState(memberIds, PointState.ABLE);
 
             for(MembersDTO member : members) {
                 for(Point point : points) {
@@ -41,6 +58,29 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return members;
+    }
+
+    @Override
+    public MemberForm findMember(Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+
+        MemberForm memberForm = new MemberForm();
+        if(!member.isEmpty()) {
+            memberForm.setMemberId(member.get().getId());
+            memberForm.setLoginId(member.get().getLoginId());
+            memberForm.setPassword(member.get().getPassword());
+            memberForm.setUsername(member.get().getUsername());
+            memberForm.setEmail(member.get().getEmail());
+            memberForm.setGrade(member.get().getGrade());
+            memberForm.setGender(member.get().getGender());
+            memberForm.setState(member.get().getState());
+            memberForm.setMobile(member.get().getMobile());
+            memberForm.setHomeNum(member.get().getHomeNum());
+            Point point = pointRepository.findByIdAndState(member.get().getId(), PointState.ABLE);
+            memberForm.setPoint(point.getPoint());
+        }
+
+        return memberForm;
     }
 }
 

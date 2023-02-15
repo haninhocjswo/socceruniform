@@ -13,7 +13,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class AdminMembersController {
+public class AdminMemberController {
 
     private final MemberService memberService;
 
@@ -27,7 +27,7 @@ public class AdminMembersController {
 
     @GetMapping("/admin/member/{memberId}")
     public String memberForm(@PathVariable(name = "memberId") Long memberId, Model model) {
-        return "admin/memberForm";
+        return "admin/members/memberForm";
     }
 
     @PostMapping("/admin/member/{memberId}")
