@@ -8,6 +8,9 @@ import shop.soccerUniform.entity.enumtype.Grade;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -30,6 +33,9 @@ public class Member extends User {
 
     @Column(name = "HOME_NUM", nullable = false)
     private String homeNum;
+
+    @OneToMany(mappedBy = "member")
+    private List<Point> points = new ArrayList<>();
 
     public Member(Gender gender, Grade grade, String mobile, String homeNum) {
         this.gender = gender;

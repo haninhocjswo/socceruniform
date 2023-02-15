@@ -4,8 +4,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import shop.soccerUniform.entity.Point;
+import shop.soccerUniform.entity.QPoint;
+import shop.soccerUniform.entity.enumtype.PointState;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
+import static shop.soccerUniform.entity.QPoint.point1;
 
 @Repository
 public class PointRepositoryImpl implements PointQueryRepository {
@@ -19,4 +24,14 @@ public class PointRepositoryImpl implements PointQueryRepository {
         queryFactory = new JPAQueryFactory(em);
     }
 
+    @Override
+    public List<Point> findByIds(List<Long> memberIds) {
+        return queryFactory
+                .selectFrom(point1)
+                .where(
+                        point1.state.eq(PointState.ABLE),
+                        point1.member.id.in(memberIds)
+                )
+                .fetch();
+    }
 }
