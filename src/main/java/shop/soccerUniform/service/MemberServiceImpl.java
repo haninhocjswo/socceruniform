@@ -1,6 +1,7 @@
 package shop.soccerUniform.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.Member;
@@ -8,8 +9,10 @@ import shop.soccerUniform.entity.Point;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
+import shop.soccerUniform.entity.enumtype.Grade;
 import shop.soccerUniform.entity.enumtype.PointState;
 import shop.soccerUniform.entity.enumtype.Role;
+import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.repository.member.MemberRepository;
 import shop.soccerUniform.repository.point.PointRepository;
 
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -26,16 +30,18 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
 
+    @Transactional
     @Override
     public void saveMember(MemberForm memberForm) {
-        Member member = new Member(memberForm.getGender(), memberForm.getGrade(), memberForm.getMobile(), memberForm.getHomeNum());
-        member.addUser(memberForm.getLoginId(), memberForm.getPassword(), memberForm.getUsername(), memberForm.getEmail(), Role.ROLE_MEMBER,member.getState());
+        Member member = new Member(memberForm.getGender(), Grade.BRONZE, memberForm.getMobile(), memberForm.getHomeNum());
+        member.addUser(memberForm.getLoginId(), memberForm.getPassword(), memberForm.getUsername(), memberForm.getEmail(), Role.ROLE_MEMBER, UserState.ABLE);
         member.addDate(LocalDateTime.now(), LocalDateTime.now());
         memberRepository.save(member);
-
+        log.info("member.persist=====");
         Point point = new Point(member, 0, 0, PointState.ABLE, 1);
         point.addDate(LocalDateTime.now(), LocalDateTime.now());
         pointRepository.save(point);
+        log.info("point.persist=====");
     }
 
     @Override

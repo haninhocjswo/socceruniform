@@ -1,5 +1,6 @@
 package shop.soccerUniform.repository.category;
 
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 @Transactional
 @Commit
@@ -30,6 +32,8 @@ class CategoryRepositoryImplTest {
     void save() {
         Category category = new Category("상의", 1, null);
         category.addDate(LocalDateTime.now(), LocalDateTime.now());
-        categoryRepository.save(category);
+        em.persist(category);
+        log.info("=================================");
+        em.flush();
     }
 }

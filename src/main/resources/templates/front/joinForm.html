@@ -51,109 +51,71 @@
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                     <div class="card-body p-4 p-md-5">
                         <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
-                        <form>
-
+                        <form th:action="@{/joinMember}" th:object="${memberForm}" method="post">
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-
                                     <div class="form-outline">
                                         <label class="form-label" for="loginId">로그인 아이디</label>
-                                        <input type="text" id="loginId" class="form-control form-control-lg" placeholder="아이디를 입력해주세요." />
+                                        <input type="text" id="loginId" name="loginId" class="form-control form-control-lg" />
                                         <label class="form-label" for="loginId">로그인 아이디</label>
                                     </div>
-
                                 </div>
                                 <div class="col-md-6 mb-4">
-
                                     <div class="form-outline">
                                         <label class="form-label" for="password">password</label>
-                                        <input type="password" id="password" class="form-control form-control-lg" placeholder="비밀번호를 입력해 주세요." />
+                                        <input type="password" id="password" name="password" class="form-control form-control-lg" />
                                         <label class="form-label" for="password">비밀번호</label>
                                     </div>
-
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                                    <div class="form-outline datepicker w-100">
+                                    <div class="form-outline">
                                         <label class="form-label" for="username">username</label>
-                                        <input type="text" class="form-control form-control-lg" id="username" placeholder="이름을 입력해 주세요." />
+                                        <input type="text" id="username" name="username" class="form-control form-control-lg" />
                                         <label for="username" class="form-label">username</label>
                                     </div>
-
                                 </div>
                                 <div class="col-md-6 mb-4">
-
-                                    <h6 class="mb-2 pb-1">Gender: </h6>
-
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender"
-                                               value="option1" checked />
-                                        <label class="form-check-label" for="femaleGender">Female</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender"
-                                               value="option2" />
-                                        <label class="form-check-label" for="maleGender">Male</label>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-4 pb-2">
-
                                     <div class="form-outline">
                                         <label class="form-label" for="email">email</label>
-                                        <input type="email" id="email" class="form-control form-control-lg" />
+                                        <input type="email" id="email" name="email" class="form-control form-control-lg" />
                                         <label class="form-label" for="email">Email</label>
                                     </div>
-
                                 </div>
-                                <div class="col-md-6 mb-4 pb-2">
+                            </div>
 
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
                                         <label class="form-label" for="mobile">mobile</label>
-                                        <input type="tel" id="mobile" class="form-control form-control-lg" placeholder="000-0000-0000형식으로 입력해 주세요." />
+                                        <input type="text" id="mobile" name="mobile" class="form-control form-control-lg" />
                                         <label class="form-label" for="mobile">Phone Number</label>
                                     </div>
-
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="homeNum">homeNum</label>
+                                        <input type="text" id="homeNum" name="homeNum" class="form-control form-control-lg" />
+                                        <label class="form-label" for="homeNum">homeNum</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
-
-                                    <div class="form-outline">
-                                        <label class="form-label" for="homenum">homenum</label>
-                                        <input type="email" id="homenum" class="form-control form-control-lg" />
-                                        <label class="form-label" for="homenum">homenum</label>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-12">
-                                    <label class="form-label" for="gender">성별</label>
-                                    <select class="select form-control-lg" id="gender">
-                                        <option value="1" disabled>Choose option</option>
-                                        <option value="2">Subject 1</option>
-                                        <option value="3">Subject 2</option>
-                                        <option value="4">Subject 3</option>
+                                    <label class="form-label" for="gender">성별</label><br>
+                                    <select class="select form-control-lg" id="gender" name="gender">
+                                        <option th:each="gender : ${T(shop.soccerUniform.entity.enumtype.Gender).values()}" th:text="${gender}" th:value="${gender}">Subject 1</option>
                                     </select>
                                     <label class="form-label select-label">Choose option</label>
-
                                 </div>
                             </div>
 
                             <div class="mt-4 pt-2">
                                 <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
                             </div>
-
                         </form>
                     </div>
                 </div>
