@@ -3,6 +3,7 @@ package shop.soccerUniform.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.enumtype.Role;
 import shop.soccerUniform.entity.enumtype.UserState;
 
@@ -53,5 +54,16 @@ public abstract class User extends DateColumns {
         this.email = email;
         this.role = role;
         this.state = state;
+    }
+
+    public void editUser(String password, String username, String email, UserState state) {
+        if(StringUtils.hasText(password)) {
+            this.password = password;
+        }
+        this.username = username;
+        this.email = email;
+        if(state != null) {
+            this.state = state;
+        }
     }
 }

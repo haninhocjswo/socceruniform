@@ -11,6 +11,8 @@ public interface MemberService {
 
     void saveMember(MemberForm memberForm);
 
+    void updateMember(MemberForm memberForm);
+
     List<MembersDTO> members(MemberSearchForm memberSearchForm);
 
     MemberForm findMember(Long memberId);

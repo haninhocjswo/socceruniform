@@ -22,16 +22,18 @@ public class AdminMemberController {
         List<MembersDTO> members = memberService.members(memberSearchForm);
         model.addAttribute("members", members);
         model.addAttribute("memberSearchForm", memberSearchForm);
-        return "admin/members/members";
+        return "admin/user/members";
     }
 
     @GetMapping("/admin/member/{memberId}")
     public String memberForm(@PathVariable(name = "memberId") Long memberId, Model model) {
-        return "admin/members/memberForm";
+        MemberForm member = memberService.findMember(memberId);
+        model.addAttribute("memberForm", member);
+        return "admin/user/memberForm";
     }
 
-    @PostMapping("/admin/member/{memberId}")
-    public String updateMember(@PathVariable(name = "memberId") Long memberId, @ModelAttribute(name = "memberForm") MemberForm memberForm) {
-        return "redirect:/admin/members";
+    @PostMapping("/admin/member/edit/{memberId}")
+    public String editMember(@PathVariable(name = "memberId") Long memberId, @ModelAttribute(name = "memberForm") MemberForm memberForm) {
+        return "redirect:/admin/user/members";
     }
 }

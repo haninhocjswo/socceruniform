@@ -37,11 +37,22 @@ public class MemberServiceImpl implements MemberService {
         member.addUser(memberForm.getLoginId(), memberForm.getPassword(), memberForm.getUsername(), memberForm.getEmail(), Role.ROLE_MEMBER, UserState.ABLE);
         member.addDate(LocalDateTime.now(), LocalDateTime.now());
         memberRepository.save(member);
-        log.info("member.persist=====");
+
         Point point = new Point(member, 0, 0, PointState.ABLE, 1);
         point.addDate(LocalDateTime.now(), LocalDateTime.now());
         pointRepository.save(point);
-        log.info("point.persist=====");
+    }
+
+    @Transactional
+    @Override
+    public void updateMember(MemberForm memberForm) {
+        Optional<Member> findMember = memberRepository.findById(memberForm.getMemberId());
+        Member member = findMember.orElse(null);
+        if(member != null) {
+            member.editMember(memberForm.getGender(), member.getGrade(), member.getMobile(), member.getHomeNum());
+            member.editUser(memberForm.getPassword(), memberForm.getUsername(), memberForm.getEmail(), memberForm.getState());
+            member.editDate(LocalDateTime.now());
+        }
     }
 
     @Override

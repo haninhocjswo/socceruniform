@@ -21,4 +21,8 @@ public class DateColumns {
         regDate = reg;
         modDate = mod;
     }
+
+    public void editDate(LocalDateTime mod) {
+        modDate = mod;
+    }
 }

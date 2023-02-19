@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>404 Error - SB Admin</title>
+  <link href="../../css/front/styles.css" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav th:replace="/front/fragment/frontHeader.html :: frontHeader"></nav>
+<div id="layoutError">
+  <div id="layoutError_content">
+    <main>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <div class="text-center mt-4">
+              <h4>회원 탈퇴</h4>
+              <p>회원 탈퇴 하시겠습니까?</p>
+              <form action="/member/deleteMember/">
+                <input type="hidden" name="memberId" />
+                <input type="hidden" name="state" th:value="#{T(shop.soccerUniform.entity.enumtype.UserState).DISABLE}" />
+                <input type="submit" value="회원탈퇴">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div id="layoutError_footer">
+    <footer th:replace="/front/fragment/frontFooter.html :: frontFooter"></footer>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../../js/front/scripts.js"></script>
+</body>
+</html>

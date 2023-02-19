@@ -67,7 +67,7 @@
                                             <td th:text="${member.grade}">등급(값)</td>
                                             <td th:text="${member.point}">적립금(값)</td>
                                             <td>
-                                                <button th:onclick="detailMember(${member.memberId})">상세 보기</button>
+                                                <button th:onclick="detailMember([[${member.memberId}]])">상세 보기</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -86,7 +86,7 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
 	        function detailMember(id) {
-	            alert(id);
+	            location.href = '/admin/member/' + id;
 	        }
 	        /*]]>*/
         </script>
