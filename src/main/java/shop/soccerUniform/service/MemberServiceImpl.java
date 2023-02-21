@@ -55,6 +55,18 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    @Transactional
+    @Override
+    public void deletedMember(Long memberId) {
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        Member member = findMember.orElse(null);
+        log.info("전={}", member.getState());
+        if(member != null) {
+            member.delUser();
+            log.info("후={}", member.getState());
+        }
+    }
+
     @Override
     public List<MembersDTO> members(MemberSearchForm memberSearchForm) {
         List<MembersDTO> members = memberRepository.members(memberSearchForm);

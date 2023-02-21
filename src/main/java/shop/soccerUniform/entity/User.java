@@ -66,4 +66,8 @@ public abstract class User extends DateColumns {
             this.state = state;
         }
     }
+
+    public void delUser(){
+        state = UserState.DISABLE;
+    }
 }

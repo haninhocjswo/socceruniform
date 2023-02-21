@@ -10,6 +10,7 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../../css/admin/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav th:replace="/admin/fragment/adminTop.html :: adminTop"></nav>
@@ -36,12 +37,38 @@
                                 회원 목록
                             </div>
                             <div class="card-body">
+
                                 <form th:object="${memberSearchForm}">
-                                    <select>
-                                        <option>10</option>
-                                        <option>20</option>
-                                        <option>30</option>
-                                    </select>
+                                    검색 조건
+                                    <input type="hidden" name="state" th:value="#{T(shop.soccerUniform.entity.enumtype.UserState).DISABLE}" />
+                                    <div class="mx-quto input-group mt-5">
+                                        <mx-auto>
+                                            <select class="form-select" name="grade" style="width:auto;">
+                                                <option value="">등급</option>
+                                                <option th:each="grade : ${T(shop.soccerUniform.entity.enumtype.Grade).values()}"
+                                                        th:value="${grade}"
+                                                        th:text="${grade}">등급</option>
+                                            </select>
+                                        </mx-auto>
+                                        <mx-auto>
+                                            <select class="form-select" name="limit" style="width:auto;">
+                                                <option value="">갯수</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                            </select>
+                                        </mx-auto>
+                                        <mx-auto style="margin-left: auto;">
+                                            <select class="form-select" name="searchKey" style="width:auto;">
+                                                <option value="loginId">아이디</option>
+                                                <option value="username">이름</option>
+                                            </select>
+                                        </mx-auto>
+                                        <mx-auto>
+                                            <input name="searchValue" type="text" class="form-control" placeholder="검색어 입력" aria-label="search" aria-describedby="button-addon2">
+                                        </mx-auto>
+                                        <button class="btn btn-success" type="submit" id="button-addon2">검색</button>
+                                    </div>
                                 </form>
                                 <table class="table table-striped">
                                     <thead>
@@ -52,12 +79,13 @@
                                             <th>핸드폰</th>
                                             <th>등급</th>
                                             <th>적립금</th>
-                                            <th>상세보기</th>
+                                            <th>상세</th>
+                                            <th>삭제</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr th:if="${#lists.isEmpty(members)}">
-                                            <td colspan="7">조회한 결과가 없습니다.</td>
+                                            <td colspan="8" style="text-align: center;">조회한 결과가 없습니다.</td>
                                         </tr>
                                         <tr th:unless="${#lists.isEmpty(members)}" th:each="member : ${members}">
                                             <td><input type="checkbox" id="ids" name="ids" th:value="${member.memberId}"></td>
@@ -67,7 +95,10 @@
                                             <td th:text="${member.grade}">등급(값)</td>
                                             <td th:text="${member.point}">적립금(값)</td>
                                             <td>
-                                                <button th:onclick="detailMember([[${member.memberId}]])">상세 보기</button>
+                                                <button class="btn-primary" th:onclick="detailMember([[${member.memberId}]])">상세</button>
+                                            </td>
+                                            <td>
+                                                <button class="btn-danger" th:onclick="deletedMember([[${member.memberId}]])">삭제</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -87,6 +118,28 @@
             /*<![CDATA[*/
 	        function detailMember(id) {
 	            location.href = '/admin/member/' + id;
+	        }
+
+	        function deletedMember(id) {
+	            if(confirm("삭제하시겠습니까?")) {
+	                $.ajax({
+                        url: '/admin/member/delete/' + id,
+                        type: 'POST',
+                        data: {'memberId': id},
+                        contentType: 'application/json; charset=UTF-8',
+                        dataType: 'json',
+                        success: function(data) {
+                            let result = data['result'];
+                            if(result) {
+                                alert("삭제되었습니다.");
+                                location.reload();
+                            }
+                        },
+                        error: function(data) {
+                            alert("삭제에 실패하였습니다.");
+                        }
+	                });
+	            }
 	        }
 	        /*]]>*/
         </script>

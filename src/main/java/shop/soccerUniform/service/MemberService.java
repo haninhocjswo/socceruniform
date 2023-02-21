@@ -13,6 +13,8 @@ public interface MemberService {
 
     void updateMember(MemberForm memberForm);
 
+    void deletedMember(Long memberId);
+
     List<MembersDTO> members(MemberSearchForm memberSearchForm);
 
     MemberForm findMember(Long memberId);
