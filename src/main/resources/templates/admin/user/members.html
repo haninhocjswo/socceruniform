@@ -38,9 +38,9 @@
                             </div>
                             <div class="card-body">
 
-                                <form th:object="${memberSearchForm}">
+                                <form th:object="${memberSearchForm}" action="/admin/members">
                                     검색 조건
-                                    <input type="hidden" name="state" th:value="#{T(shop.soccerUniform.entity.enumtype.UserState).DISABLE}" />
+                                    <input type="hidden" name="state" th:value="${T(shop.soccerUniform.entity.enumtype.UserState).DISABLE}" />
                                     <div class="mx-quto input-group mt-5">
                                         <mx-auto>
                                             <select class="form-select" name="grade" style="width:auto;">
@@ -52,7 +52,6 @@
                                         </mx-auto>
                                         <mx-auto>
                                             <select class="form-select" name="limit" style="width:auto;">
-                                                <option value="">갯수</option>
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
