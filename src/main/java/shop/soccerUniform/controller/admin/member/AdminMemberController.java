@@ -1,4 +1,4 @@
-package shop.soccerUniform.controller.admin.members;
+package shop.soccerUniform.controller.admin.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
-import shop.soccerUniform.entity.enumtype.Grade;
 import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.MemberService;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller

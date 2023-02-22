@@ -1,4 +1,4 @@
-package shop.soccerUniform.controller.front.members;
+package shop.soccerUniform.controller.front.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.service.MemberService;
-
-import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor

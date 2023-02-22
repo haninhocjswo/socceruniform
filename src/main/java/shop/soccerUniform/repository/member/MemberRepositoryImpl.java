@@ -59,6 +59,23 @@ public class MemberRepositoryImpl implements  MemberQueryRepository {
                 .fetch();
     }
 
+    @Override
+    public Long countMembers(MemberSearchForm memberSearchForm) {
+        String searchKey = memberSearchForm.getSearchKey();
+        String searchValue = memberSearchForm.getSearchValue();
+        Grade searchGrade = memberSearchForm.getGrade();
+        UserState searchState = memberSearchForm.getState();
+
+        return queryFactory
+                .select(member.count())
+                .from(member)
+                .where(
+                        byState(searchState),
+                        byGrade(searchGrade),
+                        byText(searchKey, searchValue))
+                .fetchFirst();
+    }
+
     private BooleanExpression byState(UserState searchState) {
         return searchState != null ? member.state.eq(searchState) : null;
     }

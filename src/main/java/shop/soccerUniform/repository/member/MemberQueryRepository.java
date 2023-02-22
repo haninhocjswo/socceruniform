@@ -9,4 +9,5 @@ import java.util.List;
 public interface MemberQueryRepository {
 
     List<MembersDTO> members(MemberSearchForm memberSearchForm);
+    Long countMembers(MemberSearchForm memberSearchForm);
 }

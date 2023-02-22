@@ -58,9 +58,34 @@
                                         <input class="form-control" id="email" th:field="*{email}" type="email" placeholder="name@example.com" />
                                         <label for="email">이메일</label>
                                     </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 mb-md-0">
+                                                <select class="form-control" name="grade" id="grade">
+                                                    <option th:each="memberGrade : ${T(shop.soccerUniform.entity.enumtype.Grade).values}"
+                                                            th:value="${memberGrade}"
+                                                            th:text="${memberGrade}"
+                                                            th:selected="${memberGrade} == ${memberForm.grade}">등급</option>
+                                                </select>
+                                                <label for="grade">등급</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 mb-md-0">
+                                                <select class="form-control" name="state" id="state">
+                                                    <option th:each="userState : ${T(shop.soccerUniform.entity.enumtype.UserState).values}"
+                                                            th:value="${userState}"
+                                                            th:text="${userState}"
+                                                            th:selected="${userState} == ${memberForm.state}">등급</option>
+                                                </select>
+                                                <label for="state">상태</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mt-4 mb-0">
-                                        <div>
-                                            <input type="submit" class="btn btn-warning" />
+                                        <div class="d-flex justify-content-center">
+                                            <input type="submit" class="btn btn-warning" value="수정" />
+                                            &nbsp;
                                             <a class="btn btn-secondary" href="/admin/members">목록</a>
                                         </div>
                                     </div>

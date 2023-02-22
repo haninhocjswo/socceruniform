@@ -40,31 +40,35 @@
 
                                 <form th:object="${memberSearchForm}" action="/admin/members">
                                     검색 조건
-                                    <input type="hidden" name="state" th:value="${T(shop.soccerUniform.entity.enumtype.UserState).DISABLE}" />
+                                    <input type="hidden" th:field="*{state}" th:value="${T(shop.soccerUniform.entity.enumtype.UserState).ABLE}" />
                                     <div class="mx-quto input-group mt-5">
-                                        <mx-auto>
-                                            <select class="form-select" name="grade" style="width:auto;">
-                                                <option value="">등급</option>
-                                                <option th:each="grade : ${T(shop.soccerUniform.entity.enumtype.Grade).values()}"
-                                                        th:value="${grade}"
-                                                        th:text="${grade}">등급</option>
-                                            </select>
-                                        </mx-auto>
-                                        <mx-auto>
-                                            <select class="form-select" name="limit" style="width:auto;">
+                                        <h4>개수&nbsp;</h4>
+                                        <mx-auto class="col-sm-1">
+                                            <select class="form-select" th:field="*{limit}" style="width:auto;">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
                                             </select>
                                         </mx-auto>
+
+                                        <h4>등급&nbsp;</h4>
+                                        <mx-auto class="col-sm-2">
+                                            <select class="form-select" th:field="*{grade}" style="width:auto;">
+                                                <option value="">전체</option>
+                                                <option th:each="grade : ${T(shop.soccerUniform.entity.enumtype.Grade).values()}"
+                                                        th:value="${grade}"
+                                                        th:text="${grade}">등급</option>
+                                            </select>
+                                        </mx-auto>
+
                                         <mx-auto style="margin-left: auto;">
-                                            <select class="form-select" name="searchKey" style="width:auto;">
+                                            <select class="form-select" th:field="*{searchKey}" style="width:auto;">
                                                 <option value="loginId">아이디</option>
                                                 <option value="username">이름</option>
                                             </select>
                                         </mx-auto>
                                         <mx-auto>
-                                            <input name="searchValue" type="text" class="form-control" placeholder="검색어 입력" aria-label="search" aria-describedby="button-addon2">
+                                            <input name="searchValue" type="text" class="form-control" th:field="*{searchValue}" placeholder="검색어 입력" aria-label="search" aria-describedby="button-addon2">
                                         </mx-auto>
                                         <button class="btn btn-success" type="submit" id="button-addon2">검색</button>
                                     </div>
@@ -102,6 +106,25 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                     </div>
