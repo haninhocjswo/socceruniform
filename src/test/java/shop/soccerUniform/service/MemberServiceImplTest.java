@@ -40,21 +40,29 @@ class MemberServiceImplTest {
 
     @BeforeEach
     void before() {
-        Member member = new Member(Gender.FEMALE, Grade.BRONZE, "01-222-222", "123123213");
-        member.addUser("aaaa", "1212", "aaaa", "aaaa@naver.com", Role.ROLE_MEMBER, UserState.ABLE);
-        member.addDate(LocalDateTime.now(), LocalDateTime.now());
-        em.persist(member);
-        System.out.println("=============================================================");
-        Point point = new Point(member, 0, 0, PointState.ABLE, 1);
-        point.addDate(LocalDateTime.now(), LocalDateTime.now());
-        em.persist(point);
-        System.out.println("=============================================================");
-        System.out.println("=============================================================");
+
     }
 
     @Test
     void save() {
 
+    }
+
+    @Test
+    void insertMembers() {
+        for(int i = 1; i < 96; i++) {
+            if(i%2 > 0) {
+                Member member = new Member(Gender.FEMALE, Grade.BRONZE, "010-" + i + i + i + i + "-1234", "02-" + i + i + i + i + "-5678");
+                member.addUser("member"+i, "1234"+i, "member"+i, "member"+i+"@naver.com", Role.ROLE_MEMBER, UserState.ABLE);
+                member.addDate(LocalDateTime.now(), LocalDateTime.now());
+                em.persist(member);
+            } else {
+                Member member = new Member(Gender.MALE, Grade.BRONZE, "010-" + i + i + i + i + "-1234", "02-" + i + i + i + i + "-5678");
+                member.addUser("member"+i, "1234"+i, "member"+i, "member"+i+"@naver.com", Role.ROLE_MEMBER, UserState.ABLE);
+                member.addDate(LocalDateTime.now(), LocalDateTime.now());
+                em.persist(member);
+            }
+        }
     }
 
     @Test

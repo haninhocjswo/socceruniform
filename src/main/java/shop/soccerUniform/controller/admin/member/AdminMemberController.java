@@ -2,6 +2,10 @@ package shop.soccerUniform.controller.admin.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,8 +17,10 @@ import shop.soccerUniform.entity.dto.MembersDTO;
 import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.MemberService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -24,11 +30,39 @@ public class AdminMemberController {
     private final MemberService memberService;
 
     @GetMapping("/admin/members")
-    public String members(@ModelAttribute(name = "memberSearchForm") MemberSearchForm memberSearchForm, Model model) {
+    public String members(@ModelAttribute(name = "memberSearchForm") MemberSearchForm memberSearchForm, Model model,
+                          @PageableDefault(size = 10, page = 0, sort = "memberId", direction = Sort.Direction.DESC) Pageable pageable) {
+        log.info("page={}", pageable.getOffset());
+        log.info("size={}", pageable.getPageSize());
+        log.info("number={}", pageable.getPageNumber());
         memberSearchForm.setState(UserState.ABLE);
-        List<MembersDTO> members = memberService.members(memberSearchForm);
-        model.addAttribute("members", members);
+        Page<MembersDTO> memberList = memberService.members(memberSearchForm, pageable);
+        int currentPage = memberList.getNumber();
+        int totalPages = memberList.getTotalPages();
+
+        Map<String, Object> pagination = new HashMap<>();
+        pagination.put("totalElements", memberList.getTotalElements());
+        pagination.put("totalPages", memberList.getTotalPages());
+        pagination.put("currentPage", currentPage);
+        pagination.put("isFirst", memberList.isFirst());
+        pagination.put("isLast", memberList.isLast());
+        ArrayList<Integer> pageList = new ArrayList<>();
+        for(int i = currentPage - 1; i < currentPage + 4; i++) {
+            if(i < 1) {
+                continue;
+            }
+
+            if(i > totalPages) {
+                break;
+            }
+
+            pageList.add(i);
+        }
+        pagination.put("pageList", pageList);
+
+        model.addAttribute("members", memberList.getContent());
         model.addAttribute("memberSearchForm", memberSearchForm);
+        model.addAttribute("pagination", pagination);
         return "admin/user/members";
     }
 

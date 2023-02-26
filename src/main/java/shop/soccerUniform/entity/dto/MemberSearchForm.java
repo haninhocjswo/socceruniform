@@ -5,6 +5,8 @@ import shop.soccerUniform.entity.enumtype.Grade;
 import shop.soccerUniform.entity.enumtype.Role;
 import shop.soccerUniform.entity.enumtype.UserState;
 
+import java.util.List;
+
 @Data
 public class MemberSearchForm {
 
@@ -16,7 +18,7 @@ public class MemberSearchForm {
 
     private Grade grade;
 
-    private Integer offset = 0;
+    private Integer size;
 
-    private Integer limit = 10;
+    private Integer page;
 }

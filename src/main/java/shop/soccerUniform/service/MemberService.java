@@ -1,11 +1,14 @@
 package shop.soccerUniform.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import shop.soccerUniform.entity.Member;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
 
@@ -15,7 +18,8 @@ public interface MemberService {
 
     void deletedMember(Long memberId);
 
-    List<MembersDTO> members(MemberSearchForm memberSearchForm);
+    Page<MembersDTO> members(MemberSearchForm memberSearchForm, Pageable pageable);
 
     MemberForm findMember(Long memberId);
+
 }

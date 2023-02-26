@@ -2,6 +2,8 @@ package shop.soccerUniform.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.Member;
@@ -17,7 +19,9 @@ import shop.soccerUniform.repository.member.MemberRepository;
 import shop.soccerUniform.repository.point.PointRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -68,24 +72,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MembersDTO> members(MemberSearchForm memberSearchForm) {
-        List<MembersDTO> members = memberRepository.members(memberSearchForm);
-
-        if(members.size() > 0) {
-            List<Long> memberIds = members.stream()
-                    .map(m -> m.getMemberId())
-                    .collect(Collectors.toList());
-            List<Point> points = pointRepository.findByIdsAndState(memberIds, PointState.ABLE);
-
-            for(MembersDTO member : members) {
-                for(Point point : points) {
-                    if(member.getMemberId() == point.getMember().getId()) {
-                        member.setPoint(point.getPoint());
-                    }
-                }
-            }
-        }
-
+    public Page<MembersDTO> members(MemberSearchForm memberSearchForm, Pageable pageable) {
+        Page<MembersDTO> members = memberRepository.members(memberSearchForm, pageable);
         return members;
     }
 
@@ -111,5 +99,6 @@ public class MemberServiceImpl implements MemberService {
 
         return memberForm;
     }
+
 }
 

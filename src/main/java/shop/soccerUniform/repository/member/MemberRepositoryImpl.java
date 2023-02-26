@@ -1,11 +1,15 @@
 package shop.soccerUniform.repository.member;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.el.lang.ExpressionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.Member;
@@ -16,7 +20,9 @@ import shop.soccerUniform.entity.enumtype.Grade;
 import shop.soccerUniform.entity.enumtype.UserState;
 
 import javax.persistence.EntityManager;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static shop.soccerUniform.entity.QMember.member;
 
@@ -33,7 +39,14 @@ public class MemberRepositoryImpl implements  MemberQueryRepository {
     }
 
     @Override
-    public List<MembersDTO> members(MemberSearchForm memberSearchForm) {
+    public Page<MembersDTO> members(MemberSearchForm memberSearchForm, Pageable pageable) {
+        List<MembersDTO> members = memberList(memberSearchForm, pageable);
+        Long count = countMemberList(memberSearchForm);
+
+        return new PageImpl<>(members, pageable, count);
+    }
+
+    public List<MembersDTO> memberList(MemberSearchForm memberSearchForm, Pageable pageable) {
         String searchKey = memberSearchForm.getSearchKey();
         String searchValue = memberSearchForm.getSearchValue();
         Grade searchGrade = memberSearchForm.getGrade();
@@ -54,13 +67,12 @@ public class MemberRepositoryImpl implements  MemberQueryRepository {
                         byGrade(searchGrade),
                         byState(searchState)
                 )
-                .offset(memberSearchForm.getOffset())
-                .limit(memberSearchForm.getLimit())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 
-    @Override
-    public Long countMembers(MemberSearchForm memberSearchForm) {
+    public Long countMemberList(MemberSearchForm memberSearchForm) {
         String searchKey = memberSearchForm.getSearchKey();
         String searchValue = memberSearchForm.getSearchValue();
         Grade searchGrade = memberSearchForm.getGrade();
@@ -70,10 +82,11 @@ public class MemberRepositoryImpl implements  MemberQueryRepository {
                 .select(member.count())
                 .from(member)
                 .where(
-                        byState(searchState),
+                        byText(searchKey, searchValue),
                         byGrade(searchGrade),
-                        byText(searchKey, searchValue))
-                .fetchFirst();
+                        byState(searchState)
+                )
+                .fetchOne();
     }
 
     private BooleanExpression byState(UserState searchState) {
