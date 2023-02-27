@@ -16,6 +16,7 @@ import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
 import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.MemberService;
+import shop.soccerUniform.util.PageList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,32 +33,18 @@ public class AdminMemberController {
     @GetMapping("/admin/members")
     public String members(@ModelAttribute(name = "memberSearchForm") MemberSearchForm memberSearchForm, Model model,
                           @PageableDefault(size = 10, page = 0, sort = "memberId", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("page={}", pageable.getOffset());
-        log.info("size={}", pageable.getPageSize());
-        log.info("number={}", pageable.getPageNumber());
         memberSearchForm.setState(UserState.ABLE);
         Page<MembersDTO> memberList = memberService.members(memberSearchForm, pageable);
         int currentPage = memberList.getNumber();
         int totalPages = memberList.getTotalPages();
 
         Map<String, Object> pagination = new HashMap<>();
+        List<Integer> pageList = PageList.getPageList(currentPage, totalPages);
         pagination.put("totalElements", memberList.getTotalElements());
         pagination.put("totalPages", memberList.getTotalPages());
         pagination.put("currentPage", currentPage);
         pagination.put("isFirst", memberList.isFirst());
         pagination.put("isLast", memberList.isLast());
-        ArrayList<Integer> pageList = new ArrayList<>();
-        for(int i = currentPage - 1; i < currentPage + 4; i++) {
-            if(i < 1) {
-                continue;
-            }
-
-            if(i > totalPages) {
-                break;
-            }
-
-            pageList.add(i);
-        }
         pagination.put("pageList", pageList);
 
         model.addAttribute("members", memberList.getContent());
