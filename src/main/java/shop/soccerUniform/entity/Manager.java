@@ -1,7 +1,9 @@
 package shop.soccerUniform.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.soccerUniform.entity.dto.ManagerDTO;
 import shop.soccerUniform.entity.enumtype.DeliveryPolicy;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Table(name = "T_MANAGER")
 @Getter
+@Builder
 @DiscriminatorValue("MANAGER")
 @NoArgsConstructor(access = PROTECTED)
 public class Manager extends User {
@@ -42,16 +45,16 @@ public class Manager extends User {
     @Column(name = "CHARGE_POSITION")
     private String chargePosition;
 
-    @Column(name = "CHARGE_NUM", nullable = false)
+    @Column(name = "CHARGE_NUM")
     private String chargeNum;
 
     @Column(name = "CHARGE_MOBILE", nullable = false)
     private String chargeMobile;
 
-    @Column(name = "FEE_POLICY_PERCENT", nullable = false)
+    @Column(name = "FEE_POLICY_PERCENT")
     private Double feePolicyPercent;
 
-    @Column(name = "DELIVERY_POLICY", nullable = false)
+    @Column(name = "DELIVERY_POLICY")
     @Enumerated(EnumType.STRING)
     private DeliveryPolicy deliveryPolicy;
 
@@ -69,5 +72,21 @@ public class Manager extends User {
         this.chargeMobile = chargeMobile;
         this.feePolicyPercent = feePolicyPercent;
         this.deliveryPolicy = deliveryPolicy;
+    }
+
+    public void editManager(ManagerDTO managerDTO) {
+        if(companyName != managerDTO.getCompanyName()) companyName = managerDTO.getCompanyName();
+        if(companyNum != managerDTO.getChargeNum()) companyNum = managerDTO.getChargeNum();
+        if(post != managerDTO.getPost()) post = managerDTO.getPost();
+        if(address != managerDTO.getAddress()) address = managerDTO.getAddress();
+        if(detailAddress != managerDTO.getDetailAddress()) detailAddress = managerDTO.getDetailAddress();
+        if(ceoName != managerDTO.getCeoName()) ceoName = managerDTO.getCeoName();
+        if(businessResistNum != managerDTO.getBusinessResistNum()) businessResistNum = managerDTO.getBusinessResistNum();
+        if(chargeName != managerDTO.getChargeName()) chargeName = managerDTO.getChargeName();
+        if(chargePosition != managerDTO.getChargePosition()) chargePosition = managerDTO.getChargePosition();
+        if(chargeNum != managerDTO.getChargeNum()) chargeNum = managerDTO.getChargeNum();
+        if(chargeMobile != managerDTO.getChargeMobile()) chargeMobile = managerDTO.getChargeMobile();
+        if(feePolicyPercent != managerDTO.getFeePolicyPercent()) feePolicyPercent = managerDTO.getFeePolicyPercent();
+        if(deliveryPolicy != managerDTO.getDeliveryPolicy()) deliveryPolicy = managerDTO.getDeliveryPolicy();
     }
 }

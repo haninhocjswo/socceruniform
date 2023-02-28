@@ -47,6 +47,7 @@ public class ManagerRepositoryImpl implements  ManagerQueryRepository {
 
         return queryFactory
                 .select(Projections.fields(ManagerDTO.class,
+                        manager.id.as("managerId"),
                         manager.loginId,
                         manager.username,
                         manager.state,
@@ -79,7 +80,7 @@ public class ManagerRepositoryImpl implements  ManagerQueryRepository {
 
     private BooleanExpression byText(String searchKey, String searchValue) {
         if(StringUtils.hasText(searchKey)) {
-            switch (searchValue) {
+            switch (searchKey) {
                 case "loginId" :
                     return StringUtils.hasText(searchValue) ? manager.loginId.like("%" + searchValue + "%") : null;
 

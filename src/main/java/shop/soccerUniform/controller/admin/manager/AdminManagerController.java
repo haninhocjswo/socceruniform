@@ -5,10 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.dto.ManagerDTO;
 import shop.soccerUniform.entity.dto.ManagerSearchForm;
 import shop.soccerUniform.repository.manager.ManagerRepository;
@@ -45,5 +49,27 @@ public class AdminManagerController {
         model.addAttribute("managerSearchForm", managerSearchForm);
         model.addAttribute("pagination", pagination);
         return "admin/user/managers";
+    }
+
+    @GetMapping("/admin/manager/{managerId}")
+    public String managerDetail(@PathVariable(value = "managerId") Long managerId, Model model) {
+        ManagerDTO manager = managerService.findById(managerId);
+        model.addAttribute("managerForm", manager);
+        return "admin/user/managerForm";
+    }
+
+    @PostMapping("/admin/manager/edit/{managerId}")
+    public String editManager(@PathVariable(value = "managerId") Long managerId, @ModelAttribute(value = "managerForm") ManagerDTO managerForm) {
+        managerService.updateManager(managerForm);
+        return "redirect:/admin/managers";
+    }
+
+    @PostMapping("/admin/manager/delete/{managerId}")
+    public ResponseEntity<HashMap<String, Object>> delManager(@PathVariable(value = "managerId") Long managerId) {
+        managerService.deleteManager(managerId);
+        HashMap<String, Object> ajaxMap = new HashMap<>();
+        ajaxMap.put("result", true);
+        ResponseEntity<HashMap<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+        return responseEntity;
     }
 }

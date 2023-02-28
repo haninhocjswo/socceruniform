@@ -139,109 +139,81 @@
               <h4 class="mb-2">Adventure starts here 🚀</h4>
               <p class="mb-4">Make your app management easy and fun!</p>
 
-              <form id="formAuthentication" class="mb-3" action="/admin/register" method="POST" th:object="${managerForm}">
+              <form id="formAuthentication" class="mb-3" action="/manager/register" method="POST" th:object="${managerForm}">
                 <div class="mb-3">
                   <label for="loginId" class="form-label">ID</label>
-                  <input
-                          type="text"
-                          class="form-control"
-                          id="loginId"
-                          name="loginId"
-                          placeholder="Enter your ID"
-                          autofocus
-                  />
+                  <input type="text" class="form-control" id="loginId" name="loginId" placeholder="Enter your ID" autofocus />
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <label class="form-label" for="password">Password</label>
                   <div class="input-group input-group-merge">
-                    <input
-                            type="password"
-                            id="password"
-                            class="form-control"
-                            name="password"
-                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                            aria-describedby="password"
-                    />
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" aria-describedby="password" />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
                 </div>
                 <div class="mb-3">
                   <label for="username" class="form-label">username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    placeholder="Enter your username"
-                    autofocus
-                  />
+                  <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" />
                 </div>
                 <div class="mb-3">
                   <label for="companyNum" class="form-label">회사연락처</label>
-                  <input type="text" class="form-control" id="companyNum" name="companyNum" />
+                  <input type="text" class="form-control" id="companyNum" name="companyNum" placeholder="Enter company number" />
                 </div>
                 <div class="mb-3">
                   <label for="companyName" class="form-label">회사명</label>
-                  <input type="text" class="form-control" id="companyName" name="companyName" />
+                  <input type="text" class="form-control" id="companyName" name="companyName" placeholder="Enter company name" />
                 </div>
                 <div class="mb-3">
                   <label for="ceoName" class="form-label">대표자명</label>
-                  <input type="text" class="form-control" id="ceoName" name="ceoName" />
+                  <input type="text" class="form-control" id="ceoName" name="ceoName" placeholder="Enter ceo name" />
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Enter company email" />
                 </div>
                 <div class="mb-3">
                   <label for="post" class="form-label">우편번호</label>
-                  <input type="text" class="form-control" id="post" name="post" />
+                  <input type="text" class="form-control" id="post" name="post" placeholder="Enter company post" />
                 </div>
                 <div class="mb-3">
                   <label for="address" class="form-label">주소</label>
-                  <input type="text" class="form-control" id="address" name="address" />
+                  <input type="text" class="form-control" id="address" name="address" placeholder="Enter company address" />
                 </div>
                 <div class="mb-3">
                   <label for="detailAddress" class="form-label">상세주소</label>
-                  <input type="text" class="form-control" id="detailAddress" name="detailAddress" />
+                  <input type="text" class="form-control" id="detailAddress" name="detailAddress" placeholder="Enter company detail address" />
                 </div>
                 <div class="mb-3">
                   <label for="businessResistNum" class="form-label">사업자등록번호</label>
-                  <input type="text" class="form-control" id="businessResistNum" name="businessResistNum" />
+                  <input type="text" class="form-control" id="businessResistNum" name="businessResistNum" placeholder="Enter businessResistNum" />
                 </div>
                 <div class="mb-3">
                   <label for="chargeName" class="form-label">담당자명</label>
-                  <input type="text" class="form-control" id="chargeName" name="chargeName" />
+                  <input type="text" class="form-control" id="chargeName" name="chargeName" placeholder="Enter your charge name" />
                 </div>
                 <div class="mb-3">
-                  <label for="chargeMobile" class="form-label">담당자연락처</label>
-                  <input type="text" class="form-control" id="chargeMobile" name="chargeMobile" />
+                  <label for="chargeMobile" class="form-label">담당자핸드폰</label>
+                  <input type="text" class="form-control" id="chargeMobile" name="chargeMobile" placeholder="Enter charge mobile" />
+                </div>
+                <div class="mb-3">
+                  <label for="chargeNum" class="form-label">담당자연락처</label>
+                  <input type="text" class="form-control" id="chargeNum" name="chargeNum" placeholder="Enter charge num" />
                 </div>
                 <div class="mb-3">
                   <label for="chargePosition" class="form-label">담당자 직책</label>
-                  <input type="text" class="form-control" id="chargePosition" name="chargePosition" />
+                  <input type="text" class="form-control" id="chargePosition" name="chargePosition" placeholder="Enter charge position" />
                 </div>
-
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
-                    <label class="form-check-label" for="terms-conditions">
-                      I agree to
-                      <a href="javascript:void(0);">privacy policy & terms</a>
-                    </label>
-                  </div>
-                </div>
-                <button class="btn btn-primary d-grid w-100">Sign up</button>
+                <button type="submit" class="btn btn-primary d-grid w-100">입점업체 신청</button>
               </form>
 
               <p class="text-center">
                 <span>Already have an account?</span>
-                <a href="auth-login-basic.html">
+                <a href="/manager/login">
                   <span>Sign in instead</span>
                 </a>
               </p>
             </div>
           </div>
-          <!-- Register Card -->
         </div>
       </div>
     </div>

@@ -5,16 +5,15 @@ import org.springframework.data.domain.Pageable;
 import shop.soccerUniform.entity.dto.ManagerDTO;
 import shop.soccerUniform.entity.dto.ManagerSearchForm;
 
-import java.util.List;
-
 public interface ManagerService {
 
-    public void save(ManagerDTO manager);
+    public void save(ManagerDTO managerDTO);
 
     public ManagerDTO findById(Long managerId);
 
-    public void updateManager(ManagerDTO manager);
+    public void updateManager(ManagerDTO managerDTO);
 
-    public void deleteManger(Long managerId);
+    public void deleteManager(Long managerId);
+
     public Page<ManagerDTO> managers(ManagerSearchForm managerSearchForm, Pageable pageable);
 }

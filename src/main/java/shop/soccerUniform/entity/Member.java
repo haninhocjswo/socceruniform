@@ -45,11 +45,9 @@ public class Member extends User {
     }
 
     public void editMember(Gender gender, Grade grade, String mobile, String homeNum) {
-        this.gender = gender;
-        if(grade != null) {
-            this.grade = grade;
-        }
-        this.mobile = mobile;
-        this.homeNum = homeNum;
+        if(this.gender != gender) this.gender = gender;
+        if(this.grade != grade) this.grade = grade;
+        if(this.mobile != mobile) this.mobile = mobile;
+        if(this.homeNum != homeNum) this.homeNum = homeNum;
     }
 }
