@@ -38,6 +38,8 @@ public class QCategory extends EntityPathBase<Category> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
 
+    public final EnumPath<shop.soccerUniform.entity.enumtype.CategoryState> state = createEnum("state", shop.soccerUniform.entity.enumtype.CategoryState.class);
+
     public QCategory(String variable) {
         this(Category.class, forVariable(variable), INITS);
     }

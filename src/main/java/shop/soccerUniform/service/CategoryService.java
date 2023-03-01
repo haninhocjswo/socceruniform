@@ -1,4 +1,4 @@
-package shop.soccerUniform.repository.category;
+package shop.soccerUniform.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,9 +8,11 @@ import shop.soccerUniform.entity.dto.CategorySearchForm;
 
 import java.util.List;
 
-public interface CategoryQueryRepository {
-
+public interface CategoryService {
+    public void saveCategory(CategoryForm categoryForm);
+    public void editCategory(Long categoryId, CategoryForm categoryForm);
+    public CategoryForm detailCategory(Long categoryId);
     public Page<CategoryForm> categories(CategorySearchForm categorySearchForm, Pageable pageable);
-
-    public List<Category> findByDepth(Integer parentDepth);
+    public void deleteCategory(Long categoryId);
+    public List<Category> findParents(Integer childDepth);
 }

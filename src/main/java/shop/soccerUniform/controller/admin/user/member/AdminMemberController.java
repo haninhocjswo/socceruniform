@@ -1,4 +1,4 @@
-package shop.soccerUniform.controller.admin.member;
+package shop.soccerUniform.controller.admin.user.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

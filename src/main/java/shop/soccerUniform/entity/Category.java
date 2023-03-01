@@ -2,6 +2,8 @@ package shop.soccerUniform.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+import shop.soccerUniform.entity.enumtype.CategoryState;
 
 import javax.persistence.*;
 
@@ -28,11 +30,24 @@ public class Category extends DateColumns {
     @JoinColumn(name = "PARENT_ID")
     private Category parent;
 
-    public Category(String name, Integer depth, Category parent) {
+    @Column(nullable = false)
+    private CategoryState state;
+
+    public Category(String name, Integer depth, Category parent, CategoryState state) {
         this.name = name;
         this.depth = depth;
         if(depth > 1) {
             this.parent = parent;
         }
+        this.state = state;
+    }
+
+    public void editCategory(String name, CategoryState state) {
+        if(this.name != name && StringUtils.hasText(name)) this.name = name;
+        if(this.state != state && state != null) this.state = state;
+    }
+
+    public void delCategory() {
+        state = CategoryState.DISABLE;
     }
 }

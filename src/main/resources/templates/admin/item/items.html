@@ -1,0 +1,178 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Tables - SB Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+  <link href="../../css/admin/styles.css" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+<nav th:replace="/admin/fragment/adminTop.html :: adminTop"></nav>
+<div id="layoutSidenav">
+  <div id="layoutSidenav_nav">
+    <nav th:replace="/admin/fragment/adminSide.html :: adminSide"></nav>
+  </div>
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid px-4">
+        <h1 class="mt-4">Tables</h1>
+        <ol class="breadcrumb mb-4">
+          <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+          <li class="breadcrumb-item active">Tables</li>
+        </ol>
+        <div class="card mb-4">
+          <div class="card-body">
+            상품목록을 볼 수 있습니다.
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            상품 목록
+          </div>
+          <div class="card-body">
+
+            <form id="itemSearchForm" th:object="${itemSearchForm}" action="/admin/items">
+              검색 조건
+              <!-- 현재 페이지 번호 -->
+              <input type="hidden" th:field="*{page}" />
+              <div class="mx-quto input-group mt-5">
+                <!-- 페이지당 나타낼 수 있는 데이터 개수 -->
+                <h4>개수&nbsp;</h4>
+                <mx-auto class="col-sm-1">
+                  <select class="form-select" th:field="*{size}" style="width:auto;">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                  </select>
+                </mx-auto>
+
+                <h4>상태&nbsp;</h4>
+                <mx-auto class="col-sm-2">
+                  <select class="form-select" th:field="*{state}" style="width:auto;">
+                    <option value="">전체</option>
+                    <option th:each="state : ${T(shop.soccerUniform.entity.enumtype.ItemState).values()}"
+                            th:value="${state}"
+                            th:text="${state}">등급</option>
+                  </select>
+                </mx-auto>
+
+                <mx-auto style="margin-left: auto;">
+                  <select class="form-select" th:field="*{searchKey}" style="width:auto;">
+                    <option value="loginId">아이디</option>
+                    <option value="username">회사명</option>
+                    <option value="ceoName">대표자명</option>
+                  </select>
+                </mx-auto>
+                <mx-auto>
+                  <input name="searchValue" type="text" class="form-control" th:field="*{searchValue}" placeholder="검색어 입력" aria-label="search" aria-describedby="button-addon2">
+                </mx-auto>
+                <button class="btn btn-success" type="button" onclick="submitSearchForm(1);">검색</button>
+              </div>
+            </form>
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th><input type="checkbox"></th>
+                <th>아이디</th>
+                <th>회사명</th>
+                <th>대표자명</th>
+                <th>상태</th>
+                <th>상세</th>
+                <th>삭제</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:if="${#lists.isEmpty(items)}">
+                <td colspan="8" style="text-align: center;">조회한 결과가 없습니다.</td>
+              </tr>
+              <tr th:unless="${#lists.isEmpty(items)}" th:each="item : ${items}">
+                <td><input type="checkbox" id="ids" name="ids" th:value="${item.itemId}"></td>
+                <td th:text="${item.loginId}">아이디(값)</td>
+                <td th:text="${item.username}">회사명(값)</td>
+                <td th:text="${item.ceoName}">대표자명(값)</td>
+                <td th:text="${item.state}">상태(값)</td>
+                <td>
+                  <button class="btn-primary" th:onclick="detailitem([[${item.itemId}]])">상세</button>
+                </td>
+                <td>
+                  <button class="btn-danger" th:onclick="deleteditem([[${item.itemId}]])">삭제</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+              <ul class="pagination">
+                <li class="page-item" th:unless="${pagination.isFirst == true}">
+                  <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item" aria-current="page"
+                    th:each="paging : ${pagination.pageList}"
+                    th:class="${paging eq (pagination.currentPage+1) ? 'page-item active' : 'page-item'}">
+                  <a class="page-link" href="#" th:unless="${paging eq (pagination.currentPage+1)}"
+                     th:text="${paging}" th:onclick="submitSearchForm([[${paging}]]);">1</a>
+                  <span class="page-link" th:if="${paging eq (pagination.currentPage+1)}" th:text="${paging}">2</span>
+                </li>
+                <li class="page-item" th:unless="${pagination.isLast == true}">
+                  <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer th:replace="/admin/fragment/adminFooter.html :: adminFooter"></footer>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../../js/admin/scripts.js"></script>
+<script th:inline="javascript">
+            /*<![CDATA[*/
+	        function detailitem(id) {
+	            location.href = '/admin/item/' + id;
+	        }
+
+	        function deleteditem(id) {
+	            if(confirm("삭제하시겠습니까?")) {
+	                $.ajax({
+                        url: '/admin/item/delete/' + id,
+                        type: 'POST',
+                        data: {'itemId': id},
+                        contentType: 'application/json; charset=UTF-8',
+                        dataType: 'json',
+                        success: function(data) {
+                            let result = data['result'];
+                            if(result) {
+                                alert("삭제되었습니다.");
+                                location.reload();
+                            }
+                        },
+                        error: function(data) {
+                            alert("삭제에 실패하였습니다.");
+                        }
+	                });
+	            }
+	        }
+
+	        function submitSearchForm(currentPage) {
+                let size = $("#size").val();
+                $("#page").val(currentPage-1);
+                $("#itemSearchForm").submit();
+	        }
+	        /*]]>*/
+        </script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+<script src="../../js/admin/datatables-simple-demo.js"></script>
+</body>
+</html>
