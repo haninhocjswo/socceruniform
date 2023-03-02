@@ -1,5 +1,6 @@
 package shop.soccerUniform.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -28,6 +29,7 @@ public class Category extends DateColumns {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
+    @JsonIgnore
     private Category parent;
 
     @Column(nullable = false)
@@ -42,8 +44,9 @@ public class Category extends DateColumns {
         this.state = state;
     }
 
-    public void editCategory(String name, CategoryState state) {
+    public void editCategory(String name, Category parent, CategoryState state) {
         if(this.name != name && StringUtils.hasText(name)) this.name = name;
+        if(this.parent != parent) this.parent = parent;
         if(this.state != state && state != null) this.state = state;
     }
 

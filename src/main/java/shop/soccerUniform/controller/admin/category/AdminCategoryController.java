@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.dto.CategoryForm;
 import shop.soccerUniform.entity.dto.CategorySearchForm;
@@ -78,5 +75,36 @@ public class AdminCategoryController {
         ajaxMap.put("result", true);
 
         return new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/category/register")
+    public String registerForm(Model model) {
+        model.addAttribute("categoryForm", new CategoryForm());
+        return "admin/category/categoryRegister";
+    }
+
+    @PostMapping("/admin/category/register")
+    public String registerCategory(@ModelAttribute(value = "categoryForm") CategoryForm categoryForm) {
+        categoryService.saveCategory(categoryForm);
+        return "redirect:/admin/categories";
+    }
+
+    @PostMapping("/admin/category/parent_ajax")
+    public ResponseEntity<Map<String, Object>> parent_ajax(@RequestParam(value = "childDepth", required = false) Integer childDepth) {
+        Map<String, Object> ajaxMap = new HashMap<>();
+        List<Category> parents = new ArrayList<>();
+        if(childDepth > 1) {
+            parents = categoryService.findParents(childDepth);
+        }
+
+        if(parents.size() > 0) {
+            ajaxMap.put("result", true);
+            ajaxMap.put("parents", parents);
+        } else {
+            ajaxMap.put("result", false);
+            ajaxMap.put("message", "상위 카테고리가 존재하지 않습니다.");
+        }
+        ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+        return responseEntity;
     }
 }

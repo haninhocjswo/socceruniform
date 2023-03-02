@@ -15,6 +15,7 @@ import shop.soccerUniform.repository.category.CategoryRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,13 +28,9 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     @Override
     public void saveCategory(CategoryForm categoryForm) {
-        Category parent = categoryRepository.findById(categoryForm.getParentId()).orElse(null);
-        if(parent != null && categoryForm.getDepth() <= 1) {
-            throw new RuntimeException("최상위 카테고리는 부모가 존재하면 안됩니다.");
-        }
-
-        if(parent == null && categoryForm.getDepth() > 1) {
-            throw new RuntimeException("하위 카테고리는 상위 카테고리가 필요합니다.");
+        Category parent = null;
+        if(categoryForm.getParentId() > 0) {
+            parent = categoryRepository.findById(categoryForm.getParentId()).get();
         }
 
         Category category = new Category(categoryForm.getName(), categoryForm.getDepth(), parent, CategoryState.ABLE);
@@ -44,12 +41,14 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     @Override
     public void editCategory(Long categoryId, CategoryForm categoryForm) {
-        Category category = categoryRepository.findById(categoryId).orElse(null);
-        if(category == null) {
-            throw new RuntimeException("해당 카테고리는 존재하지 않습니다.");
-        }
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> {
+                    throw new RuntimeException("해당 카테고리는 존재하지 않습니다.");
+                });
 
-        category.editCategory(categoryForm.getName(), categoryForm.getState());
+        Category parent = categoryRepository.findById(categoryForm.getParentId()).get();
+
+        category.editCategory(categoryForm.getName(), parent, categoryForm.getState());
         category.editDate(LocalDateTime.now());
     }
 
@@ -67,7 +66,6 @@ public class CategoryServiceImpl implements CategoryService{
         categoryForm.setState(category.getState());
         if(category.getParent() != null) {
             categoryForm.setParentId(category.getParent().getId());
-            categoryForm.setParentName(category.getParent().getName());
         }
 
         return categoryForm;
