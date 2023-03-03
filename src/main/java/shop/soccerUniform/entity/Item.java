@@ -20,6 +20,9 @@ public class Item extends DateColumns {
     @Column(name = "ITEM_ID", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MANAGER_ID")
     private Manager manager;

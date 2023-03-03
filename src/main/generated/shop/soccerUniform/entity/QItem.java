@@ -37,6 +37,8 @@ public class QItem extends EntityPathBase<Item> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
 
+    public final StringPath name = createString("name");
+
     public final EnumPath<shop.soccerUniform.entity.enumtype.OptionType> optionType = createEnum("optionType", shop.soccerUniform.entity.enumtype.OptionType.class);
 
     public final StringPath origin = createString("origin");

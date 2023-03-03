@@ -91,10 +91,10 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
         if(StringUtils.hasText(searchKey)) {
             switch (searchKey) {
                 case "name" :
-                    return StringUtils.hasText(searchValue) ? category.name.like("#" + searchValue + "#") : null;
+                    return StringUtils.hasText(searchValue) ? category.name.like("%" + searchValue + "%") : null;
 
                 case "parentName" :
-                    return StringUtils.hasText(searchValue) ? category.parent.name.like("#" + searchValue + "#") : null;
+                    return StringUtils.hasText(searchValue) ? category.parent.name.like("%" + searchValue + "%") : null;
 
                 default:
                     return null;

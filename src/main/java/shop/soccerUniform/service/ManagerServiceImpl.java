@@ -15,6 +15,7 @@ import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.repository.manager.ManagerRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -86,5 +87,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public Page<ManagerDTO> managers(ManagerSearchForm managerSearchForm, Pageable pageable) {
         return managerRepository.managers(managerSearchForm, pageable);
+    }
+
+    @Override
+    public List<Manager> findManagerState(UserState state) {
+        return managerRepository.findManagerState(state);
     }
 }

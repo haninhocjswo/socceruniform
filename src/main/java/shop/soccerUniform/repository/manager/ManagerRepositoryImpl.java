@@ -2,6 +2,7 @@ package shop.soccerUniform.repository.manager;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ import java.util.List;
 import static shop.soccerUniform.entity.QManager.manager;
 
 @Repository
-public class ManagerRepositoryImpl implements  ManagerQueryRepository {
+public class ManagerRepositoryImpl implements ManagerQueryRepository {
 
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
@@ -38,6 +39,14 @@ public class ManagerRepositoryImpl implements  ManagerQueryRepository {
         Long count = countManagerList(managerSearchForm, pageable);
 
         return new PageImpl<>(managers, pageable, count);
+    }
+
+    @Override
+    public List<Manager> findManagerState(UserState state) {
+        return queryFactory
+                .selectFrom(manager)
+                .where(manager.state.eq(state))
+                .fetch();
     }
 
     public List<ManagerDTO> managerList(ManagerSearchForm managerSearchForm, Pageable pageable) {

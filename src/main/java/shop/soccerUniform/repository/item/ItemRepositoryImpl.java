@@ -1,11 +1,24 @@
 package shop.soccerUniform.repository.item;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import shop.soccerUniform.entity.Item;
+import org.springframework.util.StringUtils;
+import shop.soccerUniform.entity.*;
+import shop.soccerUniform.entity.dto.ItemForm;
+import shop.soccerUniform.entity.dto.ItemSearchForm;
+import shop.soccerUniform.entity.enumtype.ItemState;
+import shop.soccerUniform.entity.enumtype.OptionType;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
+
+import static shop.soccerUniform.entity.QItem.item;
 
 @Repository
 public class ItemRepositoryImpl implements  ItemQueryRepository {
@@ -19,4 +32,37 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
         queryFactory= new JPAQueryFactory(em);
     }
 
+    @Override
+    public Page<ItemForm> items(ItemSearchForm itemSearchForm, Pageable pageable) {
+        return null;
+    }
+
+    public List<ItemForm> itemList(ItemSearchForm itemSearchForm, Pageable pageable) {
+        String searchKey = itemSearchForm.getSearchKey();
+        String searchValue = itemSearchForm.getSearchValue();
+
+        return queryFactory
+                .select(Projections.fields(ItemForm.class,
+                        item.id.as("itemId"),
+                        item.manager,
+                        item.category,
+                        item.manufacturer,
+                        item.origin,
+                        item.description,
+                        item.optionType,
+                        item.price,
+                        item.state))
+                .from(item)
+                .where(byText(searchKey, searchValue))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageNumber())
+                .fetch();
+    }
+
+    public BooleanExpression byText(String searchKey, String searchValue) {
+        if(StringUtils.hasText(searchKey)) {
+
+        }
+        return null;
+    }
 }

@@ -1,2 +1,5 @@
-package shop.soccerUniform.service;public interface ItemService {
+package shop.soccerUniform.service;
+
+public interface ItemService {
+
 }
