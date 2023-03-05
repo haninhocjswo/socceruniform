@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.dto.CategoryForm;
@@ -17,6 +18,7 @@ import shop.soccerUniform.entity.enumtype.CategoryState;
 import shop.soccerUniform.service.CategoryService;
 import shop.soccerUniform.util.PageList;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +86,27 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/admin/category/register")
-    public String registerCategory(@ModelAttribute(value = "categoryForm") CategoryForm categoryForm) {
+    public String registerCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult) {
+
+        //글로벌에러
+        if(categoryForm.getDepth() != null && categoryForm.getParentId() != null) {
+            CategoryForm parent = categoryService.detailCategory(categoryForm.getParentId());
+            if(parent.getDepth() < 1) {
+                bindingResult.reject("minusParentDepth", "부모 뎁스는 1보다 작으면 안됩니다. 새로고침 부탁드립니다.");
+            }
+
+            if(categoryForm.getDepth() > 1) {
+                if(categoryForm.getDepth() - 1 != parent.getDepth()) {
+                    bindingResult.reject("mismatchParent", "상위카테고리의 뎁스와 매칭되지 않습니다.");
+                }
+            }
+        }
+
+        //필드 에러
+        if(bindingResult.hasErrors()) {
+            return "admin/category/categoryRegister";
+        }
+
         categoryService.saveCategory(categoryForm);
         return "redirect:/admin/categories";
     }
@@ -94,7 +116,8 @@ public class AdminCategoryController {
         Map<String, Object> ajaxMap = new HashMap<>();
         List<Category> parents = new ArrayList<>();
         if(childDepth > 1) {
-            parents = categoryService.findParents(childDepth);
+            int parentDepth = childDepth - 1;
+            parents = categoryService.findParents(parentDepth);
         }
 
         if(parents.size() > 0) {

@@ -5,12 +5,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import shop.soccerUniform.entity.Manager;
+import org.springframework.web.bind.annotation.PostMapping;
+import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
-import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.ItemService;
 import shop.soccerUniform.service.ManagerService;
 
@@ -32,6 +33,18 @@ public class AdminItemController {
 
     @GetMapping("/admin/item/{itemId}")
     public String item(@PathVariable(value = "itemId") Long itemId, Model model) {
+
         return "admin/item/itemForm";
+    }
+
+    @GetMapping("/admin/item/register")
+    public String itemRegisterForm(Model model) {
+        model.addAttribute("itemForm", new ItemForm());
+        return "admin/item/itemRegister";
+    }
+
+    @PostMapping("/admin/item/register")
+    public String itemRegister(@ModelAttribute ItemForm itemForm, BindingResult bindingResult) {
+        return "redirect:/admin/items";
     }
 }

@@ -24,10 +24,13 @@ public class MemberForm {
     @NotEmpty
     private String email;
 
+    @NotEmpty
     private UserState state;
 
+    @NotEmpty
     private Gender gender;
 
+    @NotEmpty
     private Grade grade;
 
     @NotEmpty

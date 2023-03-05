@@ -40,11 +40,19 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
     }
 
     @Override
-    public List<Category> findByDepth(Integer parentDepth) {
+    public List<Category> findByParentDepths(Integer parentDepth) {
         return queryFactory
                 .selectFrom(category)
                 .where(category.depth.eq(parentDepth))
                 .fetch();
+    }
+
+    @Override
+    public Category findByParentDepth(Long parentId) {
+        return queryFactory
+                .selectFrom(category)
+                .where(category.id.eq(parentId))
+                .fetchOne();
     }
 
     public List<CategoryForm> categoryList(CategorySearchForm categorySearchForm, Pageable pageable) {

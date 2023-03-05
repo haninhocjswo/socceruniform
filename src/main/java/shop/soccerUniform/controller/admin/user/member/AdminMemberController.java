@@ -30,7 +30,7 @@ public class AdminMemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/admin/members")
+    @GetMapping("categories")
     public String members(@ModelAttribute(name = "memberSearchForm") MemberSearchForm memberSearchForm, Model model,
                           @PageableDefault(size = 10, page = 0, sort = "memberId", direction = Sort.Direction.DESC) Pageable pageable) {
         memberSearchForm.setState(UserState.ABLE);

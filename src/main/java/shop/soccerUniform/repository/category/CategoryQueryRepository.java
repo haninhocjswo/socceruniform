@@ -12,5 +12,7 @@ public interface CategoryQueryRepository {
 
     public Page<CategoryForm> categories(CategorySearchForm categorySearchForm, Pageable pageable);
 
-    public List<Category> findByDepth(Integer parentDepth);
+    public List<Category> findByParentDepths(Integer parentDepth);
+
+    public Category findByParentDepth(Long parentId);
 }

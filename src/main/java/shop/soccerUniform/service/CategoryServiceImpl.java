@@ -89,11 +89,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<Category> findParents(Integer childDepth) {
-        if(childDepth == 1) {
-            return new ArrayList<Category>();
-        }
-        Integer parentDepth = childDepth - 1;
-        return categoryRepository.findByDepth(parentDepth);
+    public List<Category> findParents(Integer parentDepth) {
+        return categoryRepository.findByParentDepths(parentDepth);
     }
 }
