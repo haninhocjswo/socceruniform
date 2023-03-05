@@ -41,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     @Override
     public void editCategory(Long categoryId, CategoryForm categoryForm) {
+        System.out.println("CategoryServiceImpl.editCategory");
         Category category = categoryRepository.findById(categoryId).orElseThrow(
                 () -> {
                     throw new RuntimeException("해당 카테고리는 존재하지 않습니다.");
@@ -54,6 +55,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public CategoryForm detailCategory(Long categoryId) {
+        System.out.println("CategoryServiceImpl.detailCategory");
         Category category = categoryRepository.findById(categoryId).orElse(null);
         if(category == null) {
             throw new RuntimeException("해당 카테고리는 존재하지 않습니다.");
@@ -79,6 +81,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     @Override
     public void deleteCategory(Long categoryId) {
+        System.out.println("CategoryServiceImpl.deleteCategory");
         Category category = categoryRepository.findById(categoryId).orElse(null);
         if(category == null) {
             throw new RuntimeException("해당 카테고리는 존재하지 않습니다.");

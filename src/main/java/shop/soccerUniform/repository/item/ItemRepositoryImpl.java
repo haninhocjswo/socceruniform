@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -34,7 +35,9 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
 
     @Override
     public Page<ItemForm> items(ItemSearchForm itemSearchForm, Pageable pageable) {
-        return null;
+        List<ItemForm> items = itemList(itemSearchForm, pageable);
+        Long count = countItem(itemSearchForm, pageable);
+        return new PageImpl<>(items, pageable, count);
     }
 
     public List<ItemForm> itemList(ItemSearchForm itemSearchForm, Pageable pageable) {
@@ -57,6 +60,17 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageNumber())
                 .fetch();
+    }
+
+    public Long countItem(ItemSearchForm itemSearchForm, Pageable pageable) {
+        String searchKey = itemSearchForm.getSearchKey();
+        String searchValue = itemSearchForm.getSearchValue();
+
+        return queryFactory
+                .select(item.count())
+                .from(item)
+                .where(byText(searchKey, searchValue))
+                .fetchOne();
     }
 
     public BooleanExpression byText(String searchKey, String searchValue) {

@@ -1,6 +1,7 @@
 package shop.soccerUniform.controller.admin.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -14,8 +15,11 @@ import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
 import shop.soccerUniform.service.ItemService;
 import shop.soccerUniform.service.ManagerService;
+import shop.soccerUniform.util.PageList;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,7 +31,21 @@ public class AdminItemController {
     @GetMapping("/admin/items")
     public String items(@ModelAttribute(value = "itemSearchForm") ItemSearchForm itemSearchForm, @PageableDefault(size = 10, page = 0) Pageable pageable,
                         Model model) {
+        Page<ItemForm> items = itemService.items(itemSearchForm, pageable);
+        int currentPage = items.getNumber();
+        int totalPages = items.getTotalPages();
 
+        Map<String, Object> pagination = new HashMap<>();
+        List<Integer> pageList = PageList.getPageList(currentPage, totalPages);
+        pagination.put("totalElements", items.getTotalElements());
+        pagination.put("totalPages", totalPages);
+        pagination.put("currentPage", currentPage);
+        pagination.put("isFirst", items.isFirst());
+        pagination.put("isLast", items.isLast());
+        pagination.put("pageList", pageList);
+
+        model.addAttribute("items", items.getContent());
+        model.addAttribute("pagination", pagination);
         return "admin/item/items";
     }
 

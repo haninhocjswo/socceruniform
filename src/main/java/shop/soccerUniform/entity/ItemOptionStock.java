@@ -18,6 +18,10 @@ public class ItemOptionStock extends DateColumns {
     @Column(name = "ITEM_OPTION_STOCK", nullable = false)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FIRST_ITEM_OPTION_ID")
     private ItemOption firstItemOption;

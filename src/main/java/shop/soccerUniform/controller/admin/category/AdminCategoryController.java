@@ -40,11 +40,13 @@ public class AdminCategoryController {
         Map<String, Object> pagination = new HashMap<>();
         List<Integer> pageList = PageList.getPageList(currentPage, totalPages);
         pagination.put("totalElements", categories.getTotalElements());
-        pagination.put("totalPages", categories.getTotalPages());
+        pagination.put("totalPages", totalPages);
         pagination.put("currentPage", currentPage);
         pagination.put("isFirst", categories.isFirst());
         pagination.put("isLast", categories.isLast());
         pagination.put("pageList", pageList);
+
+        log.info("pagination={}", pagination.entrySet());
 
         model.addAttribute("categories", categories.getContent());
         model.addAttribute("pagination", pagination);
@@ -65,7 +67,13 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/admin/category/edit/{categoryId}")
-    public String editCategory(@PathVariable(value = "categoryId") Long categoryId, @ModelAttribute(value = "categoryForm") CategoryForm categoryForm) {
+    public String editCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult,
+                               @PathVariable(value = "categoryId") Long categoryId) {
+        log.info("/admin/category/edit/{categoryId}");
+        if(bindingResult.hasErrors()) {
+            return "admin/category/categoryForm";
+        }
+
         categoryService.editCategory(categoryId, categoryForm);
         return "redirect:/admin/categories";
     }
@@ -87,15 +95,10 @@ public class AdminCategoryController {
 
     @PostMapping("/admin/category/register")
     public String registerCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult) {
-
         //글로벌에러
         if(categoryForm.getDepth() != null && categoryForm.getParentId() != null) {
-            CategoryForm parent = categoryService.detailCategory(categoryForm.getParentId());
-            if(parent.getDepth() < 1) {
-                bindingResult.reject("minusParentDepth", "부모 뎁스는 1보다 작으면 안됩니다. 새로고침 부탁드립니다.");
-            }
-
             if(categoryForm.getDepth() > 1) {
+                CategoryForm parent = categoryService.detailCategory(categoryForm.getParentId());
                 if(categoryForm.getDepth() - 1 != parent.getDepth()) {
                     bindingResult.reject("mismatchParent", "상위카테고리의 뎁스와 매칭되지 않습니다.");
                 }
@@ -108,6 +111,7 @@ public class AdminCategoryController {
         }
 
         categoryService.saveCategory(categoryForm);
+
         return "redirect:/admin/categories";
     }
 

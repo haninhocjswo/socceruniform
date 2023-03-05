@@ -7,6 +7,9 @@ import shop.soccerUniform.entity.enumtype.OptionType;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -30,6 +33,12 @@ public class Item extends DateColumns {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemOption> itemOptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item")
+    public List<ItemOptionStock> itemOptionStocks = new ArrayList<>();
 
     private String manufacturer;
 
