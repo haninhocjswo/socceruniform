@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.dto.CategoryForm;
 import shop.soccerUniform.entity.dto.CategorySearchForm;
+import shop.soccerUniform.entity.enumtype.CategoryState;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface CategoryQueryRepository {
     public List<Category> findByParentDepths(Integer parentDepth);
 
     public Category findByParentDepth(Long parentId);
+
+    public List<Category> findByCategoriesByState(CategoryState categoryState);
 }

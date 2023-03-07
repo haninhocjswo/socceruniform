@@ -21,5 +21,5 @@ public interface ManagerService {
 
     public Page<ManagerDTO> managers(ManagerSearchForm managerSearchForm, Pageable pageable);
 
-    public List<Manager> findManagerState(UserState state);
+    public List<Manager> findManagersByState(UserState state);
 }

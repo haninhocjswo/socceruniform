@@ -2,6 +2,7 @@ package shop.soccerUniform.repository.category;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.QCategory;
 import shop.soccerUniform.entity.dto.CategoryForm;
 import shop.soccerUniform.entity.dto.CategorySearchForm;
+import shop.soccerUniform.entity.enumtype.CategoryState;
 
 import javax.persistence.EntityManager;
 
@@ -53,6 +55,14 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
                 .selectFrom(category)
                 .where(category.id.eq(parentId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<Category> findByCategoriesByState(CategoryState categoryState) {
+        return queryFactory
+                .selectFrom(category)
+                .where(category.state.eq(categoryState))
+                .fetch();
     }
 
     public List<CategoryForm> categoryList(CategorySearchForm categorySearchForm, Pageable pageable) {

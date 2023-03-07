@@ -1,6 +1,7 @@
 package shop.soccerUniform.controller.admin.item;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -11,8 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import shop.soccerUniform.entity.Category;
+import shop.soccerUniform.entity.Manager;
 import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
+import shop.soccerUniform.entity.enumtype.CategoryState;
+import shop.soccerUniform.entity.enumtype.UserState;
+import shop.soccerUniform.service.CategoryService;
 import shop.soccerUniform.service.ItemService;
 import shop.soccerUniform.service.ManagerService;
 import shop.soccerUniform.util.PageList;
@@ -21,12 +27,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class AdminItemController {
 
     private final ItemService itemService;
     private final ManagerService managerService;
+
+    private final CategoryService categoryService;
 
     @GetMapping("/admin/items")
     public String items(@ModelAttribute(value = "itemSearchForm") ItemSearchForm itemSearchForm, @PageableDefault(size = 10, page = 0) Pageable pageable,
@@ -56,8 +65,11 @@ public class AdminItemController {
     }
 
     @GetMapping("/admin/item/register")
-    public String itemRegisterForm(Model model) {
-        model.addAttribute("itemForm", new ItemForm());
+    public String itemRegisterForm(@ModelAttribute(name = "itemForm") ItemForm itemForm, Model model) {
+        List<Manager> ableManagers = managerService.findManagersByState(UserState.ABLE);
+        List<Category> ableCategories = categoryService.findCategoriesByState(CategoryState.ABLE);
+        model.addAttribute("managers", ableManagers);
+        model.addAttribute("categories", ableCategories);
         return "admin/item/itemRegister";
     }
 

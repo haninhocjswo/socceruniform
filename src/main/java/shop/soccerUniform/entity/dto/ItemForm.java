@@ -21,29 +21,30 @@ public class ItemForm {
     @NotEmpty(message = "상품명은 필수값입니다.")
     private String name;
 
-    @NotEmpty(message = "입점업체를 선택해주세요.")
-    private Manager manager;
+    @NotNull(message = "가격은 필수값입니다.")
+    private Integer price;
 
-    @NotEmpty(message = "카테고리를 선택해주세요.")
-    private Category category;
+    @NotNull(message = "입점업체를 선택해주세요.")
+    private Long managerId;
 
-    private List<ItemOption> itemOptions = new ArrayList<>();
-
-    private List<ItemOptionStock> itemOptionStocks = new ArrayList<>();
+    //@NotNull(message = "카테고리를 선택해주세요.")
+    private Long categoryId;
 
     @NotEmpty(message = "제조사는 필수값입니다.")
     private String manufacturer;
 
+    @NotEmpty(message = "원산지는 필수값입니다.")
     private String origin;
-
-    private String description;
 
     @NotEmpty(message = "상품옵션 유형을 선택해주세요.")
     private OptionType optionType;
 
-    @NotNull(message = "가격은 필수값입니다.")
-    private Integer price;
-
     @NotEmpty(message = "상품상태를 선택해주세요.")
     private ItemState state;
+
+    private String description;
+
+    private List<ItemOption> itemOptions = new ArrayList<>();
+
+    private List<ItemOptionStock> itemOptionStocks = new ArrayList<>();
 }

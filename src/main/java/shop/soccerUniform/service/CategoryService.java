@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.dto.CategoryForm;
 import shop.soccerUniform.entity.dto.CategorySearchForm;
+import shop.soccerUniform.entity.enumtype.CategoryState;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface CategoryService {
     public void deleteCategory(Long categoryId);
     public List<Category> findParents(Integer parentDepth);
 
+    public List<Category> findCategoriesByState(CategoryState categoryState);
 }

@@ -28,6 +28,8 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QItem item;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
 
@@ -57,6 +59,7 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
     public QItemOptionStock(Class<? extends ItemOptionStock> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.firstItemOption = inits.isInitialized("firstItemOption") ? new QItemOption(forProperty("firstItemOption"), inits.get("firstItemOption")) : null;
+        this.item = inits.isInitialized("item") ? new QItem(forProperty("item"), inits.get("item")) : null;
         this.secondItemOption = inits.isInitialized("secondItemOption") ? new QItemOption(forProperty("secondItemOption"), inits.get("secondItemOption")) : null;
     }
 

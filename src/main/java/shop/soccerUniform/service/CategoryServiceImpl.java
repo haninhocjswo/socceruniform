@@ -95,4 +95,9 @@ public class CategoryServiceImpl implements CategoryService{
     public List<Category> findParents(Integer parentDepth) {
         return categoryRepository.findByParentDepths(parentDepth);
     }
+
+    @Override
+    public List<Category> findCategoriesByState(CategoryState categoryState) {
+        return categoryRepository.findByCategoriesByState(categoryState);
+    }
 }

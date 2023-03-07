@@ -25,7 +25,7 @@
             <div class="card shadow-lg border-0 rounded-lg mt-5">
               <div class="card-header"><h3 class="text-center font-weight-light my-4">상품등록</h3></div>
               <div class="card-body">
-                <form th:object="${itemForm}" method="post" th:action="@{/admin/item/register">
+                <form th:object="${itemForm}" method="post" th:action="@{/admin/item/register}">
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
@@ -35,8 +35,68 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
+                        <input class="form-control" id="price" th:field="*{price}" type="number" />
+                        <label for="price">가격</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <input class="form-control" id="origin" th:field="*{origin}" type="text" />
+                        <label for="origin">원산지</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
                         <input class="form-control" id="manufacturer" th:field="*{manufacturer}" type="text" />
                         <label for="manufacturer">제조사</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <select class="form-control" id="managerId" name="managerId">
+                          <option th:each="manager : ${managers}"
+                                  th:value="${manager.id}"
+                                  th:text="${manager.username}">입점업체</option>
+                        </select>
+                        <label for="managerId">입점업체</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <select class="form-control" id="categoryId" name="categoryId">
+                          <option th:each="category : ${categories}"
+                                  th:value="${category.id}"
+                                  th:text="${category.name}"></option>
+                        </select>
+                        <label for="categoryId">카테고리</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <select class="form-control" id="optionType" name="optionType">
+                          <option th:each="optionType : ${T(shop.soccerUniform.entity.enumtype.OptionType).values}"
+                                  th:text="${optionType}"
+                                  th:value="${optionType}"
+                                  th:selected="${optionType} == ${itemForm.optionType}">옵션타입</option>
+                        </select>
+                        <label for="optionType">옵션타입</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <select class="form-control" id="state" name="state">
+                          <option th:each="itemState : ${T(shop.soccerUniform.entity.enumtype.ItemState).values}"
+                                  th:text="${itemState}"
+                                  th:value="${itemState}"
+                                  th:selected="${itemState} == ${itemForm.state}">상태</option>
+                        </select>
+                        <label for="state">상태</label>
                       </div>
                     </div>
                   </div>

@@ -42,7 +42,7 @@ public class ManagerRepositoryImpl implements ManagerQueryRepository {
     }
 
     @Override
-    public List<Manager> findManagerState(UserState state) {
+    public List<Manager> findManagersByState(UserState state) {
         return queryFactory
                 .selectFrom(manager)
                 .where(manager.state.eq(state))

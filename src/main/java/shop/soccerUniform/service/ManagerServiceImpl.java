@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.Manager;
-import shop.soccerUniform.entity.Member;
 import shop.soccerUniform.entity.dto.ManagerDTO;
 import shop.soccerUniform.entity.dto.ManagerSearchForm;
 import shop.soccerUniform.entity.enumtype.Role;
@@ -90,7 +89,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public List<Manager> findManagerState(UserState state) {
-        return managerRepository.findManagerState(state);
+    public List<Manager> findManagersByState(UserState state) {
+        return managerRepository.findManagersByState(state);
     }
 }

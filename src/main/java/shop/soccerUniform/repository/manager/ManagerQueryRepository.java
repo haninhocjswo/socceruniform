@@ -12,5 +12,5 @@ import java.util.List;
 public interface ManagerQueryRepository {
     public Page<ManagerDTO> managers(ManagerSearchForm managerSearchForm, Pageable pageable);
 
-    List<Manager> findManagerState(UserState state);
+    List<Manager> findManagersByState(UserState state);
 }

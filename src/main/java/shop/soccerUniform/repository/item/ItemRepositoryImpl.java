@@ -3,6 +3,7 @@ package shop.soccerUniform.repository.item;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static shop.soccerUniform.entity.QItem.item;
 
+@Slf4j
 @Repository
 public class ItemRepositoryImpl implements  ItemQueryRepository {
 
@@ -44,6 +46,8 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
         String searchKey = itemSearchForm.getSearchKey();
         String searchValue = itemSearchForm.getSearchValue();
 
+        log.info("pageable.getPageNumber()={}", pageable.getPageNumber());
+
         return queryFactory
                 .select(Projections.fields(ItemForm.class,
                         item.id.as("itemId"),
@@ -58,7 +62,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                 .from(item)
                 .where(byText(searchKey, searchValue))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageNumber())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 

@@ -30,6 +30,10 @@ public class QItem extends EntityPathBase<Item> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<ItemOption, QItemOption> itemOptions = this.<ItemOption, QItemOption>createList("itemOptions", ItemOption.class, QItemOption.class, PathInits.DIRECT2);
+
+    public final ListPath<ItemOptionStock, QItemOptionStock> itemOptionStocks = this.<ItemOptionStock, QItemOptionStock>createList("itemOptionStocks", ItemOptionStock.class, QItemOptionStock.class, PathInits.DIRECT2);
+
     public final QManager manager;
 
     public final StringPath manufacturer = createString("manufacturer");
