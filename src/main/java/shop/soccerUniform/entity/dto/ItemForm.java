@@ -27,8 +27,14 @@ public class ItemForm {
     @NotNull(message = "입점업체를 선택해주세요.")
     private Long managerId;
 
-    //@NotNull(message = "카테고리를 선택해주세요.")
-    private Long categoryId;
+    @NotNull(message = "뎁스1 카테고리를 선택해주세요.")
+    private Long depthOneCategoryId;
+
+    @NotNull(message = "뎁스2 카테고리를 선택해주세요.")
+    private Long depthTwoCategoryId;
+
+    @NotNull(message = "뎁스3 카테고리를 선택해주세요.")
+    private Long depthThreeCategoryId;
 
     @NotEmpty(message = "제조사는 필수값입니다.")
     private String manufacturer;

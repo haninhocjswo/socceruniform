@@ -1,16 +1,6 @@
 <!DOCTYPE html >
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <title>Tables - SB Admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-  <link href="../../css/admin/styles.css" rel="stylesheet" />
-  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<head th:replace="/admin/fragment/adminHeader.html :: adminHeader">
 </head>
 <body class="sb-nav-fixed">
 <nav th:replace="/admin/fragment/adminTop.html :: adminTop"></nav>
@@ -155,7 +145,6 @@
                 url: '/admin/item/delete/' + id,
                 type: 'POST',
                 data: {'itemId': id},
-                contentType: 'application/json; charset=UTF-8',
                 dataType: 'json',
                 success: function(data) {
                     let result = data['result'];

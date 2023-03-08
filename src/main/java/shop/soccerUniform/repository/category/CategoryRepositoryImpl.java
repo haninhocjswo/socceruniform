@@ -50,6 +50,14 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
     }
 
     @Override
+    public List<Category> findByChildDepths(Long categoryId) {
+        return queryFactory
+                .selectFrom(category)
+                .where(category.parent.id.eq(categoryId))
+                .fetch();
+    }
+
+    @Override
     public Category findByParentDepth(Long parentId) {
         return queryFactory
                 .selectFrom(category)

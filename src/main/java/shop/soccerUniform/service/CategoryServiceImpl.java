@@ -97,6 +97,11 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    public List<Category> findChildren(Long categoryId) {
+        return categoryRepository.findByChildDepths(categoryId);
+    }
+
+    @Override
     public List<Category> findCategoriesByState(CategoryState categoryState) {
         return categoryRepository.findByCategoriesByState(categoryState);
     }

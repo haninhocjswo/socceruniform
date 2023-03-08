@@ -15,6 +15,8 @@ public interface CategoryQueryRepository {
 
     public List<Category> findByParentDepths(Integer parentDepth);
 
+    public List<Category> findByChildDepths(Long categoryId);
+
     public Category findByParentDepth(Long parentId);
 
     public List<Category> findByCategoriesByState(CategoryState categoryState);

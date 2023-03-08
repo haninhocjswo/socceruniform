@@ -116,7 +116,7 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/admin/category/parent_ajax")
-    public ResponseEntity<Map<String, Object>> parent_ajax(@RequestParam(value = "childDepth", required = false) Integer childDepth) {
+    public ResponseEntity<Map<String, Object>> parent_ajax(@RequestParam(value = "childDepth") Integer childDepth) {
         Map<String, Object> ajaxMap = new HashMap<>();
         List<Category> parents = new ArrayList<>();
         if(childDepth > 1) {
@@ -131,6 +131,23 @@ public class AdminCategoryController {
             ajaxMap.put("result", false);
             ajaxMap.put("message", "상위 카테고리가 존재하지 않습니다.");
         }
+        ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+        return responseEntity;
+    }
+
+    @PostMapping("/admin/category/findByChildDepths_ajax")
+    public ResponseEntity<Map<String, Object>> findByChildDepthsAjax(@RequestParam Long categoryId) {
+        Map<String, Object> ajaxMap = new HashMap<>();
+        List<Category> children = categoryService.findChildren(categoryId);
+
+        if(children.size() > 0) {
+            ajaxMap.put("result", true);
+            ajaxMap.put("children", children);
+        } else {
+            ajaxMap.put("result", false);
+            ajaxMap.put("message", "하위 카테고리가 존재하지 않습니다.");
+        }
+
         ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
         return responseEntity;
     }
