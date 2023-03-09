@@ -17,6 +17,11 @@
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                             <div class="card-body">
                                 <form id="categoryForm" th:object="${categoryForm}" method="post" th:action="@{/admin/category/edit/{categoryId}(categoryId=${categoryForm.categoryId})}">
+                                    <div class="row mb-3" th:if="${#fields.hasGlobalErrors()}">
+                                        <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">
+                                            글로벌 에러
+                                        </p>
+                                    </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
@@ -27,7 +32,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating">
-                                                <select class="form-control" id="depth" th:field="*{depth}" th:errorclass="field-error" type="number" disabled>
+                                                <select class="form-control" id="depth" th:field="*{depth}" th:errorclass="field-error" type="number" readonly >
                                                     <option value="1" th:selected="${categoryForm.depth} == 1">1</option>
                                                     <option value="2" th:selected="${categoryForm.depth} == 2">2</option>
                                                     <option value="3" th:selected="${categoryForm.depth} == 3">3</option>
@@ -65,7 +70,7 @@
                                         <div class="col-md-6" th:if="${#lists.isEmpty(parents)}">
                                             <div class="form-floating mb-3 mb-md-0">
                                                 <select class="form-control" th:field="*{parentId}" th:errorclass="field-error">
-                                                    <option value="">최상위</option>
+                                                    <option value="0">최상위</option>
                                                 </select>
                                                 <label for="parentId">선택해주세요.</label>
                                                 <div class="field-error" th:errors="*{parentId}">상위카테고리에러</div>
@@ -90,9 +95,9 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="../../js/admin/scripts.js"></script>
+<script src="../../../js/admin/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-<script src="../../js/admin/datatables-simple-demo.js"></script>
+<script src="../../../js/admin/datatables-simple-demo.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
 

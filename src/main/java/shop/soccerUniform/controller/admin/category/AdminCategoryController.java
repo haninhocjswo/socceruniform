@@ -69,7 +69,14 @@ public class AdminCategoryController {
     @PostMapping("/admin/category/edit/{categoryId}")
     public String editCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult,
                                @PathVariable(value = "categoryId") Long categoryId) {
+        //글로벌에러
+        if(categoryForm.getDepth() == 1) {
+            bindingResult.reject("depthError", "뎁스가 1인 카테고리는 수정을 할 수 없습니다.");
+        }
+
+        //필드에러
         if(bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult);
             return "admin/category/categoryForm";
         }
 
@@ -94,7 +101,10 @@ public class AdminCategoryController {
 
     @PostMapping("/admin/category/register")
     public String registerCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult) {
-        log.info("parentId={}", categoryForm.getParentId());
+        //글로벌 에러
+        if(categoryForm.getDepth() <= 1) {
+            bindingResult.reject("depthError", "뎁스는 1보다 커야합니다.");
+        }
 
         //필드 에러
         if(bindingResult.hasErrors()) {
