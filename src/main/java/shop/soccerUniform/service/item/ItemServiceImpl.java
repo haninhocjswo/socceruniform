@@ -1,4 +1,4 @@
-package shop.soccerUniform.service;
+package shop.soccerUniform.service.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

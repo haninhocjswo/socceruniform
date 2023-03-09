@@ -30,12 +30,16 @@ public class ItemOptionStock extends DateColumns {
     @JoinColumn(name = "SECOND_ITEM_OPTION_ID")
     private ItemOption secondItemOption;
 
+    @Column(name = "ADD_PRICE", nullable = false)
+    private Integer addPrice;
+
     @Column(nullable = false)
     private Integer stock;
 
-    public ItemOptionStock(ItemOption firstItemOption, ItemOption secondItemOption, Integer stock) {
+    public ItemOptionStock(ItemOption firstItemOption, ItemOption secondItemOption, Integer addPrice, Integer stock) {
         this.firstItemOption = firstItemOption;
         this.secondItemOption = secondItemOption;
+        this.addPrice = addPrice;
         this.stock = stock;
     }
 }

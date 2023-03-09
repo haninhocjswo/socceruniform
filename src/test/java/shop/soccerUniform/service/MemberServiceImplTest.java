@@ -12,6 +12,7 @@ import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.enumtype.*;
 import shop.soccerUniform.repository.member.MemberRepository;
 import shop.soccerUniform.repository.point.PointRepository;
+import shop.soccerUniform.service.member.MemberService;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;

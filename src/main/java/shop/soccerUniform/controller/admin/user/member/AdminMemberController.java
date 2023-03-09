@@ -15,10 +15,9 @@ import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
 import shop.soccerUniform.entity.enumtype.UserState;
-import shop.soccerUniform.service.MemberService;
+import shop.soccerUniform.service.member.MemberService;
 import shop.soccerUniform.util.PageList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

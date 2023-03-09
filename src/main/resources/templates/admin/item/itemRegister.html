@@ -20,80 +20,95 @@
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
-                        <input class="form-control" id="name" th:field="*{name}" type="text" />
+                        <input class="form-control" id="name" th:field="*{name}" th:errorclass="field-error" type="text" />
                         <label for="name">상품명</label>
+                        <div class="field-error" th:errors="*{name}">상품명에러</div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
-                        <input class="form-control" id="price" th:field="*{price}" type="number" />
+                        <input class="form-control" id="price" th:field="*{price}" th:errorclass="field-error" type="number" />
                         <label for="price">가격</label>
+                        <div class="field-error" th:errors="*{price}">가격에러</div>
                       </div>
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
-                        <input class="form-control" id="origin" th:field="*{origin}" type="text" />
+                        <input class="form-control" id="origin" th:field="*{origin}" th:errorclass="field-error" type="text" />
                         <label for="origin">원산지</label>
+                        <div class="field-error" th:errors="*{origin}">원산지에러</div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
-                        <input class="form-control" id="manufacturer" th:field="*{manufacturer}" type="text" />
+                        <input class="form-control" id="manufacturer" th:field="*{manufacturer}" th:errorclass="field-error" type="text" />
                         <label for="manufacturer">제조사</label>
+                        <div class="field-error" th:errors="*{manufacturer}">제조사에러</div>
                       </div>
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
-                        <select class="form-control" id="managerId" name="managerId">
+                        <select class="form-control" id="managerId" name="managerId" th:field="*{managerId}" th:errorclass="field-error">
                           <option th:each="manager : ${managers}"
                                   th:value="${manager.id}"
                                   th:text="${manager.username}">입점업체</option>
                         </select>
                         <label for="managerId">입점업체</label>
+                        <div class="field-error" th:errors="*{managerId}">입접업체에러</div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
-                        <select class="form-control" id="categoryId" name="categoryId">
+                        <select class="form-control" id="categoryId" name="categoryId" th:filed="*{categoryId}" th:errorclass="field-error">
+                          <option value="0" >선택해주세요</option>
                           <option th:each="category : ${categories}"
                                   th:value="${category.id}"
                                   th:text="${category.description}">카테고리</option>
                         </select>
                         <label for="categoryId">카테고리</label>
+                        <div class="field-error" th:errors="*{categoryId}">카테고리에러</div>
                       </div>
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
-                        <select class="form-control" id="optionType" name="optionType">
+                        <select class="form-control" id="optionType" name="optionType" th:field="*{optionType}" th:errorclass="field-error">
+                          <option value="">선택해주세요</option>
                           <option th:each="optionType : ${T(shop.soccerUniform.entity.enumtype.OptionType).values}"
                                   th:text="${optionType}"
                                   th:value="${optionType}">옵션타입</option>
                         </select>
                         <label for="optionType">옵션타입</label>
+                        <div class="field-error" th:errors="*{optionType}">옵션타입에러</div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
-                        <select class="form-control" id="state" name="state">
+                        <select class="form-control" id="state" name="state" th:field="*{state}" th:errorclass="field-error">
                           <option th:each="itemState : ${T(shop.soccerUniform.entity.enumtype.ItemState).values}"
                                   th:text="${itemState}"
                                   th:value="${itemState}">상태</option>
                         </select>
                         <label for="state">상태</label>
+                        <div class="field-error" th:errors="*{state}">상태에러</div>
                       </div>
                     </div>
+                  </div>
+                  <div class="row mb-3">
+<!--                    <p th:text="${itemForm.optionType}">ssss</p>-->
+<!--                    <p th:if="${itemForm.optionType} == 'SINGLE'">있다</p>-->
+<!--                    <p th:unless="${itemForm.optionType}  == 'SINGLE'">없다</p>-->
                   </div>
                   <div class="mt-4 mb-0">
                     <div class="d-flex justify-content-center">
                       <input type="submit" class="btn btn-warning" value="수정" />
                       &nbsp;
-                      <a class="btn btn-secondary" href="/admin/managers">목록</a>
+                      <a class="btn btn-secondary" href="/admin/items">목록</a>
                     </div>
                   </div>
                 </form>

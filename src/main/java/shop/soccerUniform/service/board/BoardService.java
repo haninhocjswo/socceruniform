@@ -1,4 +1,4 @@
-package shop.soccerUniform.service;
+package shop.soccerUniform.service.board;
 
 import shop.soccerUniform.entity.dto.BoardForm;
 import shop.soccerUniform.entity.dto.BoardSearchForm;

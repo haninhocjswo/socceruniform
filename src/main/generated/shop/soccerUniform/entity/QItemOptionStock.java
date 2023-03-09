@@ -24,6 +24,8 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
 
     public final QDateColumns _super = new QDateColumns(this);
 
+    public final NumberPath<Integer> addPrice = createNumber("addPrice", Integer.class);
+
     public final QItemOption firstItemOption;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

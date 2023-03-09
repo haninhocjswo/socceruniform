@@ -2,8 +2,6 @@ package shop.soccerUniform.controller.front.board;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import shop.soccerUniform.entity.dto.BoardForm;
 import shop.soccerUniform.entity.dto.BoardSearchForm;
 import shop.soccerUniform.entity.enumtype.BoardType;
-import shop.soccerUniform.service.BoardService;
+import shop.soccerUniform.service.board.BoardService;
 
 import java.util.List;
 

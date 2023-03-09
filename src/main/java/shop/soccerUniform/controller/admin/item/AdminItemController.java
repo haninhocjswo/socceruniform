@@ -16,13 +16,13 @@ import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.Manager;
 import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
-import shop.soccerUniform.entity.enumtype.CategoryState;
 import shop.soccerUniform.entity.enumtype.UserState;
-import shop.soccerUniform.service.CategoryService;
-import shop.soccerUniform.service.ItemService;
-import shop.soccerUniform.service.ManagerService;
+import shop.soccerUniform.service.category.CategoryService;
+import shop.soccerUniform.service.item.ItemService;
+import shop.soccerUniform.service.manager.ManagerService;
 import shop.soccerUniform.util.PageList;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,15 +66,28 @@ public class AdminItemController {
 
     @GetMapping("/admin/item/register")
     public String itemRegisterForm(@ModelAttribute(name = "itemForm") ItemForm itemForm, Model model) {
-        List<Manager> ableManagers = managerService.findManagersByState(UserState.ABLE);
+        List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
         List<Category> categories = categoryService.findByDepths(3);
-        model.addAttribute("managers", ableManagers);
+
+        model.addAttribute("managers", managers);
         model.addAttribute("categories", categories);
         return "admin/item/itemRegister";
     }
 
     @PostMapping("/admin/item/register")
-    public String itemRegister(@ModelAttribute ItemForm itemForm, BindingResult bindingResult) {
+    public String itemRegister(@Valid @ModelAttribute ItemForm itemForm, BindingResult bindingResult, Model model) {
+
+        //필드에러
+        if(bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult);
+            List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
+            List<Category> categories = categoryService.findByDepths(3);
+
+            model.addAttribute("managers", managers);
+            model.addAttribute("categories", categories);
+            return "admin/item/itemRegister";
+        }
+
         return "redirect:/admin/items";
     }
 }

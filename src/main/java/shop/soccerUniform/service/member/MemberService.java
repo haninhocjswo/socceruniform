@@ -1,4 +1,4 @@
-package shop.soccerUniform.service;
+package shop.soccerUniform.service.member;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

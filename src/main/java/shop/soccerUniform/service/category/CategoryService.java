@@ -1,4 +1,4 @@
-package shop.soccerUniform.service;
+package shop.soccerUniform.service.category;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +15,6 @@ public interface CategoryService {
     public CategoryForm detailCategory(Long categoryId);
     public Page<CategoryForm> categories(CategorySearchForm categorySearchForm, Pageable pageable);
     public void deleteCategory(Long categoryId);
-    public List<Category> findByDepths(Integer parentDepth);
+    public List<Category> findByDepths(Integer depth);
     public List<Category> findChildren(Long categoryId);
 }

@@ -1,4 +1,4 @@
-package shop.soccerUniform.service;
+package shop.soccerUniform.service.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +19,7 @@ import shop.soccerUniform.repository.member.MemberRepository;
 import shop.soccerUniform.repository.point.PointRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

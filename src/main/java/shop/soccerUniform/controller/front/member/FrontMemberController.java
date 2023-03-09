@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.dto.MemberForm;
-import shop.soccerUniform.service.MemberService;
+import shop.soccerUniform.service.member.MemberService;
 
 @Controller
 @RequiredArgsConstructor

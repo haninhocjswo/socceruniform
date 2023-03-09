@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.dto.ManagerDTO;
 import shop.soccerUniform.entity.dto.ManagerSearchForm;
-import shop.soccerUniform.repository.manager.ManagerRepository;
-import shop.soccerUniform.service.ManagerService;
+import shop.soccerUniform.service.manager.ManagerService;
 import shop.soccerUniform.util.PageList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

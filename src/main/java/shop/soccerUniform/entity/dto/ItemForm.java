@@ -8,6 +8,8 @@ import shop.soccerUniform.entity.Manager;
 import shop.soccerUniform.entity.enumtype.ItemState;
 import shop.soccerUniform.entity.enumtype.OptionType;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class ItemForm {
 
     private Long itemId;
 
-    @NotEmpty(message = "상품명은 필수값입니다.")
+    @NotBlank(message = "상품명은 필수값입니다.")
     private String name;
 
     @NotNull(message = "가격은 필수값입니다.")
@@ -28,18 +30,19 @@ public class ItemForm {
     private Long managerId;
 
     @NotNull(message = "카테고리는 필수값입니다.")
+    @Min(value = 1, message = "카테고리를 선택해주세요.")
     private Long categoryId;
 
-    @NotEmpty(message = "제조사는 필수값입니다.")
+    @NotBlank(message = "제조사는 필수값입니다.")
     private String manufacturer;
 
-    @NotEmpty(message = "원산지는 필수값입니다.")
+    @NotBlank(message = "원산지는 필수값입니다.")
     private String origin;
 
-    @NotEmpty(message = "상품옵션 유형을 선택해주세요.")
+    @NotNull(message = "상품옵션 유형을 선택해주세요.")
     private OptionType optionType;
 
-    @NotEmpty(message = "상품상태를 선택해주세요.")
+    @NotNull(message = "상품상태를 선택해주세요.")
     private ItemState state;
 
     private List<ItemOption> itemOptions = new ArrayList<>();

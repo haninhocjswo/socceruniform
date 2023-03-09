@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.dto.CategoryForm;
 import shop.soccerUniform.entity.dto.CategorySearchForm;
-import shop.soccerUniform.entity.enumtype.CategoryState;
-import shop.soccerUniform.service.CategoryService;
+import shop.soccerUniform.service.category.CategoryService;
 import shop.soccerUniform.util.PageList;
 
 import javax.validation.Valid;
