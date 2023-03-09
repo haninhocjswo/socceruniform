@@ -58,28 +58,12 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
-                        <select class="form-control" id="depthOneCategoryId" name="depthOneCategoryId" onchange="changeDepthSelector(this.value)">
+                        <select class="form-control" id="categoryId" name="categoryId">
                           <option th:each="category : ${categories}"
                                   th:value="${category.id}"
-                                  th:text="${category.name}">카테고리</option>
+                                  th:text="${category.description}">카테고리</option>
                         </select>
-                        <label for="depthOneCategoryId">카테고리(뎁스1)</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col-md-6" id="depth2" style="display:none;">
-                      <div class="form-floating">
-                        <select class="form-control" id="depthTwoCategoryId" name="depthTwoCategoryId" onchange="changeDepthSelector(this.value)">
-                        </select>
-                        <label for="depthTwoCategoryId">카테고리(뎁스2)</label>
-                      </div>
-                    </div>
-                    <div class="col-md-6" id="depth3" style="display:none;">
-                      <div class="form-floating">
-                        <select class="form-control" id="depthThreeCategoryId" name="depthThreeCategoryId" onchange="changeDepthSelector(this.value)">
-                        </select>
-                        <label for="depthThreeCategoryId">카테고리(뎁스3)</label>
+                        <label for="categoryId">카테고리</label>
                       </div>
                     </div>
                   </div>
@@ -89,8 +73,7 @@
                         <select class="form-control" id="optionType" name="optionType">
                           <option th:each="optionType : ${T(shop.soccerUniform.entity.enumtype.OptionType).values}"
                                   th:text="${optionType}"
-                                  th:value="${optionType}"
-                                  th:selected="${optionType} == ${itemForm.optionType}">옵션타입</option>
+                                  th:value="${optionType}">옵션타입</option>
                         </select>
                         <label for="optionType">옵션타입</label>
                       </div>
@@ -100,8 +83,7 @@
                         <select class="form-control" id="state" name="state">
                           <option th:each="itemState : ${T(shop.soccerUniform.entity.enumtype.ItemState).values}"
                                   th:text="${itemState}"
-                                  th:value="${itemState}"
-                                  th:selected="${itemState} == ${itemForm.state}">상태</option>
+                                  th:value="${itemState}">상태</option>
                         </select>
                         <label for="state">상태</label>
                       </div>
@@ -130,46 +112,7 @@
 <script src="../../js/admin/datatables-simple-demo.js"></script>
 <script th:inline="javascript">
   /*<![CDATA[*/
-  function changeDepthSelector(id) {
-    $('#depth2').hide();
-    $('#depth3').hide();
 
-    $.ajax({
-      url: '/admin/category/findByChildDepths_ajax',
-      type: 'POST',
-      data: {'categoryId': id},
-      dataType: 'json',
-      success: function(data) {
-          const result = data['result'];
-          if(result) {
-            const children = data['children'];
-            let addOption = '';
-            let childDepth = '';
-            for(let i = 0; i < children.length; i++) {
-              addOption += '<option value="' + children[i].id + '">' + children[i].name + '</option>';
-              childDepth = children[i].depth;
-            }
-
-            if(childDepth == 2) {
-              $('#depth2').show();
-              $('#depth3').hide();
-              $('#depthTwoCategoryId').empty();
-              $('#depthTwoCategoryId').append(addOption);
-            } else if(childDepth == 3) {
-              $('#depth2').show();
-              $('#depth3').show();
-              $('#depthThreeCategoryId').empty();
-              $('#depthThreeCategoryId').append(addOption);
-            }
-          } else {
-
-          }
-      },
-      error: function(xhr, status, error) {
-          alert("에러가 발생하였습니다.");
-      }
-    });
-  }
   /*]]>*/
 </script>
 </body>

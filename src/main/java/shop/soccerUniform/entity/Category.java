@@ -25,6 +25,9 @@ public class Category extends DateColumns {
     private String name;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
     private Integer depth;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -35,19 +38,23 @@ public class Category extends DateColumns {
     @Column(nullable = false)
     private CategoryState state;
 
-    public Category(String name, Integer depth, Category parent, CategoryState state) {
+    public Category(String name, Integer depth, Category parent, CategoryState state, String description) {
         this.name = name;
         this.depth = depth;
         if(depth > 1) {
             this.parent = parent;
         }
         this.state = state;
+        this.description = description;
     }
 
     public void editCategory(String name, Category parent, CategoryState state) {
         if(this.name != name && StringUtils.hasText(name)) this.name = name;
         if(this.parent != parent) this.parent = parent;
         if(this.state != state && state != null) this.state = state;
+        if(this.name != name || this.parent != parent) {
+            this.description = parent.getDescription() + "/" + name;
+        }
     }
 
     public void delCategory() {

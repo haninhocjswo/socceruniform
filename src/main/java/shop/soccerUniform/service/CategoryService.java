@@ -15,7 +15,6 @@ public interface CategoryService {
     public CategoryForm detailCategory(Long categoryId);
     public Page<CategoryForm> categories(CategorySearchForm categorySearchForm, Pageable pageable);
     public void deleteCategory(Long categoryId);
-    public List<Category> findParents(Integer parentDepth);
+    public List<Category> findByDepths(Integer parentDepth);
     public List<Category> findChildren(Long categoryId);
-    public List<Category> findCategoriesByState(CategoryState categoryState);
 }

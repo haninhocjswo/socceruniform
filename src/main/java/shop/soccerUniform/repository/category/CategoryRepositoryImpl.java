@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static shop.soccerUniform.entity.QCategory.category;
 
+@Slf4j
 @Repository
 public class CategoryRepositoryImpl implements CategoryQueryRepository {
 
@@ -42,10 +44,10 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
     }
 
     @Override
-    public List<Category> findByParentDepths(Integer parentDepth) {
+    public List<Category> findByDepths(Integer depth) {
         return queryFactory
                 .selectFrom(category)
-                .where(category.depth.eq(parentDepth))
+                .where(category.depth.eq(depth), category.state.eq(CategoryState.ABLE))
                 .fetch();
     }
 
@@ -65,18 +67,11 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
                 .fetchOne();
     }
 
-    @Override
-    public List<Category> findByCategoriesByState(CategoryState categoryState) {
-        return queryFactory
-                .selectFrom(category)
-                .where(category.state.eq(categoryState))
-                .fetch();
-    }
-
     public List<CategoryForm> categoryList(CategorySearchForm categorySearchForm, Pageable pageable) {
         Integer depth = categorySearchForm.getDepth();
         String searchKey = categorySearchForm.getSearchKey();
         String searchValue = categorySearchForm.getSearchValue();
+        CategoryState state = categorySearchForm.getState();
 
         return queryFactory
                 .select(Projections.fields(CategoryForm.class,
@@ -91,7 +86,8 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
                 .leftJoin(category.parent)
                 .where(
                         byText(searchKey, searchValue),
-                        byDepth(depth))
+                        byDepth(depth),
+                        byState(state))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -101,14 +97,16 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
         Integer depth = categorySearchForm.getDepth();
         String searchKey = categorySearchForm.getSearchKey();
         String searchValue = categorySearchForm.getSearchValue();
+        CategoryState state = categorySearchForm.getState();
 
         return queryFactory
                 .select(category.count())
                 .from(category)
                 .where(
                         byText(searchKey, searchValue),
-                        byDepth(depth))
-                .offset(pageable.getOffset())
+                        byDepth(depth),
+                        byState(state))
+//                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchOne();
     }
@@ -132,5 +130,9 @@ public class CategoryRepositoryImpl implements CategoryQueryRepository {
 
     public BooleanExpression byDepth(Integer depth) {
         return depth != null ? category.depth.eq(depth) : null;
+    }
+
+    public BooleanExpression byState(CategoryState state) {
+        return state != null ? category.state.eq(state) : null;
     }
 }

@@ -29,11 +29,17 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void saveCategory(CategoryForm categoryForm) {
         Category parent = null;
+        String desc = "";
         if(categoryForm.getParentId() > 0) {
-            parent = categoryRepository.findById(categoryForm.getParentId()).get();
+            parent = categoryRepository.findById(categoryForm.getParentId())
+                    .orElseThrow(() -> {
+                        throw new RuntimeException("해당카테고리는 존재하지 않습니다.");
+                    });
+            desc = parent.getDescription();
         }
 
-        Category category = new Category(categoryForm.getName(), categoryForm.getDepth(), parent, CategoryState.ABLE);
+        desc += "/" + categoryForm.getName();
+        Category category = new Category(categoryForm.getName(), categoryForm.getDepth(), parent, CategoryState.ABLE, desc);
         category.addDate(LocalDateTime.now(), LocalDateTime.now());
         categoryRepository.save(category);
     }
@@ -41,7 +47,6 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     @Override
     public void editCategory(Long categoryId, CategoryForm categoryForm) {
-        System.out.println("CategoryServiceImpl.editCategory");
         Category category = categoryRepository.findById(categoryId).orElseThrow(
                 () -> {
                     throw new RuntimeException("해당 카테고리는 존재하지 않습니다.");
@@ -92,17 +97,12 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<Category> findParents(Integer parentDepth) {
-        return categoryRepository.findByParentDepths(parentDepth);
+    public List<Category> findByDepths(Integer parentDepth) {
+        return categoryRepository.findByDepths(parentDepth);
     }
 
     @Override
     public List<Category> findChildren(Long categoryId) {
         return categoryRepository.findByChildDepths(categoryId);
-    }
-
-    @Override
-    public List<Category> findCategoriesByState(CategoryState categoryState) {
-        return categoryRepository.findByCategoriesByState(categoryState);
     }
 }

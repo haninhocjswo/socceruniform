@@ -67,9 +67,9 @@ public class AdminItemController {
     @GetMapping("/admin/item/register")
     public String itemRegisterForm(@ModelAttribute(name = "itemForm") ItemForm itemForm, Model model) {
         List<Manager> ableManagers = managerService.findManagersByState(UserState.ABLE);
-        List<Category> ableCategories = categoryService.findCategoriesByState(CategoryState.ABLE);
+        List<Category> categories = categoryService.findByDepths(3);
         model.addAttribute("managers", ableManagers);
-        model.addAttribute("categories", ableCategories);
+        model.addAttribute("categories", categories);
         return "admin/item/itemRegister";
     }
 

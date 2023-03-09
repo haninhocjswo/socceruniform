@@ -38,9 +38,9 @@ class CategoryRepositoryImplTest {
 
     @BeforeEach
     void before() {
-        Category depth1 = new Category("최상위", 1, null, CategoryState.ABLE);
+        Category depth1 = new Category("최상위", 1, null, CategoryState.ABLE, "");
         depth1.addDate(LocalDateTime.now(), LocalDateTime.now());
-        Category depth2 = new Category("상위", 2, depth1, CategoryState.ABLE);
+        Category depth2 = new Category("상위", 2, depth1, CategoryState.ABLE, "");
         depth2.addDate(LocalDateTime.now(), LocalDateTime.now());
         categoryRepository.save(depth1);
         categoryRepository.save(depth2);
@@ -48,7 +48,7 @@ class CategoryRepositoryImplTest {
 
     @Test
     void save() {
-        Category category = new Category("상의", 1, null, null);
+        Category category = new Category("상의", 1, null, null, "");
         category.addDate(LocalDateTime.now(), LocalDateTime.now());
         em.persist(category);
         log.info("=================================");

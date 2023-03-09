@@ -27,8 +27,13 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating">
-                                                <input class="form-control" id="depth" th:field="*{depth}" type="number" disabled />
+                                                <select class="form-control" id="depth" th:field="*{depth}" th:errorclass="field-error" type="number" disabled>
+                                                    <option value="1" th:selected="${categoryForm.depth} == 1">1</option>
+                                                    <option value="2" th:selected="${categoryForm.depth} == 2">2</option>
+                                                    <option value="3" th:selected="${categoryForm.depth} == 3">3</option>
+                                                </select>
                                                 <label for="depth">뎁스</label>
+                                                <div class="field-error" th:errors="*{depth}">뎁스에러</div>
                                             </div>
                                         </div>
                                     </div>
@@ -46,21 +51,24 @@
                                         </div>
                                         <div class="col-md-6" th:unless="${#lists.isEmpty(parents)}">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <select class="form-control" id="parentId" name="parentId" th:onchange="changeParent('');">
+                                                <select class="form-control" id="parentId" th:field="*{parentId}" th:errorclass="field-error">
+                                                    <option value="0">선택해주세요</option>
                                                     <option th:each="parent : ${parents}"
                                                             th:value="${parent.id}"
                                                             th:text="${parent.name}"
                                                             th:selected="${parent.id} == ${categoryForm.parentId}">상위카테고리</option>
                                                 </select>
                                                 <label for="parentId">상위카테고리</label>
+                                                <div class="field-error" th:errors="*{parentId}">상위카테고리에러</div>
                                             </div>
                                         </div>
                                         <div class="col-md-6" th:if="${#lists.isEmpty(parents)}">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <select class="form-control" name="parentId" th:onchange="changeParent('');">
+                                                <select class="form-control" th:field="*{parentId}" th:errorclass="field-error">
                                                     <option value="">최상위</option>
                                                 </select>
-                                                <label for="parentId">상위카테고리</label>
+                                                <label for="parentId">선택해주세요.</label>
+                                                <div class="field-error" th:errors="*{parentId}">상위카테고리에러</div>
                                             </div>
                                         </div>
                                     </div>
@@ -87,9 +95,7 @@
 <script src="../../js/admin/datatables-simple-demo.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    function changeParent(parentName) {
-        $("#categoryForm input[name='parentName']").val(parentName);
-    }
+
     /*]]>*/
 </script>
 </body>

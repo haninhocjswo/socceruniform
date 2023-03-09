@@ -58,7 +58,7 @@ public class AdminCategoryController {
         CategoryForm categoryForm = categoryService.detailCategory(categoryId);
         List<Category> parents = new ArrayList<>();
         if(categoryForm.getDepth() != null) {
-            parents = categoryService.findParents(categoryForm.getDepth());
+            parents = categoryService.findByDepths(categoryForm.getDepth());
         }
 
         model.addAttribute("categoryForm", categoryForm);
@@ -69,7 +69,6 @@ public class AdminCategoryController {
     @PostMapping("/admin/category/edit/{categoryId}")
     public String editCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult,
                                @PathVariable(value = "categoryId") Long categoryId) {
-        log.info("/admin/category/edit/{categoryId}");
         if(bindingResult.hasErrors()) {
             return "admin/category/categoryForm";
         }
@@ -95,18 +94,11 @@ public class AdminCategoryController {
 
     @PostMapping("/admin/category/register")
     public String registerCategory(@Valid @ModelAttribute(value = "categoryForm") CategoryForm categoryForm, BindingResult bindingResult) {
-        //글로벌에러
-        if(categoryForm.getDepth() != null && categoryForm.getParentId() != null) {
-            if(categoryForm.getDepth() > 1) {
-                CategoryForm parent = categoryService.detailCategory(categoryForm.getParentId());
-                if(categoryForm.getDepth() - 1 != parent.getDepth()) {
-                    bindingResult.reject("mismatchParent", "상위카테고리의 뎁스와 매칭되지 않습니다.");
-                }
-            }
-        }
+        log.info("parentId={}", categoryForm.getParentId());
 
         //필드 에러
         if(bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult);
             return "admin/category/categoryRegister";
         }
 
@@ -121,7 +113,7 @@ public class AdminCategoryController {
         List<Category> parents = new ArrayList<>();
         if(childDepth > 1) {
             int parentDepth = childDepth - 1;
-            parents = categoryService.findParents(parentDepth);
+            parents = categoryService.findByDepths(parentDepth);
         }
 
         if(parents.size() > 0) {
