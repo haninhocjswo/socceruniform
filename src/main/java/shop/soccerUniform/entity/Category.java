@@ -36,6 +36,7 @@ public class Category extends DateColumns {
     private Category parent;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private CategoryState state;
 
     public Category(String name, Integer depth, Category parent, CategoryState state, String description) {

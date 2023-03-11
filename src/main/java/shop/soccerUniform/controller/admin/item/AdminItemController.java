@@ -75,7 +75,7 @@ public class AdminItemController {
     }
 
     @PostMapping("/admin/item/register")
-    public String itemRegister(@Valid @ModelAttribute ItemForm itemForm, BindingResult bindingResult, Model model) {
+    public String itemRegister(@Valid @ModelAttribute ItemForm itemForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
 
         //필드에러
         if(bindingResult.hasErrors()) {
@@ -87,6 +87,8 @@ public class AdminItemController {
             model.addAttribute("categories", categories);
             return "admin/item/itemRegister";
         }
+
+        itemService.saveItem(itemForm);
 
         return "redirect:/admin/items";
     }

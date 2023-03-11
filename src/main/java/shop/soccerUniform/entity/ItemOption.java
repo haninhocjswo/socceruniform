@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "T_ITEM_OPTION")
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class ItemOption extends DateColumns {
+public class ItemOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +26,11 @@ public class ItemOption extends DateColumns {
     private String optionName;
 
     @Column(name = "OPTION_SORT", nullable = false)
-    private String optionSort;
+    private Integer optionSort;
 
-    @Column(name = "VALUE_NAME", nullable = false)
-    private String valueName;
-
-    @Column(name = "VALUE_SORT", nullable = false)
-    private String valueSort;
-
-    public ItemOption(Item item, String optionName, String optionSort, String valueName, String valueSort) {
+    public ItemOption(Item item, String optionName, Integer optionSort) {
         this.item = item;
         this.optionName = optionName;
         this.optionSort = optionSort;
-        this.valueName = valueName;
-        this.valueSort = valueSort;
     }
 }

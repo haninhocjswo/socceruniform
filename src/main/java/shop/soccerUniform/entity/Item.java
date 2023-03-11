@@ -58,9 +58,10 @@ public class Item extends DateColumns {
     @Enumerated(EnumType.STRING)
     private ItemState state;
 
-    public Item(Manager manager, Category category, String manufacturer, String origin, String description, OptionType optionType, Integer price, ItemState state) {
+    public Item(Manager manager, Category category, String name, String manufacturer, String origin, String description, OptionType optionType, Integer price, ItemState state) {
         this.manager = manager;
         this.category = category;
+        this.name = name;
         this.manufacturer = manufacturer;
         this.origin = origin;
         this.description = description;

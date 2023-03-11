@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "T_ITEM_OPTION_STOCK")
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class ItemOptionStock extends DateColumns {
+public class ItemOptionStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,24 +22,21 @@ public class ItemOptionStock extends DateColumns {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FIRST_ITEM_OPTION_ID")
-    private ItemOption firstItemOption;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FIRST_OPTION_VALUE_ID")
+    private ItemOptionValue firstOptionValue;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SECOND_ITEM_OPTION_ID")
-    private ItemOption secondItemOption;
-
-    @Column(name = "ADD_PRICE", nullable = false)
-    private Integer addPrice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SECOND_OPTION_VALUE_ID")
+    private ItemOptionValue secondOptionValue;
 
     @Column(nullable = false)
     private Integer stock;
 
-    public ItemOptionStock(ItemOption firstItemOption, ItemOption secondItemOption, Integer addPrice, Integer stock) {
-        this.firstItemOption = firstItemOption;
-        this.secondItemOption = secondItemOption;
-        this.addPrice = addPrice;
+    public ItemOptionStock(Item item, ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, Integer stock) {
+        this.item = item;
+        this.firstOptionValue = firstOptionValue;
+        this.secondOptionValue = secondOptionValue;
         this.stock = stock;
     }
 }

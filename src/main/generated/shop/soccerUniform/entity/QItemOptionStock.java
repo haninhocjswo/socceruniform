@@ -22,23 +22,13 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
 
     public static final QItemOptionStock itemOptionStock = new QItemOptionStock("itemOptionStock");
 
-    public final QDateColumns _super = new QDateColumns(this);
-
-    public final NumberPath<Integer> addPrice = createNumber("addPrice", Integer.class);
-
-    public final QItemOption firstItemOption;
+    public final QItemOptionValue firstOptionValue;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QItem item;
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
-
-    public final QItemOption secondItemOption;
+    public final QItemOptionValue secondOptionValue;
 
     public final NumberPath<Integer> stock = createNumber("stock", Integer.class);
 
@@ -60,9 +50,9 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
 
     public QItemOptionStock(Class<? extends ItemOptionStock> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.firstItemOption = inits.isInitialized("firstItemOption") ? new QItemOption(forProperty("firstItemOption"), inits.get("firstItemOption")) : null;
+        this.firstOptionValue = inits.isInitialized("firstOptionValue") ? new QItemOptionValue(forProperty("firstOptionValue"), inits.get("firstOptionValue")) : null;
         this.item = inits.isInitialized("item") ? new QItem(forProperty("item"), inits.get("item")) : null;
-        this.secondItemOption = inits.isInitialized("secondItemOption") ? new QItemOption(forProperty("secondItemOption"), inits.get("secondItemOption")) : null;
+        this.secondOptionValue = inits.isInitialized("secondOptionValue") ? new QItemOptionValue(forProperty("secondOptionValue"), inits.get("secondOptionValue")) : null;
     }
 
 }

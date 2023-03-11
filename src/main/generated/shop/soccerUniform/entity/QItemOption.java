@@ -22,25 +22,13 @@ public class QItemOption extends EntityPathBase<ItemOption> {
 
     public static final QItemOption itemOption = new QItemOption("itemOption");
 
-    public final QDateColumns _super = new QDateColumns(this);
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QItem item;
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
-
     public final StringPath optionName = createString("optionName");
 
-    public final StringPath optionSort = createString("optionSort");
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
-
-    public final StringPath valueName = createString("valueName");
-
-    public final StringPath valueSort = createString("valueSort");
+    public final NumberPath<Integer> optionSort = createNumber("optionSort", Integer.class);
 
     public QItemOption(String variable) {
         this(ItemOption.class, forVariable(variable), INITS);

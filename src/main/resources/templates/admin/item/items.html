@@ -86,8 +86,8 @@
               </tr>
               <tr th:unless="${#lists.isEmpty(items)}" th:each="item : ${items}">
                 <td><input type="checkbox" id="ids" name="ids" th:value="${item.itemId}"></td>
-                <td th:text="${item.loginId}">아이디(값)</td>
-                <td th:text="${item.username}">회사명(값)</td>
+                <td th:text="${item.name}">아이디(값)</td>
+                <td th:text="${item.optionType}">회사명(값)</td>
                 <td th:text="${item.ceoName}">대표자명(값)</td>
                 <td th:text="${item.state}">상태(값)</td>
                 <td>

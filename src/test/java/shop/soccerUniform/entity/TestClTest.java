@@ -10,14 +10,6 @@ class TestClTest {
 
     @Test
     void test()  {
-        TestCl build = TestCl.builder().build();
-        log.info("builder={}", build);
 
-        TestCl build1 = TestCl.builder()
-                .username("gksdlsgh")
-                .password("1234")
-                .build();
-
-        log.info("build1={}", build1);
     }
 }
