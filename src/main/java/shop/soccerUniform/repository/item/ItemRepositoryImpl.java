@@ -10,14 +10,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import shop.soccerUniform.entity.*;
 import shop.soccerUniform.entity.dto.ItemForm;
+import shop.soccerUniform.entity.dto.ItemSaveForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
-import shop.soccerUniform.entity.enumtype.ItemState;
-import shop.soccerUniform.entity.enumtype.OptionType;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 import static shop.soccerUniform.entity.QItem.item;
@@ -53,6 +50,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                         item.id.as("itemId"),
                         item.manager,
                         item.category,
+                        item.name,
                         item.manufacturer,
                         item.origin,
                         item.description,
@@ -74,6 +72,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                 .select(item.count())
                 .from(item)
                 .where(byText(searchKey, searchValue))
+                .limit(pageable.getPageSize())
                 .fetchOne();
     }
 

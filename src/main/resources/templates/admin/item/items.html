@@ -72,9 +72,10 @@
               <thead>
               <tr>
                 <th><input type="checkbox"></th>
-                <th>아이디</th>
-                <th>회사명</th>
-                <th>대표자명</th>
+                <th>입점업체명</th>
+                <th>상품명</th>
+                <th>원산지</th>
+                <th>제조사</th>
                 <th>상태</th>
                 <th>상세</th>
                 <th>삭제</th>
@@ -86,9 +87,10 @@
               </tr>
               <tr th:unless="${#lists.isEmpty(items)}" th:each="item : ${items}">
                 <td><input type="checkbox" id="ids" name="ids" th:value="${item.itemId}"></td>
-                <td th:text="${item.name}">아이디(값)</td>
-                <td th:text="${item.optionType}">회사명(값)</td>
-                <td th:text="${item.ceoName}">대표자명(값)</td>
+                <td th:text="${item.manager.username}">입점업체명(값)</td>
+                <td th:text="${item.name}">상품명(값)</td>
+                <td th:text="${item.manufacturer}">원산지(값)</td>
+                <td th:text="${item.origin}">제조사(값)</td>
                 <td th:text="${item.state}">상태(값)</td>
                 <td>
                   <button class="btn-primary" th:onclick="detailitem([[${item.itemId}]])">상세</button>

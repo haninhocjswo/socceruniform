@@ -16,7 +16,7 @@
             <div class="card shadow-lg border-0 rounded-lg mt-5">
               <div class="card-header"><h3 class="text-center font-weight-light my-4">상품등록</h3></div>
               <div class="card-body">
-                <form th:object="${itemForm}" method="post" th:action="@{/admin/item/register}">
+                <form th:object="${itemSaveForm}" method="post" th:action="@{/admin/item/register}">
                   <input type="hidden" id="itemId" name="itemId" value="0" />
                   <input type="hidden" id="itemOption1ValueSize" name="itemOption1ValueSize" value="0" />
                   <input type="hidden" id="itemOption2ValueSize" name="itemOption2ValueSize" value="0" />
@@ -141,7 +141,7 @@
                         </colgroup>
                         <tr class="option-value-1-list">
                           <th style="width:100px;">옵션1종류</th>
-                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
                         </tr>
                         <tr class="option-stock-list">
                           <th>재고</th>
@@ -171,7 +171,7 @@
                         </colgroup>
                         <tr class="option-value-1-list">
                           <th></th>
-                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
                         </tr>
                         <tr class="option-stock-list option-value-2-list" id="optionValue2_1">
                           <th><input type="text" name="valueName2_1" style="width:100px;" placeholder="옵션2종류" /></th>
@@ -183,7 +183,7 @@
                   <!-- 옵션타입이 DOUBLE일 때 종료 -->
                   <div class="mt-4 mb-0">
                     <div class="d-flex justify-content-center">
-                      <input type="submit" class="btn btn-warning" value="등록" />
+                      <input type="submit" class="btn btn-warning" value="등록" onclick="aaa()" />
                       &nbsp;
                       <a class="btn btn-secondary" href="/admin/items">목록</a>
                     </div>
@@ -258,9 +258,7 @@
 
         addStock = '<td><input type="number" name="stock_' + (optionValue1Size + 1) + '_0" style="width:100px;" placeholder="재고" /></td>';
         $('#singleTable .option-stock-list').append(addStock);
-        alert("옵션1사이즈 : " + (optionValue1Size + 1));
         $('#itemOption1ValueSize').val(optionValue1Size + 1);
-        alert("옵션1결과 : " + $('#itemOption1ValueSize').val());
       } else {
         alert('옵션종류는 최대 10개까지입니다.');
       }
@@ -276,9 +274,7 @@
           addStock = '<td><input type="number" name="stock_' + (optionValue1Size + 1) + '_' + k + '" style="width:100px;" placeholder="재고" /></td>';
           $('#doubleType tr:nth-child(' + (k+1) + ')').append(addStock);
         }
-        alert("옵션1사이즈 : " + (optionValue1Size + 1));
         $('#itemOption1ValueSize').val(optionValue1Size + 1);
-        alert("옵션1결과 : " + $('#itemOption1ValueSize').val());
       } else {
         alert('옵션종류는 최대 10개까지입니다.');
       }
@@ -304,9 +300,7 @@
         addOptionValue += '</tr>>';
 
         $('#doubleType table').append(addOptionValue);
-        alert("옵션2사이즈 : " + (optionValue2Size + 1));
         $('#itemOption2ValueSize').val(optionValue2Size + 1);
-        alert("옵션2결과 : " + $('#itemOption2ValueSize').val());
       } else {
         alert('옵션종류는 최대 10개까지입니다.');
       }
@@ -321,17 +315,13 @@
 
       $('#singleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
       $('#singleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
-      alert("옵션1사이즈 : " + (optionValue1Size - 1));
       $('#itemOption1ValueSize').val(optionValue1Size - 1);
-      alert("옵션1결과 : " + $('#itemOption1ValueSize').val());
     } else if(optionType == 'DOUBLE') {
       let optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length;
 
       $('#doubleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
       $('#doubleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
-      alert("옵션1사이즈 : " + (optionValue1Size - 1));
-      $('#itemForm hidden[name="itemOption1ValueSize"]').val(optionValue1Size - 1);
-      alert("옵션1결과 : " + $('#itemOption1ValueSize').val());
+      $('#itemSaveForm hidden[name="itemOption1ValueSize"]').val(optionValue1Size - 1);
     }
   }
 
@@ -344,9 +334,7 @@
       if(optionValue2Size > 1) {
         $('#optionValue2_' + optionValue2Size).remove();
       }
-      alert("옵션2사이즈 : " + (optionValue2Size - 1));
       $('#itemOption2ValueSize').val(optionValue2Size - 1);
-      alert("옵션2결과 : " + $('#itemOption2ValueSize').val());
     }
   }
   /*]]>*/

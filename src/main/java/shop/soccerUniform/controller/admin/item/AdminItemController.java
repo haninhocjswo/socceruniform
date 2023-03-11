@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.Manager;
 import shop.soccerUniform.entity.dto.ItemForm;
+import shop.soccerUniform.entity.dto.ItemSaveForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
 import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.category.CategoryService;
@@ -65,7 +66,7 @@ public class AdminItemController {
     }
 
     @GetMapping("/admin/item/register")
-    public String itemRegisterForm(@ModelAttribute(name = "itemForm") ItemForm itemForm, Model model) {
+    public String itemRegisterForm(@ModelAttribute(name = "itemSaveForm") ItemSaveForm itemSaveForm, Model model) {
         List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
         List<Category> categories = categoryService.findByDepths(3);
 
@@ -75,7 +76,7 @@ public class AdminItemController {
     }
 
     @PostMapping("/admin/item/register")
-    public String itemRegister(@Valid @ModelAttribute ItemForm itemForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
+    public String itemRegister(@Valid @ModelAttribute(name = "itemSaveForm") ItemSaveForm itemSaveForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
 
         //필드에러
         if(bindingResult.hasErrors()) {
@@ -88,7 +89,8 @@ public class AdminItemController {
             return "admin/item/itemRegister";
         }
 
-        itemService.saveItem(itemForm);
+        itemSaveForm.setValueName1_1(itemSaveForm.getValueName1_1().replaceAll(",", ""));
+        itemService.saveItem(itemSaveForm);
 
         return "redirect:/admin/items";
     }
