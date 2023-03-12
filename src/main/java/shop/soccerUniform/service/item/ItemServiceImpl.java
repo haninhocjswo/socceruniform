@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.*;
+import shop.soccerUniform.entity.dto.ItemEditForm;
 import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSaveForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
@@ -142,12 +143,58 @@ public class ItemServiceImpl implements ItemService{
     @Transactional
     @Override
     public void deletedItem(Long itemId) {
-
+        Item item = itemRepository.findById(itemId).get();
+        item.deleteItem();
     }
 
     @Override
-    public ItemSaveForm detailItem(Long itemId) {
-        return null;
+    public ItemEditForm detailItem(Long itemId) {
+        ItemEditForm itemEditForm = ItemEditForm.builder().build();
+
+        Item item = itemRepository.findById(itemId).get();
+        itemEditForm.builder()
+                .itemId(item.getId())
+                .name(item.getName())
+                .optionType(item.getOptionType())
+                .price(item.getPrice())
+                .managerId(item.getManager().getId())
+                .categoryId(item.getCategory().getId())
+                .description(item.getDescription())
+                .state(item.getState())
+                .origin(item.getOrigin())
+                .manufacturer(item.getManufacturer())
+                .build();
+
+        List<ItemOption> itemOptions = itemOptionRepository.findByItemId(item.getId());
+        if(itemOptions.size() == 1) {
+            List<ItemOptionValue> itemOptionValues = itemOptionValueRepository.findByItemOptionId(itemOptions.get(0).getId());
+            itemEditForm.builder()
+                    .firstOptionName(itemOptions.get(0).getOptionName())
+                    .build();
+
+            itemEditForm = pushItemOptionValue(itemEditForm, itemOptionValues, itemOptions.get(0).getOptionSort());
+        }
+
+        if(itemOptions.size() == 2) {
+            for(int i = 0; i < itemOptions.size(); i++) {
+                List<ItemOptionValue> itemOptionValues = itemOptionValueRepository.findByItemOptionId(itemOptions.get(i).getId());
+                if(i == 0) {
+                    itemEditForm.builder()
+                            .firstOptionName(itemOptions.get(i).getOptionName())
+                            .build();
+                } else if(i == 1) {
+                    itemEditForm.builder()
+                            .secondOptionName(itemOptions.get(i).getOptionName())
+                            .build();
+                }
+
+                itemEditForm = pushItemOptionValue(itemEditForm, itemOptionValues, itemOptions.get(i).getOptionSort());
+            }
+        }
+
+        //재고 넣어야함....
+
+        return itemEditForm;
     }
 
     @Override
@@ -155,4 +202,37 @@ public class ItemServiceImpl implements ItemService{
         return itemRepository.items(itemSearchForm, pageable);
     }
 
+    public ItemEditForm pushItemOptionValue(ItemEditForm itemEditForm, List<ItemOptionValue> itemOptionValues, int sort) {
+        if(itemOptionValues.size() > 0) {
+            for(int i = 0; i < itemOptionValues.size(); i++) {
+                if(sort == 1) {
+                    if((i+1) == 1) itemEditForm.builder().valueName1_1(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 2) itemEditForm.builder().valueName1_2(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 3) itemEditForm.builder().valueName1_3(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 4) itemEditForm.builder().valueName1_4(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 5) itemEditForm.builder().valueName1_5(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 6) itemEditForm.builder().valueName1_6(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 7) itemEditForm.builder().valueName1_7(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 8) itemEditForm.builder().valueName1_8(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 9) itemEditForm.builder().valueName1_9(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 10) itemEditForm.builder().valueName1_10(itemOptionValues.get(i).getOptionValue()).build();
+                }
+
+                if(sort == 2) {
+                    if((i+1) == 1) itemEditForm.builder().valueName2_1(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 2) itemEditForm.builder().valueName2_2(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 3) itemEditForm.builder().valueName2_3(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 4) itemEditForm.builder().valueName2_4(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 5) itemEditForm.builder().valueName2_5(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 6) itemEditForm.builder().valueName2_6(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 7) itemEditForm.builder().valueName2_7(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 8) itemEditForm.builder().valueName2_8(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 9) itemEditForm.builder().valueName2_9(itemOptionValues.get(i).getOptionValue()).build();
+                    if((i+1) == 10) itemEditForm.builder().valueName2_10(itemOptionValues.get(i).getOptionValue()).build();
+                }
+            }
+        }
+
+        return itemEditForm;
+    }
 }

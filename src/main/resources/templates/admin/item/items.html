@@ -89,14 +89,14 @@
                 <td><input type="checkbox" id="ids" name="ids" th:value="${item.itemId}"></td>
                 <td th:text="${item.manager.username}">입점업체명(값)</td>
                 <td th:text="${item.name}">상품명(값)</td>
-                <td th:text="${item.manufacturer}">원산지(값)</td>
-                <td th:text="${item.origin}">제조사(값)</td>
+                <td th:text="${item.origin}">원산지(값)</td>
+                <td th:text="${item.manufacturer}">제조사(값)</td>
                 <td th:text="${item.state}">상태(값)</td>
                 <td>
-                  <button class="btn-primary" th:onclick="detailitem([[${item.itemId}]])">상세</button>
+                  <button class="btn-primary" th:onclick="detailItem([[${item.itemId}]])">상세</button>
                 </td>
                 <td>
-                  <button class="btn-danger" th:onclick="deleteditem([[${item.itemId}]])">삭제</button>
+                  <button class="btn-danger" th:onclick="deletedItem([[${item.itemId}]])">삭제</button>
                 </td>
               </tr>
               </tbody>

@@ -1,0 +1,352 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/admin/fragment/adminHeader.html :: adminHeader">
+</head>
+<body class="sb-nav-fixed">
+<nav th:replace="/admin/fragment/adminTop.html :: adminTop"></nav>
+<div id="layoutSidenav">
+  <div id="layoutSidenav_nav">
+    <nav th:replace="/admin/fragment/adminSide.html :: adminSide"></nav>
+  </div>
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+              <div class="card-header"><h3 class="text-center font-weight-light my-4">상품등록</h3></div>
+              <div class="card-body">
+                <form th:object="${itemEditForm}" method="post" th:action="@{/admin/item/edit/}">
+                  <div class="row mb-3" th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">
+                      글로벌 에러
+                    </p>
+                  </div>
+                  <input type="hidden" id="itemOption1ValueSize" name="itemOption1ValueSize" value="0" />
+                  <input type="hidden" id="itemOption2ValueSize" name="itemOption2ValueSize" value="0" />
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <input class="form-control" id="name" th:field="*{name}" th:errorclass="field-error" type="text" />
+                        <label for="name">상품명</label>
+                        <div class="field-error" th:errors="*{name}">상품명에러</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <input class="form-control" id="price" th:field="*{price}" th:errorclass="field-error" type="number" />
+                        <label for="price">가격</label>
+                        <div class="field-error" th:errors="*{price}">가격에러</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <input class="form-control" id="origin" th:field="*{origin}" th:errorclass="field-error" type="text" />
+                        <label for="origin">원산지</label>
+                        <div class="field-error" th:errors="*{origin}">원산지에러</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <input class="form-control" id="manufacturer" th:field="*{manufacturer}" th:errorclass="field-error" type="text" />
+                        <label for="manufacturer">제조사</label>
+                        <div class="field-error" th:errors="*{manufacturer}">제조사에러</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <select class="form-control" id="managerId" name="managerId" th:field="*{managerId}" th:errorclass="field-error" disabled>
+                          <option th:each="manager : ${managers}"
+                                  th:value="${manager.id}"
+                                  th:text="${manager.username}">입점업체</option>
+                        </select>
+                        <label for="managerId">입점업체</label>
+                        <div class="field-error" th:errors="*{managerId}">입접업체에러</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <select class="form-control" id="categoryId" th:field="*{categoryId}" th:errorclass="field-error">
+                          <option value="0" >선택해주세요</option>
+                          <option th:each="category : ${categories}"
+                                  th:value="${category.id}"
+                                  th:text="${category.description}">카테고리</option>
+                        </select>
+                        <label for="categoryId">카테고리</label>
+                        <div class="field-error" th:errors="*{categoryId}">카테고리에러</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <select class="form-control" id="optionType" name="optionType" th:field="*{optionType}" th:errorclass="field-error" onchange="changeOptionType(this.value)" disabled>
+                          <option value="">선택해주세요</option>
+                          <option th:each="optionType : ${T(shop.soccerUniform.entity.enumtype.OptionType).values}"
+                                  th:text="${optionType}"
+                                  th:value="${optionType}">옵션타입</option>
+                        </select>
+                        <label for="optionType">옵션타입</label>
+                        <div class="field-error" th:errors="*{optionType}">옵션타입에러</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <select class="form-control" id="state" name="state" th:field="*{state}" th:errorclass="field-error">
+                          <option th:each="itemState : ${T(shop.soccerUniform.entity.enumtype.ItemState).values}"
+                                  th:text="${itemState}"
+                                  th:value="${itemState}">상태</option>
+                        </select>
+                        <label for="state">상태</label>
+                        <div class="field-error" th:errors="*{state}">상태에러</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3 option-name">
+                    <div class="col-md-6" style="display:none;" id="optionName1">
+                      <div class="form-floating mb-3 mb-md-0">
+                        <input class="form-control" id="firstOptionName" name="firstOptionName" type="text" />
+                        <label for="firstOptionName">옵션1명</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6" style="display:none;" id="optionName2">
+                      <div class="form-floating">
+                        <input class="form-control" id="secondOptionName" name="secondOptionName" type="text" />
+                        <label for="secondOptionName">옵션2명</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="btn btn-info" id="addOptionValue1Btn" type="button" onclick="addFirstOption();" style="display:none;">옵션1종류 추가</button>
+                    <button class="btn btn-danger" id="removeOptionValue1Btn" type="button" onclick="removeFirstOption();" style="display:none;">옵션1종류 제거</button>
+                    <button class="btn btn-info" id="addOptionValue2Btn" type="button" onclick="addSecondOption();" style="display:none;">옵션2종류 추가</button>
+                    <button class="btn btn-danger" id="removeOptionValue2Btn" type="button" onclick="removeSecondOption();" style="display:none;">옵션2종류 제거</button>
+                  </div>
+                  <!-- 옵션타입이 SINGLE일 때 시작 -->
+                  <div class="row mb-3 option-value-stock" id="singleType" style="display:none;">
+                    <div class="col-md-12">
+                      <table class="table table-borderless" id="singleTable">
+                        <colgroup>
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                        </colgroup>
+                        <tr class="option-value-1-list">
+                          <th style="width:100px;">옵션1종류</th>
+                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
+                        </tr>
+                        <tr class="option-stock-list">
+                          <th>재고</th>
+                          <td><input type="number" name="stock_1_0" style="width:100px;" placeholder="재고" /></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <!-- 옵션타입이 SINGLE일 때 종료 -->
+                  <!-- 옵션타입이 DOUBLE일 때 시작 -->
+                  <div class="row mb-3 option-value-stock" id="doubleType" style="display:none;">
+                    <p style="color:red;">첫번째 옵션은 가로, 두번째 옵션은 세로입니다.</p>
+                    <div class="col-md-12">
+                      <table class="table table-borderless" id="doubleTable">
+                        <colgroup>
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                          <col width="100">
+                        </colgroup>
+                        <tr class="option-value-1-list">
+                          <th></th>
+                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_1">
+                          <th><input type="text" name="valueName2_1" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td><input type="number" name="stock_1_1" style="width:100px;" placeholder="재고" /></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <!-- 옵션타입이 DOUBLE일 때 종료 -->
+                  <div class="mt-4 mb-0">
+                    <div class="d-flex justify-content-center">
+                      <input type="submit" class="btn btn-warning" value="등록" onclick="aaa()" />
+                      &nbsp;
+                      <a class="btn btn-secondary" href="/admin/items">목록</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer th:replace="/admin/fragment/adminFooter.html :: adminFooter"></footer>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../../js/admin/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  window.addEventListener('DOMContentLoaded', function() {
+
+  });
+
+  function changeOptionType(optionType) {
+    //초기화
+    $('#optionName1').hide();
+    $('#optionName2').hide();
+    $('#addOptionValue1Btn').hide();
+    $('#removeOptionValue1Btn').hide();
+    $('#addOptionValue2Btn').hide();
+    $('#removeOptionValue2Btn').hide();
+    $('#singleType').hide();
+    $('#doubleType').hide();
+
+    if(optionType == 'SINGLE') {
+      $('#optionName1').show();
+      $('#optionName2').hide();
+      $('#addOptionValue1Btn').show();
+      $('#removeOptionValue1Btn').show();
+      $('#addOptionValue2Btn').hide();
+      $('#removeOptionValue2Btn').hide();
+      $('#singleType').show();
+      $('#doubleType').hide();
+    } else if(optionType == 'DOUBLE') {
+      $('#optionName1').show();
+      $('#optionName2').show();
+      $('#addOptionValue1Btn').show();
+      $('#removeOptionValue1Btn').show();
+      $('#addOptionValue2Btn').show();
+      $('#removeOptionValue2Btn').show();
+      $('#singleType').hide();
+      $('#doubleType').show();
+    } else {
+      $('#optionName1').hide();
+      $('#optionName2').hide();
+      $('#addOptionValue1Btn').hide();
+      $('#removeOptionValue1Btn').hide();
+      $('#addOptionValue2Btn').hide();
+      $('#removeOptionValue2Btn').hide();
+      $('#singleType').hide();
+      $('#doubleType').hide();
+    }
+  }
+
+  function addFirstOption() {
+    let optionType = $('#optionType').val();
+    let optionValue1Size = '';
+    let addOptionValue = '';
+
+    if(optionType == 'SINGLE') {
+      optionValue1Size = $('#singleTable .option-value-1-list').children('td').length;
+
+      if(optionValue1Size <= 9) {
+        addOptionValue = '<td><input type="text" name="valueName1_' + (optionValue1Size + 1) + '" style="width:100px;" placeholder="옵션1종류" /></td>';
+        $('#singleTable .option-value-1-list').append(addOptionValue);
+
+        addStock = '<td><input type="number" name="stock_' + (optionValue1Size + 1) + '_0" style="width:100px;" placeholder="재고" /></td>';
+        $('#singleTable .option-stock-list').append(addStock);
+        $('#itemOption1ValueSize').val(optionValue1Size + 1);
+      } else {
+        alert('옵션종류는 최대 10개까지입니다.');
+      }
+    } else if(optionType == 'DOUBLE') {
+      optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length;
+
+      if(optionValue1Size <= 9) {
+        addOptionValue = '<td><input type="text" name="valueName1_' + (optionValue1Size + 1) + '" style="width:100px;" placeholder="옵션1종류" /></td>';
+        $('#doubleType .option-value-1-list').append(addOptionValue);
+
+        let optionValue2Size = $('#doubleType .option-value-2-list').length;
+        for(let k = 1; k <= optionValue2Size; k++) {
+          addStock = '<td><input type="number" name="stock_' + (optionValue1Size + 1) + '_' + k + '" style="width:100px;" placeholder="재고" /></td>';
+          $('#doubleType tr:nth-child(' + (k+1) + ')').append(addStock);
+        }
+        $('#itemOption1ValueSize').val(optionValue1Size + 1);
+      } else {
+        alert('옵션종류는 최대 10개까지입니다.');
+      }
+    } else {
+      alert('옵션타입을 선택해주세요.');
+    }
+  }
+
+  function addSecondOption() {
+    let optionType = $('#optionType').val();
+
+    if(optionType == 'DOUBLE') {
+      let optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length;
+      let optionValue2Size = $('#doubleType .option-value-2-list').length;
+      let addOptionValue = '';
+
+      if(optionValue2Size <= 9) {
+        addOptionValue += '<tr class="option-stock-list option-value-2-list" id="optionValue2_' + (optionValue2Size + 1) + '">';
+        addOptionValue += '  <th><input type="text" name="valueName2_' + (optionValue2Size + 1) + '" style="width:100px;" placeholder="옵션2종류" /></th>';
+        for(let i = 1; i <= optionValue1Size; i++) {
+          addOptionValue += ' <td><input type="number" name="stock_' + i + '_' + (optionValue2Size + 1) + '" style="width:100px;" placeholder="재고" /></td>';
+        }
+        addOptionValue += '</tr>>';
+
+        $('#doubleType table').append(addOptionValue);
+        $('#itemOption2ValueSize').val(optionValue2Size + 1);
+      } else {
+        alert('옵션종류는 최대 10개까지입니다.');
+      }
+    }
+  }
+
+  function removeFirstOption() {
+    let optionType = $('#optionType').val();
+
+    if(optionType == 'SINGLE') {
+      let optionValue1Size = $('#singleTable .option-value-1-list').children('td').length;
+
+      $('#singleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
+      $('#singleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
+      $('#itemOption1ValueSize').val(optionValue1Size - 1);
+    } else if(optionType == 'DOUBLE') {
+      let optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length;
+
+      $('#doubleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
+      $('#doubleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
+      $('#itemSaveForm hidden[name="itemOption1ValueSize"]').val(optionValue1Size - 1);
+    }
+  }
+
+  function removeSecondOption() {
+    let optionType = $('#optionType').val();
+
+    if(optionType == 'DOUBLE') {
+      let optionValue2Size = $('#doubleTable .option-value-2-list').length;
+
+      if(optionValue2Size > 1) {
+        $('#optionValue2_' + optionValue2Size).remove();
+      }
+      $('#itemOption2ValueSize').val(optionValue2Size - 1);
+    }
+  }
+  /*]]>*/
+</script>
+<script src="../../js/admin/datatables-simple-demo.js"></script>
+</body>
+</html>

@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSaveForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
+import shop.soccerUniform.entity.enumtype.ItemState;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
 
     @Override
     public Page<ItemForm> items(ItemSearchForm itemSearchForm, Pageable pageable) {
+        log.info("itemSearchForm={}", itemSearchForm);
         List<ItemForm> items = itemList(itemSearchForm, pageable);
         Long count = countItem(itemSearchForm, pageable);
         return new PageImpl<>(items, pageable, count);
@@ -42,8 +44,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
     public List<ItemForm> itemList(ItemSearchForm itemSearchForm, Pageable pageable) {
         String searchKey = itemSearchForm.getSearchKey();
         String searchValue = itemSearchForm.getSearchValue();
-
-        log.info("pageable.getPageNumber()={}", pageable.getPageNumber());
+        ItemState state = itemSearchForm.getState();
 
         return queryFactory
                 .select(Projections.fields(ItemForm.class,
@@ -58,7 +59,9 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                         item.price,
                         item.state))
                 .from(item)
-                .where(byText(searchKey, searchValue))
+                .where(
+                        byText(searchKey, searchValue),
+                        byState(state))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -67,19 +70,33 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
     public Long countItem(ItemSearchForm itemSearchForm, Pageable pageable) {
         String searchKey = itemSearchForm.getSearchKey();
         String searchValue = itemSearchForm.getSearchValue();
+        ItemState state = itemSearchForm.getState();
 
         return queryFactory
                 .select(item.count())
                 .from(item)
-                .where(byText(searchKey, searchValue))
+                .where(
+                        byText(searchKey, searchValue),
+                        byState(state))
                 .limit(pageable.getPageSize())
                 .fetchOne();
     }
 
     public BooleanExpression byText(String searchKey, String searchValue) {
         if(StringUtils.hasText(searchKey)) {
-
+            switch (searchKey) {
+                case "name" :
+                    return StringUtils.hasText(searchValue) ? item.name.like("%" + searchValue + "%") : null;
+                case "managerName" :
+                    return StringUtils.hasText(searchValue) ? item.manager.username.like("%" + searchValue + "%") : null;
+                default:
+                    return null;
+            }
         }
         return null;
+    }
+
+    public BooleanExpression byState(ItemState state) {
+        return state != null ? item.state.eq(state) : null;
     }
 }

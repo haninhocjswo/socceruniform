@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.Category;
 import shop.soccerUniform.entity.Manager;
+import shop.soccerUniform.entity.dto.ItemEditForm;
 import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.ItemSaveForm;
 import shop.soccerUniform.entity.dto.ItemSearchForm;
@@ -64,6 +67,12 @@ public class AdminItemController {
 
     @GetMapping("/admin/item/{itemId}")
     public String item(@PathVariable(value = "itemId") Long itemId, Model model) {
+        List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
+        List<Category> categories = categoryService.findByDepths(3);
+
+        model.addAttribute("itemEditForm", new ItemEditForm());
+        model.addAttribute("managers", managers);
+        model.addAttribute("categories", categories);
 
         return "admin/item/itemForm";
     }
@@ -151,5 +160,17 @@ public class AdminItemController {
         itemService.saveItem(itemSaveForm);
 
         return "redirect:/admin/items";
+    }
+
+    @PostMapping("/admin/item/delete/{itemId}")
+    public ResponseEntity<Map<String, Object>> deletedItem(@PathVariable(value = "itemId") Long itemId) {
+        itemService.deletedItem(itemId);
+
+        Map<String, Object> ajaxMap = new HashMap<>();
+        ajaxMap.put("result", true);
+
+        ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+
+        return responseEntity;
     }
 }

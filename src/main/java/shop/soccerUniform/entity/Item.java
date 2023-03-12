@@ -69,4 +69,8 @@ public class Item extends DateColumns {
         this.price = price;
         this.state = state;
     }
+
+    public void deleteItem() {
+        state = ItemState.DELETE;
+    }
 }
