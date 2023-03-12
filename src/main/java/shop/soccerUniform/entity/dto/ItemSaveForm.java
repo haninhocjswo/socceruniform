@@ -11,9 +11,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ItemSaveForm {
 
-    @NotNull
-    public Long itemId;
-
     @NotBlank(message = "상품명은 필수값입니다.")
     public String name;
 
