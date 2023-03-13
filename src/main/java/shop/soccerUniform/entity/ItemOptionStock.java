@@ -31,12 +31,16 @@ public class ItemOptionStock {
     private ItemOptionValue secondOptionValue;
 
     @Column(nullable = false)
+    private String sort;
+
+    @Column(nullable = false)
     private Integer stock;
 
-    public ItemOptionStock(Item item, ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, Integer stock) {
+    public ItemOptionStock(Item item, ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, String sort, Integer stock) {
         this.item = item;
         this.firstOptionValue = firstOptionValue;
         this.secondOptionValue = secondOptionValue;
+        this.sort = sort;
         this.stock = stock;
     }
 }

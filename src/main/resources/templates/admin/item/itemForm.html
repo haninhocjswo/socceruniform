@@ -22,8 +22,9 @@
                       글로벌 에러
                     </p>
                   </div>
-                  <input type="hidden" id="itemOption1ValueSize" name="itemOption1ValueSize" value="0" />
-                  <input type="hidden" id="itemOption2ValueSize" name="itemOption2ValueSize" value="0" />
+                  <input type="hidden" th:field="*{itemId}" />
+                  <input type="hidden" id="itemOption1ValueSize" name="itemOption1ValueSize" th:field="*{itemOption1ValueSize}" />
+                  <input type="hidden" id="itemOption2ValueSize" name="itemOption2ValueSize" th:field="*{itemOption2ValueSize}" />
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
@@ -107,27 +108,27 @@
                     </div>
                   </div>
                   <div class="row mb-3 option-name">
-                    <div class="col-md-6" style="display:none;" id="optionName1">
+                    <div class="col-md-6" id="optionName1">
                       <div class="form-floating mb-3 mb-md-0">
-                        <input class="form-control" id="firstOptionName" name="firstOptionName" type="text" />
+                        <input class="form-control" id="firstOptionName" name="firstOptionName" th:field="*{firstOptionName}" type="text" />
                         <label for="firstOptionName">옵션1명</label>
                       </div>
                     </div>
-                    <div class="col-md-6" style="display:none;" id="optionName2">
+                    <div class="col-md-6" id="optionName2" th:if="*{optionType eq T(shop.soccerUniform.entity.enumtype.OptionType).DOUBLE}">
                       <div class="form-floating">
-                        <input class="form-control" id="secondOptionName" name="secondOptionName" type="text" />
+                        <input class="form-control" id="secondOptionName" name="secondOptionName" th:field="*{secondOptionName}" type="text" />
                         <label for="secondOptionName">옵션2명</label>
                       </div>
                     </div>
                   </div>
                   <div>
-                    <button class="btn btn-info" id="addOptionValue1Btn" type="button" onclick="addFirstOption();" style="display:none;">옵션1종류 추가</button>
-                    <button class="btn btn-danger" id="removeOptionValue1Btn" type="button" onclick="removeFirstOption();" style="display:none;">옵션1종류 제거</button>
-                    <button class="btn btn-info" id="addOptionValue2Btn" type="button" onclick="addSecondOption();" style="display:none;">옵션2종류 추가</button>
-                    <button class="btn btn-danger" id="removeOptionValue2Btn" type="button" onclick="removeSecondOption();" style="display:none;">옵션2종류 제거</button>
+                    <button class="btn btn-info" id="addOptionValue1Btn" type="button" onclick="addFirstOption();" >옵션1종류 추가</button>
+                    <button class="btn btn-danger" id="removeOptionValue1Btn" type="button" onclick="removeFirstOption();" >옵션1종류 제거</button>
+                    <button class="btn btn-info" id="addOptionValue2Btn" type="button" onclick="addSecondOption();" th:if="*{optionType eq T(shop.soccerUniform.entity.enumtype.OptionType).DOUBLE}">옵션2종류 추가</button>
+                    <button class="btn btn-danger" id="removeOptionValue2Btn" type="button" onclick="removeSecondOption();" th:if="*{optionType eq T(shop.soccerUniform.entity.enumtype.OptionType).DOUBLE}">옵션2종류 제거</button>
                   </div>
                   <!-- 옵션타입이 SINGLE일 때 시작 -->
-                  <div class="row mb-3 option-value-stock" id="singleType" style="display:none;">
+                  <div class="row mb-3 option-value-stock" id="singleType" th:if="*{optionType eq T(shop.soccerUniform.entity.enumtype.OptionType).SINGLE}">
                     <div class="col-md-12">
                       <table class="table table-borderless" id="singleTable">
                         <colgroup>
@@ -145,18 +146,36 @@
                         </colgroup>
                         <tr class="option-value-1-list">
                           <th style="width:100px;">옵션1종류</th>
-                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1)}"><input type="text" name="valueName1_1" th:field="*{valueName1_1}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2)}"><input type="text" name="valueName1_2" th:field="*{valueName1_2}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3)}"><input type="text" name="valueName1_3" th:field="*{valueName1_3}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4)}"><input type="text" name="valueName1_4" th:field="*{valueName1_4}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5)}"><input type="text" name="valueName1_5" th:field="*{valueName1_5}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6)}"><input type="text" name="valueName1_6" th:field="*{valueName1_6}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7)}"><input type="text" name="valueName1_7" th:field="*{valueName1_7}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8)}"><input type="text" name="valueName1_8" th:field="*{valueName1_8}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9)}"><input type="text" name="valueName1_9" th:field="*{valueName1_9}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10)}"><input type="text" name="valueName1_10" th:field="*{valueName1_10}"  style="width:100px;" placeholder="옵션1종류" /></td>
                         </tr>
                         <tr class="option-stock-list">
                           <th>재고</th>
-                          <td><input type="number" name="stock_1_0" style="width:100px;" placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_0 != null}"><input type="number" name="stock_1_0" th:field="*{stock_1_0}" style="width:100px;"  placeholder="재고"  /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_0 != null}"><input type="number" name="stock_2_0" th:field="*{stock_2_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_0 != null}"><input type="number" name="stock_3_0" th:field="*{stock_3_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_0 != null}"><input type="number" name="stock_4_0" th:field="*{stock_4_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_0 != null}"><input type="number" name="stock_5_0" th:field="*{stock_5_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_0 != null}"><input type="number" name="stock_6_0" th:field="*{stock_6_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_0 != null}"><input type="number" name="stock_7_0" th:field="*{stock_7_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_0 != null}"><input type="number" name="stock_8_0" th:field="*{stock_8_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_0 != null}"><input type="number" name="stock_9_0" th:field="*{stock_9_0}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_0 != null}"><input type="number" name="stock_10_0" th:field="*{stock_10_0}" style="width:100px;"  placeholder="재고" /></td>
                         </tr>
                       </table>
                     </div>
                   </div>
                   <!-- 옵션타입이 SINGLE일 때 종료 -->
                   <!-- 옵션타입이 DOUBLE일 때 시작 -->
-                  <div class="row mb-3 option-value-stock" id="doubleType" style="display:none;">
+                  <div class="row mb-3 option-value-stock" id="doubleType" th:if="*{optionType eq T(shop.soccerUniform.entity.enumtype.OptionType).DOUBLE}">
                     <p style="color:red;">첫번째 옵션은 가로, 두번째 옵션은 세로입니다.</p>
                     <div class="col-md-12">
                       <table class="table table-borderless" id="doubleTable">
@@ -175,11 +194,146 @@
                         </colgroup>
                         <tr class="option-value-1-list">
                           <th></th>
-                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1)}"><input type="text" name="valueName1_1" th:field="*{valueName1_1}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2)}"><input type="text" name="valueName1_2" th:field="*{valueName1_2}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3)}"><input type="text" name="valueName1_3" th:field="*{valueName1_3}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4)}"><input type="text" name="valueName1_4" th:field="*{valueName1_4}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5)}"><input type="text" name="valueName1_5" th:field="*{valueName1_5}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6)}"><input type="text" name="valueName1_6" th:field="*{valueName1_6}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7)}"><input type="text" name="valueName1_7" th:field="*{valueName1_7}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8)}"><input type="text" name="valueName1_8" th:field="*{valueName1_8}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9)}"><input type="text" name="valueName1_9" th:field="*{valueName1_9}"  style="width:100px;" placeholder="옵션1종류" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10)}"><input type="text" name="valueName1_10" th:field="*{valueName1_10}"  style="width:100px;" placeholder="옵션1종류" /></td>
                         </tr>
-                        <tr class="option-stock-list option-value-2-list" id="optionValue2_1">
-                          <th><input type="text" name="valueName2_1" style="width:100px;" placeholder="옵션2종류" /></th>
-                          <td><input type="number" name="stock_1_1" style="width:100px;" placeholder="재고" /></td>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_1" th:if="*{not #strings.isEmpty(valueName2_1)}">
+                          <th><input type="text" name="valueName2_1" th:field="*{valueName2_1}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_1 != null}"><input type="number" name="stock_1_1" th:field="*{stock_1_1}" style="width:100px;"  placeholder="재고"  /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_1 != null}"><input type="number" name="stock_2_1" th:field="*{stock_2_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_1 != null}"><input type="number" name="stock_3_1" th:field="*{stock_3_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_1 != null}"><input type="number" name="stock_4_1" th:field="*{stock_4_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_1 != null}"><input type="number" name="stock_5_1" th:field="*{stock_5_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_1 != null}"><input type="number" name="stock_6_1" th:field="*{stock_6_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_1 != null}"><input type="number" name="stock_7_1" th:field="*{stock_7_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_1 != null}"><input type="number" name="stock_8_1" th:field="*{stock_8_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_1_1 != null}"><input type="number" name="stock_9_1" th:field="*{stock_9_1}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_1 != null}"><input type="number" name="stock_10_1" th:field="*{stock_10_1}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_2" th:if="*{not #strings.isEmpty(valueName2_2)}">
+                          <th><input type="text" name="valueName2_2" th:field="*{valueName2_2}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_2 != null}"><input type="number" name="stock_1_2" th:field="*{stock_1_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_2 != null}"><input type="number" name="stock_2_2" th:field="*{stock_2_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_2 != null}"><input type="number" name="stock_3_2" th:field="*{stock_3_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_2 != null}"><input type="number" name="stock_4_2" th:field="*{stock_4_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_2 != null}"><input type="number" name="stock_5_2" th:field="*{stock_5_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_2 != null}"><input type="number" name="stock_6_2" th:field="*{stock_6_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_2 != null}"><input type="number" name="stock_7_2" th:field="*{stock_7_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_2 != null}"><input type="number" name="stock_8_2" th:field="*{stock_8_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_2 != null}"><input type="number" name="stock_9_2" th:field="*{stock_9_2}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_2 != null}"><input type="number" name="stock_10_2" th:field="*{stock_10_2}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_3" th:if="*{not #strings.isEmpty(valueName2_3)}">
+                          <th><input type="text" name="valueName2_3" th:field="*{valueName2_3}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_3 != null}"><input type="number" name="stock_1_3" th:field="*{stock_1_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_3 != null}"><input type="number" name="stock_2_3" th:field="*{stock_2_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_3 != null}"><input type="number" name="stock_3_3" th:field="*{stock_3_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_3 != null}"><input type="number" name="stock_4_3" th:field="*{stock_4_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_3 != null}"><input type="number" name="stock_5_3" th:field="*{stock_5_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_3 != null}"><input type="number" name="stock_6_3" th:field="*{stock_6_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_3 != null}"><input type="number" name="stock_7_3" th:field="*{stock_7_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_3 != null}"><input type="number" name="stock_8_3" th:field="*{stock_8_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_3 != null}"><input type="number" name="stock_9_3" th:field="*{stock_9_3}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_3 != null}"><input type="number" name="stock_10_3" th:field="*{stock_10_3}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_4" th:if="*{not #strings.isEmpty(valueName2_4)}">
+                          <th><input type="text" name="valueName2_4" th:field="*{valueName2_4}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_4 != null}"><input type="number" name="stock_1_4" th:field="*{stock_1_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_4 != null}"><input type="number" name="stock_2_4" th:field="*{stock_2_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_4 != null}"><input type="number" name="stock_3_4" th:field="*{stock_3_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_4 != null}"><input type="number" name="stock_4_4" th:field="*{stock_4_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_4 != null}"><input type="number" name="stock_5_4" th:field="*{stock_5_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_4 != null}"><input type="number" name="stock_6_4" th:field="*{stock_6_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_4 != null}"><input type="number" name="stock_7_4" th:field="*{stock_7_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_4 != null}"><input type="number" name="stock_8_4" th:field="*{stock_8_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_4 != null}"><input type="number" name="stock_9_4" th:field="*{stock_9_4}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_4 != null}"><input type="number" name="stock_10_4" th:field="*{stock_10_4}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_5" th:if="*{not #strings.isEmpty(valueName2_5)}">
+                          <th><input type="text" name="valueName2_5" th:field="*{valueName2_5}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_5 != null}"><input type="number" name="stock_1_5" th:field="*{stock_1_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_5 != null}"><input type="number" name="stock_2_5" th:field="*{stock_2_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_5 != null}"><input type="number" name="stock_3_5" th:field="*{stock_3_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_5 != null}"><input type="number" name="stock_4_5" th:field="*{stock_4_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_5 != null}"><input type="number" name="stock_5_5" th:field="*{stock_5_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_5 != null}"><input type="number" name="stock_6_5" th:field="*{stock_6_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_5 != null}"><input type="number" name="stock_7_5" th:field="*{stock_7_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_5 != null}"><input type="number" name="stock_8_5" th:field="*{stock_8_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_5 != null}"><input type="number" name="stock_9_5" th:field="*{stock_9_5}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_5 != null}"><input type="number" name="stock_10_5" th:field="*{stock_10_5}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_6" th:if="*{not #strings.isEmpty(valueName2_6)}">
+                          <th><input type="text" name="valueName2_6" th:field="*{valueName2_6}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_6 != null}"><input type="number" name="stock_1_6" th:field="*{stock_1_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_6 != null}"><input type="number" name="stock_2_6" th:field="*{stock_2_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_6 != null}"><input type="number" name="stock_3_6" th:field="*{stock_3_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_6 != null}"><input type="number" name="stock_4_6" th:field="*{stock_4_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_6 != null}"><input type="number" name="stock_5_6" th:field="*{stock_5_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_6 != null}"><input type="number" name="stock_6_6" th:field="*{stock_6_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_6 != null}"><input type="number" name="stock_7_6" th:field="*{stock_7_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_6 != null}"><input type="number" name="stock_8_6" th:field="*{stock_8_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_6 != null}"><input type="number" name="stock_9_6" th:field="*{stock_9_6}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_6 != null}"><input type="number" name="stock_10_6" th:field="*{stock_10_6}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_7" th:if="*{not #strings.isEmpty(valueName2_7)}">
+                          <th><input type="text" name="valueName2_7" th:field="*{valueName2_7}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_7 != null}"><input type="number" name="stock_1_7" th:field="*{stock_1_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_7 != null}"><input type="number" name="stock_2_7" th:field="*{stock_2_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_7 != null}"><input type="number" name="stock_3_7" th:field="*{stock_3_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_7 != null}"><input type="number" name="stock_4_7" th:field="*{stock_4_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_7 != null}"><input type="number" name="stock_5_7" th:field="*{stock_5_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_7 != null}"><input type="number" name="stock_6_7" th:field="*{stock_6_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_7 != null}"><input type="number" name="stock_7_7" th:field="*{stock_7_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_7 != null}"><input type="number" name="stock_8_7" th:field="*{stock_8_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_7 != null}"><input type="number" name="stock_9_7" th:field="*{stock_9_7}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_7 != null}"><input type="number" name="stock_10_7" th:field="*{stock_10_7}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_8" th:if="*{not #strings.isEmpty(valueName2_8)}">
+                          <th><input type="text" name="valueName2_8" th:field="*{valueName2_8}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_8 != null}"><input type="number" name="stock_1_8" th:field="*{stock_1_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_8 != null}"><input type="number" name="stock_2_8" th:field="*{stock_2_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_8 != null}"><input type="number" name="stock_3_8" th:field="*{stock_3_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_8 != null}"><input type="number" name="stock_4_8" th:field="*{stock_4_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_8 != null}"><input type="number" name="stock_5_8" th:field="*{stock_5_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_8 != null}"><input type="number" name="stock_6_8" th:field="*{stock_6_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_8 != null}"><input type="number" name="stock_7_8" th:field="*{stock_7_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_8 != null}"><input type="number" name="stock_8_8" th:field="*{stock_8_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_8 != null}"><input type="number" name="stock_9_8" th:field="*{stock_9_8}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_8 != null}"><input type="number" name="stock_10_8" th:field="*{stock_10_8}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_9" th:if="*{not #strings.isEmpty(valueName2_9)}">
+                          <th><input type="text" name="valueName2_9" th:field="*{valueName2_9}" style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_9 != null}"><input type="number" name="stock_1_9" th:field="*{stock_1_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_9 != null}"><input type="number" name="stock_2_9" th:field="*{stock_2_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_9 != null}"><input type="number" name="stock_3_9" th:field="*{stock_3_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_9 != null}"><input type="number" name="stock_4_9" th:field="*{stock_4_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_9 != null}"><input type="number" name="stock_5_9" th:field="*{stock_5_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_9 != null}"><input type="number" name="stock_6_9" th:field="*{stock_6_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_9 != null}"><input type="number" name="stock_7_9" th:field="*{stock_7_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and stock_8_9 != null}"><input type="number" name="stock_8_9" th:field="*{stock_8_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and stock_9_9 != null}"><input type="number" name="stock_9_9" th:field="*{stock_9_9}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and stock_10_9 != null}"><input type="number" name="stock_10_9" th:field="*{stock_10_9}" style="width:100px;"  placeholder="재고" /></td>
+                        </tr>
+                        <tr class="option-stock-list option-value-2-list" id="optionValue2_10" th:if="*{not #strings.isEmpty(valueName2_10)}">
+                          <th><input type="text" name="valueName2_10" th:field="*{valueName2_10}"  style="width:100px;" placeholder="옵션2종류" /></th>
+                          <td th:if="*{not #strings.isEmpty(valueName1_1) and stock_1_10 != null}"><input type="number" name="stock_1_10" th:field="*{stock_1_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_2) and stock_2_10 != null}"><input type="number" name="stock_2_10" th:field="*{stock_2_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_3) and stock_3_10 != null}"><input type="number" name="stock_3_10" th:field="*{stock_3_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_4) and stock_4_10 != null}"><input type="number" name="stock_4_10" th:field="*{stock_4_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_5) and stock_5_10 != null}"><input type="number" name="stock_5_10" th:field="*{stock_5_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_6) and stock_6_10 != null}"><input type="number" name="stock_6_10" th:field="*{stock_6_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_7) and stock_7_10 != null}"><input type="number" name="stock_7_10" th:field="*{stock_7_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_8) and not stock_8_10 != null}"><input type="number" name="stock_8_10" th:field="*{stock_8_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_9) and not stock_9_10 != null}"><input type="number" name="stock_9_10" th:field="*{stock_9_10}" style="width:100px;"  placeholder="재고" /></td>
+                          <td th:if="*{not #strings.isEmpty(valueName1_10) and not stock_10_10 != null}"><input type="number" name="stock_10_10" th:field="*{stock_10_10}" style="width:100px;"  placeholder="재고" /></td>
                         </tr>
                       </table>
                     </div>
@@ -187,7 +341,7 @@
                   <!-- 옵션타입이 DOUBLE일 때 종료 -->
                   <div class="mt-4 mb-0">
                     <div class="d-flex justify-content-center">
-                      <input type="submit" class="btn btn-warning" value="등록" onclick="aaa()" />
+                      <input type="submit" class="btn btn-warning" value="수정" onclick="itemEditSubmit()" />
                       &nbsp;
                       <a class="btn btn-secondary" href="/admin/items">목록</a>
                     </div>
@@ -207,51 +361,10 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script th:inline="javascript">
   /*<![CDATA[*/
-  window.addEventListener('DOMContentLoaded', function() {
-
-  });
-
-  function changeOptionType(optionType) {
-    //초기화
-    $('#optionName1').hide();
-    $('#optionName2').hide();
-    $('#addOptionValue1Btn').hide();
-    $('#removeOptionValue1Btn').hide();
-    $('#addOptionValue2Btn').hide();
-    $('#removeOptionValue2Btn').hide();
-    $('#singleType').hide();
-    $('#doubleType').hide();
-
-    if(optionType == 'SINGLE') {
-      $('#optionName1').show();
-      $('#optionName2').hide();
-      $('#addOptionValue1Btn').show();
-      $('#removeOptionValue1Btn').show();
-      $('#addOptionValue2Btn').hide();
-      $('#removeOptionValue2Btn').hide();
-      $('#singleType').show();
-      $('#doubleType').hide();
-    } else if(optionType == 'DOUBLE') {
-      $('#optionName1').show();
-      $('#optionName2').show();
-      $('#addOptionValue1Btn').show();
-      $('#removeOptionValue1Btn').show();
-      $('#addOptionValue2Btn').show();
-      $('#removeOptionValue2Btn').show();
-      $('#singleType').hide();
-      $('#doubleType').show();
-    } else {
-      $('#optionName1').hide();
-      $('#optionName2').hide();
-      $('#addOptionValue1Btn').hide();
-      $('#removeOptionValue1Btn').hide();
-      $('#addOptionValue2Btn').hide();
-      $('#removeOptionValue2Btn').hide();
-      $('#singleType').hide();
-      $('#doubleType').hide();
-    }
+  function itemEditSubmit() {
+    $("#optionType").attr("disabled", false);
+    $("#managerId").attr("disabled", false);
   }
-
   function addFirstOption() {
     let optionType = $('#optionType').val();
     let optionValue1Size = '';

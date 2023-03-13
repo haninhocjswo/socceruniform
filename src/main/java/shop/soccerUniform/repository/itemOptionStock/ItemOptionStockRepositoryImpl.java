@@ -4,8 +4,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import shop.soccerUniform.entity.ItemOptionStock;
+import shop.soccerUniform.entity.QItemOptionStock;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
+import static shop.soccerUniform.entity.QItemOptionStock.itemOptionStock;
 
 @Repository
 public class ItemOptionStockRepositoryImpl implements ItemOptionStockQueryRepository {
@@ -19,4 +23,12 @@ public class ItemOptionStockRepositoryImpl implements ItemOptionStockQueryReposi
         queryFactory = new JPAQueryFactory(em);
     }
 
+    @Override
+    public List<ItemOptionStock> findByItemId(Long itemId) {
+        return queryFactory
+                .selectFrom(itemOptionStock)
+                .where(itemOptionStock.item.id.eq(itemId))
+                .orderBy(itemOptionStock.sort.asc())
+                .fetch();
+    }
 }

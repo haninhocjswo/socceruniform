@@ -30,9 +30,8 @@ import shop.soccerUniform.util.PageList;
 
 import javax.validation.Valid;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -69,8 +68,9 @@ public class AdminItemController {
     public String item(@PathVariable(value = "itemId") Long itemId, Model model) {
         List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
         List<Category> categories = categoryService.findByDepths(3);
+        ItemEditForm itemEditForm = itemService.detailItem(itemId);
 
-        model.addAttribute("itemEditForm", new ItemEditForm());
+        model.addAttribute("itemEditForm", itemEditForm);
         model.addAttribute("managers", managers);
         model.addAttribute("categories", categories);
 
@@ -121,6 +121,18 @@ public class AdminItemController {
             }
         }
 
+        ArrayList<String> stockKeyList = itemSaveFormMap.keySet().stream()
+                .filter(m -> m.contains("stock_"))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        for (String key : stockKeyList) {
+            if(itemSaveFormMap.get(key) != null) {
+                if((Integer) itemSaveFormMap.get(key) < 0) {
+                    bindingResult.reject("stockMinus", "재고값은 마이너스가 될 수 없습니다.");
+                }
+            }
+        }
+
         firstValueName = "";
         if(itemSaveForm.getOptionType() == OptionType.DOUBLE) {
             String doubleStockName = "";
@@ -147,7 +159,6 @@ public class AdminItemController {
 
         //필드에러
         if(bindingResult.hasErrors()) {
-            log.info("bindingResult={}", bindingResult);
             List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
             List<Category> categories = categoryService.findByDepths(3);
 
@@ -158,6 +169,91 @@ public class AdminItemController {
 
         itemSaveForm.setValueName1_1(itemSaveForm.getValueName1_1().replaceAll(",", ""));
         itemService.saveItem(itemSaveForm);
+
+        return "redirect:/admin/items";
+    }
+
+    @PostMapping("/admin/item/edit")
+    public String editItem(@Valid @ModelAttribute(name = "itemEditForm") ItemEditForm itemEditForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
+        if(!StringUtils.hasText(itemEditForm.getFirstOptionName())) {
+            bindingResult.reject("firstOptionName", "옵션1명은 필수값입니다.");
+        }
+
+        Map<String, Object> itemEditFormMap = new HashMap<>();
+        Field[] fields = itemEditForm.getClass().getDeclaredFields();
+        String firstValueName = "";
+        String secondValueName = "";
+
+        for (Field field : fields) {
+            if(field.get(itemEditForm) != null) {
+                itemEditFormMap.put(field.getName(), field.get(itemEditForm));
+            }
+        }
+
+        if(itemEditForm.getOptionType() == OptionType.SINGLE) {
+            String singleStockName = "";
+            for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
+                firstValueName = "valueName1_" + (i+1);
+                singleStockName = "stock_" + (i+1) + "_0";
+
+                if(itemEditFormMap.get(firstValueName) == null) {
+                    bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
+                }
+
+                if(itemEditFormMap.get(singleStockName) == null) {
+                    bindingResult.reject(singleStockName, "재고를 확인해주세요.");
+                }
+            }
+        }
+
+        ArrayList<String> stockKeyList = itemEditFormMap.keySet().stream()
+                .filter(m -> m.contains("stock_"))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        for (String key : stockKeyList) {
+            if(itemEditFormMap.get(key) != null) {
+                if((Integer) itemEditFormMap.get(key) < 0) {
+                    bindingResult.reject("stockMinus", "재고값은 마이너스가 될 수 없습니다.");
+                }
+            }
+        }
+
+        firstValueName = "";
+        if(itemEditForm.getOptionType() == OptionType.DOUBLE) {
+            String doubleStockName = "";
+            for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
+                for(int k = 0; k < itemEditForm.getItemOption2ValueSize(); k++) {
+                    firstValueName = "valueName1_" + (i+1);
+                    secondValueName = "valueName2_" + (k+1);
+                    doubleStockName = "stock_" + (i+1) + "_" + (k+1);
+
+                    if(itemEditFormMap.get(firstValueName) == null) {
+                        bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
+                    }
+
+                    if(itemEditFormMap.get(secondValueName) == null) {
+                        bindingResult.reject(secondValueName, "옵션값을 확인해주세요.");
+                    }
+
+                    if(itemEditFormMap.get(doubleStockName) == null) {
+                        bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
+                    }
+                }
+            }
+        }
+
+        //필드에러
+        if(bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult);
+            List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
+            List<Category> categories = categoryService.findByDepths(3);
+
+            model.addAttribute("managers", managers);
+            model.addAttribute("categories", categories);
+            return "admin/item/itemForm";
+        }
+
+        itemService.editItem(itemEditForm, itemEditForm.getItemId());
 
         return "redirect:/admin/items";
     }

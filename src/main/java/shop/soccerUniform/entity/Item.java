@@ -2,6 +2,7 @@ package shop.soccerUniform.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.enumtype.ItemState;
 import shop.soccerUniform.entity.enumtype.OptionType;
 
@@ -68,6 +69,19 @@ public class Item extends DateColumns {
         this.optionType = optionType;
         this.price = price;
         this.state = state;
+    }
+
+    public void editItem(String name, Manager manager, Category category, String manufacturer, String origin, String description, Integer price, ItemState state) {
+        if(StringUtils.hasText(name) && (this.name != name)) this.name = name;
+        if(manager != null && (this.manager != manager)) this.manager = manager;
+        System.out.println("원래 카테고리=" + this.category.getId());
+        System.out.println("변경 카테고리=" + category.getId());
+        if(category != null && (this.category != category)) this.category = category;
+        if(StringUtils.hasText(manufacturer) && (this.manufacturer != manufacturer)) this.manufacturer = manufacturer;
+        if(StringUtils.hasText(origin) && (this.origin != origin)) this.origin = origin;
+        if(StringUtils.hasText(description) && (this.description != description)) this.description = description;
+        if(price != null && (this.price != price)) this.price = price;
+        if(state != null && (this.state != state)) this.state = state;
     }
 
     public void deleteItem() {

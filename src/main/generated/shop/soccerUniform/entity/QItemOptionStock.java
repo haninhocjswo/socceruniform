@@ -30,6 +30,8 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
 
     public final QItemOptionValue secondOptionValue;
 
+    public final StringPath sort = createString("sort");
+
     public final NumberPath<Integer> stock = createNumber("stock", Integer.class);
 
     public QItemOptionStock(String variable) {

@@ -10,11 +10,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 public class ItemEditForm {
 
     @NotNull(message = "접근이 잘못되었습니다.")
-    private Long itemId;
+    public Long itemId;
 
     @NotBlank(message = "상품명은 필수값입니다.")
     public String name;
