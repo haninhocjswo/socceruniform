@@ -106,15 +106,13 @@ public class AdminItemController {
         }
 
         if(itemSaveForm.getOptionType() == OptionType.SINGLE) {
+            if(itemSaveForm.getValueName1_1() == null) {
+                bindingResult.reject("valueName1_1", "옵션값을 입력해주세요.");
+            }
+
             String singleStockName = "";
             for(int i = 0; i < itemSaveForm.getItemOption1ValueSize(); i++) {
-                firstValueName = "valueName1_" + (i+1);
                 singleStockName = "stock_" + (i+1) + "_0";
-
-                if(itemSaveFormMap.get(firstValueName) == null) {
-                    bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
-                    break;
-                }
 
                 if(itemSaveFormMap.get(singleStockName) == null) {
                     bindingResult.reject(singleStockName, "재고를 확인해주세요.");
@@ -137,22 +135,18 @@ public class AdminItemController {
 
         firstValueName = "";
         if(itemSaveForm.getOptionType() == OptionType.DOUBLE) {
+            if(itemSaveForm.getValueName1_1() == null) {
+                bindingResult.reject("valueName1_1", "옵션값을 입력해주세요.");
+            }
+
+            if(itemSaveForm.getValueName2_1() == null) {
+                bindingResult.reject("valueName2_1", "옵션값을 입력해주세요.");
+            }
+
             String doubleStockName = "";
             for(int i = 0; i < itemSaveForm.getItemOption1ValueSize(); i++) {
                 for(int k = 0; k < itemSaveForm.getItemOption2ValueSize(); k++) {
-                    firstValueName = "valueName1_" + (i+1);
-                    secondValueName = "valueName2_" + (k+1);
                     doubleStockName = "stock_" + (i+1) + "_" + (k+1);
-
-                    if(itemSaveFormMap.get(firstValueName) == null) {
-                        bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
-                        break;
-                    }
-
-                    if(itemSaveFormMap.get(secondValueName) == null) {
-                        bindingResult.reject(secondValueName, "옵션값을 확인해주세요.");
-                        break;
-                    }
 
                     if(itemSaveFormMap.get(doubleStockName) == null) {
                         bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
@@ -198,13 +192,7 @@ public class AdminItemController {
         if(itemEditForm.getOptionType() == OptionType.SINGLE) {
             String singleStockName = "";
             for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
-                firstValueName = "valueName1_" + (i+1);
                 singleStockName = "stock_" + (i+1) + "_0";
-
-                if(itemEditFormMap.get(firstValueName) == null) {
-                    bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
-                    break;
-                }
 
                 if(itemEditFormMap.get(singleStockName) == null) {
                     bindingResult.reject(singleStockName, "재고를 확인해주세요.");
@@ -230,19 +218,7 @@ public class AdminItemController {
             String doubleStockName = "";
             for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
                 for(int k = 0; k < itemEditForm.getItemOption2ValueSize(); k++) {
-                    firstValueName = "valueName1_" + (i+1);
-                    secondValueName = "valueName2_" + (k+1);
                     doubleStockName = "stock_" + (i+1) + "_" + (k+1);
-
-                    if(itemEditFormMap.get(firstValueName) == null) {
-                        bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
-                        break;
-                    }
-
-                    if(itemEditFormMap.get(secondValueName) == null) {
-                        bindingResult.reject(secondValueName, "옵션값을 확인해주세요.");
-                        break;
-                    }
 
                     if(itemEditFormMap.get(doubleStockName) == null) {
                         bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
