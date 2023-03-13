@@ -33,4 +33,8 @@ public class ItemOption {
         this.optionName = optionName;
         this.optionSort = optionSort;
     }
+
+    public void editOption(String optionName) {
+        this.optionName = optionName;
+    }
 }

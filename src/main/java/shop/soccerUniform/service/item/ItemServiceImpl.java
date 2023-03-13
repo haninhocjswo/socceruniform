@@ -142,7 +142,7 @@ public class ItemServiceImpl implements ItemService{
 
     @Transactional
     @Override
-    public void editItem(ItemEditForm itemEditForm, Long itemId) {
+    public void editItem(ItemEditForm itemEditForm, Long itemId) throws IllegalAccessException {
         Item item = itemRepository.findById(itemId).get();
         Manager manager = managerRepository.findById(itemEditForm.getManagerId()).get();
         Category category = categoryRepository.findById(itemEditForm.getCategoryId()).get();
@@ -151,9 +151,107 @@ public class ItemServiceImpl implements ItemService{
                 itemEditForm.getDescription(), itemEditForm.getPrice(), itemEditForm.getState());
 
         List<ItemOption> itemOptions = itemOptionRepository.findByItemId(itemId);
+        Long firstItemOptionId = 0L;
+        Long secondItemOptionId = 0L;
         if(itemOptions.size() > 0) {
             for (ItemOption itemOption : itemOptions) {
-                //여깁니다!! 여기요!!
+                if(itemOption.getOptionSort() == 1) {
+                    itemOption.editOption(itemEditForm.getFirstOptionName());
+                    firstItemOptionId = itemOption.getId();
+                }
+
+                if(itemOption.getOptionSort() == 2) {
+                    itemOption.editOption(itemEditForm.getSecondOptionName());
+                    secondItemOptionId = itemOption.getId();
+                }
+            }
+        }
+
+        itemOptionStockRepository.deletedByItemId(itemId);
+        itemOptionValueRepository.deletedByItemId(itemId);
+
+        Field[] fields = itemEditForm.getClass().getDeclaredFields();
+        Map<String, Object> itemEditFormMap = new HashMap<>();
+        for (Field field : fields) {
+            if(field.get(itemEditForm) != null) {
+                itemEditFormMap.put(field.getName(), field.get(itemEditForm));
+            }
+        }
+
+        ItemOption firstItemOption = null;
+        String stockSort = "";
+        if(item.getOptionType() == OptionType.SINGLE) { // 옵션이 하나인 경우
+            firstItemOption = itemOptions.get(0);
+
+            // ITEM_OPTION_VALUE 생성
+            String itemOptionValueName = "";
+            for(int i = 1; i <= itemEditForm.getItemOption1ValueSize(); i++) {
+                itemOptionValueName = "valueName1_" + i;
+                if(itemEditFormMap.get(itemOptionValueName) == null) {
+                    throw new RuntimeException("상품옵션 종류명을 확인해주세요");
+                }
+
+                itemOptionValueRepository.save(new ItemOptionValue(item, firstItemOption, String.valueOf(itemEditFormMap.get(itemOptionValueName)), i));
+            }
+
+            // ITEM_OPTION_STOCK 생성
+            List<ItemOptionValue> itemOptionValues = itemOptionValueRepository.findByItemOptionId(firstItemOption.getId());
+            String itemOptionStockName = "";
+            for(int i = 0; i < itemOptionValues.size(); i++) {
+                itemOptionStockName = "stock_" + (i+1) + "_0";
+                stockSort = (i+1) + "_0";
+                if(itemEditFormMap.get(itemOptionStockName) == null) {
+                    throw new RuntimeException("상품 재고를 확인해주세요");
+                }
+
+                itemOptionStockRepository.save(new ItemOptionStock(item, itemOptionValues.get(i), null,
+                        stockSort, (Integer) itemEditFormMap.get(itemOptionStockName)));
+            }
+        }
+
+        ItemOption secondItemOption = null;
+        if(item.getOptionType() == OptionType.DOUBLE) { // 옵션이 두 개인 경우
+            firstItemOption = itemOptions.get(0);
+            secondItemOption = itemOptions.get(1);
+
+            // ITEM_OPTION_VALUE 생성
+            String itemOption1ValueName = "";
+            for(int i = 1; i <= itemEditForm.getItemOption1ValueSize(); i++) {
+                itemOption1ValueName = "valueName1_" + i;
+                if(itemEditFormMap.get(itemOption1ValueName) == null) {
+                    throw new RuntimeException("상품옵션 종류명을 확인해주세요");
+                }
+
+                itemOptionValueRepository.save(new ItemOptionValue(item, firstItemOption,
+                        String.valueOf(itemEditFormMap.get(itemOption1ValueName)), i));
+            }
+
+            String itemOption2ValueName = "";
+            for(int i = 1; i <= itemEditForm.getItemOption2ValueSize(); i++) {
+                itemOption2ValueName = "valueName2_" + i;
+                if(itemEditFormMap.get(itemOption2ValueName) == null) {
+                    throw new RuntimeException("상품옵션 종류명을 확인해주세요");
+                }
+
+                itemOptionValueRepository.save(new ItemOptionValue(item, secondItemOption,
+                        String.valueOf(itemEditFormMap.get(itemOption2ValueName)), i));
+            }
+
+            // ITEM_OPTION_STOCK 생성
+            List<ItemOptionValue> itemOption1Values = itemOptionValueRepository.findByItemOptionId(firstItemOption.getId());
+            List<ItemOptionValue> itemOption2Values = itemOptionValueRepository.findByItemOptionId(secondItemOption.getId());
+            String itemOptionStockName = "";
+            for(int i = 0; i < itemOption1Values.size(); i++) {
+                for(int k = 0; k < itemOption2Values.size(); k++) {
+                    itemOptionStockName = "stock_" + (i+1) + "_" + (k+1);
+                    stockSort = (i+1) + "_" + (k+1);
+                    if(itemEditFormMap.get(itemOptionStockName) == null) {
+                        throw new RuntimeException("상품 재고를 확인해주세요");
+                    }
+
+                    itemOptionStockRepository.save(new ItemOptionStock(item, itemOption1Values.get(i), itemOption2Values.get(k),
+                            stockSort, (Integer) itemEditFormMap.get(itemOptionStockName)));
+                }
             }
         }
     }

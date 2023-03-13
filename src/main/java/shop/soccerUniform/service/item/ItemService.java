@@ -9,7 +9,7 @@ import shop.soccerUniform.entity.dto.ItemSearchForm;
 
 public interface ItemService {
     public void saveItem(ItemSaveForm itemForm) throws IllegalAccessException;
-    public void editItem(ItemEditForm itemEditForm, Long itemId);
+    public void editItem(ItemEditForm itemEditForm, Long itemId) throws IllegalAccessException;
     public void deletedItem(Long itemId);
     public ItemEditForm detailItem(Long itemId);
     public Page<ItemForm> items(ItemSearchForm itemSearchForm, Pageable pageable);

@@ -40,4 +40,9 @@ public class ItemOptionValue {
         this.optionValue = optionValue;
         this.optionValueSort = optionValueSort;
     }
+
+    public void editItemOptionValue(String optionValue, Integer optionValueSort) {
+        this.optionValue = optionValue;
+        this.optionValueSort = optionValueSort;
+    }
 }

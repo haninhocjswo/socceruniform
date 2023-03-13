@@ -31,4 +31,12 @@ public class ItemOptionStockRepositoryImpl implements ItemOptionStockQueryReposi
                 .orderBy(itemOptionStock.sort.asc())
                 .fetch();
     }
+
+    @Override
+    public void deletedByItemId(Long itemId) {
+        queryFactory
+                .delete(itemOptionStock)
+                .where(itemOptionStock.item.id.eq(itemId))
+                .execute();
+    }
 }

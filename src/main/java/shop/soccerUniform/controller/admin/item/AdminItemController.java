@@ -113,10 +113,12 @@ public class AdminItemController {
 
                 if(itemSaveFormMap.get(firstValueName) == null) {
                     bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
+                    break;
                 }
 
                 if(itemSaveFormMap.get(singleStockName) == null) {
                     bindingResult.reject(singleStockName, "재고를 확인해주세요.");
+                    break;
                 }
             }
         }
@@ -144,14 +146,17 @@ public class AdminItemController {
 
                     if(itemSaveFormMap.get(firstValueName) == null) {
                         bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
+                        break;
                     }
 
                     if(itemSaveFormMap.get(secondValueName) == null) {
                         bindingResult.reject(secondValueName, "옵션값을 확인해주세요.");
+                        break;
                     }
 
                     if(itemSaveFormMap.get(doubleStockName) == null) {
                         bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
+                        break;
                     }
                 }
             }
@@ -198,10 +203,12 @@ public class AdminItemController {
 
                 if(itemEditFormMap.get(firstValueName) == null) {
                     bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
+                    break;
                 }
 
                 if(itemEditFormMap.get(singleStockName) == null) {
                     bindingResult.reject(singleStockName, "재고를 확인해주세요.");
+                    break;
                 }
             }
         }
@@ -229,14 +236,17 @@ public class AdminItemController {
 
                     if(itemEditFormMap.get(firstValueName) == null) {
                         bindingResult.reject(firstValueName, "옵션값을 확인해주세요.");
+                        break;
                     }
 
                     if(itemEditFormMap.get(secondValueName) == null) {
                         bindingResult.reject(secondValueName, "옵션값을 확인해주세요.");
+                        break;
                     }
 
                     if(itemEditFormMap.get(doubleStockName) == null) {
                         bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
+                        break;
                     }
                 }
             }
