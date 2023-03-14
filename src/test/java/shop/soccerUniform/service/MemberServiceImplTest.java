@@ -46,7 +46,12 @@ class MemberServiceImplTest {
 
     @Test
     void save() {
-
+        MemberForm memberForm = new MemberForm();
+        Optional<Member> member = memberRepository.findById(3L);
+        member.ifPresent(m -> {
+            memberForm.setMemberId(m.getId());
+        });
+        assertThat(memberForm.getMemberId()).isNull();
     }
 
     @Test
