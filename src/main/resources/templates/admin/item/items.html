@@ -56,6 +56,17 @@
                   </select>
                 </mx-auto>
 
+                <h4>입점업체&nbsp;</h4>
+                <mx-auto class="col-sm-2">
+                  <select class="form-select" th:field="*{managerId}" style="width:auto;">
+                    <option value="">전체</option>
+                    <option th:each="manager : ${managers}"
+                            th:value="${manager.id}"
+                            th:text="${manager.companyName}"
+                            th:selected="${manager.id} == *{managerId}">등급</option>
+                  </select>
+                </mx-auto>
+
                 <mx-auto style="margin-left: auto;">
                   <select class="form-select" th:field="*{searchKey}" style="width:auto;">
                     <option value="name">상품명</option>

@@ -45,6 +45,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
         String searchKey = itemSearchForm.getSearchKey();
         String searchValue = itemSearchForm.getSearchValue();
         ItemState state = itemSearchForm.getState();
+        Long managerId = itemSearchForm.getManagerId();
 
         return queryFactory
                 .select(Projections.fields(ItemForm.class,
@@ -61,7 +62,8 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                 .from(item)
                 .where(
                         byText(searchKey, searchValue),
-                        byState(state))
+                        byState(state),
+                        byManagerId(managerId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -71,13 +73,15 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
         String searchKey = itemSearchForm.getSearchKey();
         String searchValue = itemSearchForm.getSearchValue();
         ItemState state = itemSearchForm.getState();
+        Long managerId = itemSearchForm.getManagerId();
 
         return queryFactory
                 .select(item.count())
                 .from(item)
                 .where(
                         byText(searchKey, searchValue),
-                        byState(state))
+                        byState(state),
+                        byManagerId(managerId))
                 .limit(pageable.getPageSize())
                 .fetchOne();
     }
@@ -98,5 +102,9 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
 
     public BooleanExpression byState(ItemState state) {
         return state != null ? item.state.eq(state) : null;
+    }
+
+    public BooleanExpression byManagerId(Long managerId) {
+        return managerId != null ? item.manager.id.eq(managerId) : null;
     }
 }

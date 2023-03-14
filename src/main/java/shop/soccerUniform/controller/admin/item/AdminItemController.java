@@ -59,8 +59,14 @@ public class AdminItemController {
         pagination.put("isLast", items.isLast());
         pagination.put("pageList", pageList);
 
+        List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
+        for (Manager manager : managers) {
+            log.info("manager={}", manager);
+        }
+
         model.addAttribute("items", items.getContent());
         model.addAttribute("pagination", pagination);
+        model.addAttribute("managers", managers);
         return "admin/item/items";
     }
 
@@ -215,12 +221,19 @@ public class AdminItemController {
 
         firstValueName = "";
         if(itemEditForm.getOptionType() == OptionType.DOUBLE) {
+            if(itemEditForm.getValueName2_1() == null) {
+                bindingResult.reject("valueName2_1", "옵션2값은 필수입니다.");
+            }
+
             String doubleStockName = "";
             for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
                 for(int k = 0; k < itemEditForm.getItemOption2ValueSize(); k++) {
                     doubleStockName = "stock_" + (i+1) + "_" + (k+1);
 
                     if(itemEditFormMap.get(doubleStockName) == null) {
+                        log.info("itemEditForm.getItemOption1ValueSize()={}", itemEditForm.getItemOption1ValueSize());
+                        log.info("itemEditForm.getItemOption2ValueSize()={}", itemEditForm.getItemOption2ValueSize());
+                        log.info("bindingResult={}", bindingResult);
                         bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
                         break;
                     }

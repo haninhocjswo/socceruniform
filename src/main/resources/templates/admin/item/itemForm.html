@@ -432,17 +432,17 @@
     let optionType = $('#optionType').val();
 
     if(optionType == 'SINGLE') {
-      let optionValue1Size = $('#singleTable .option-value-1-list').children('td').length;
+      let optionValue1Size = $('#singleTable .option-value-1-list').children('td').length + 1;
 
       $('#singleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
       $('#singleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
-      $('#itemOption1ValueSize').val(optionValue1Size - 1);
+      $('#itemOption1ValueSize').val(optionValue1Size - 2);
     } else if(optionType == 'DOUBLE') {
       let optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length + 1;
 
       $('#doubleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
       $('#doubleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
-      $('#itemOption1ValueSize').val(optionValue1Size - 1);
+      $('#itemOption1ValueSize').val(optionValue1Size - 2);
     }
   }
 
