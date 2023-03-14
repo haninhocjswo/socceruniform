@@ -12,4 +12,5 @@ import java.util.Map;
 public interface MemberQueryRepository {
 
     Page<MembersDTO> members(MemberSearchForm memberSearchForm, Pageable pageable);
+    Long findByLoginId(String loginId);
 }

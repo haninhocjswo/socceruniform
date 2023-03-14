@@ -136,7 +136,7 @@
 
 	        function deletedMember(id) {
 	            if(confirm("삭제하시겠습니까?")) {
-	                categories
+	                $.ajax({
                         url: '/admin/member/delete/' + id,
                         type: 'POST',
                         data: {'memberId': id},

@@ -1,48 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Shop Item - Start Bootstrap Template</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="../css/front/styles.css" rel="stylesheet" />
-</head>
+<head th:replace="~{/front/fragment/frontHeader.html :: frontHeader}"></head>
 <body>
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#!">Start Bootstrap</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">All Products</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="d-flex">
-                <button class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
-            </form>
-        </div>
-    </div>
-</nav>
+<nav th:replace="~{/front/fragment/frontNav.html :: frontNav}"></nav>
 <!-- Product section-->
 <section class="vh-100" style="background-color: #eee;">
     <div class="container py-5 h-100">
@@ -50,41 +11,66 @@
             <div class="col-12 col-lg-9 col-xl-7">
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                     <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
-                        <form th:action="@{/member/edit}" th:object="${memberForm}" method="post">
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">회원등록</h3>
+                        <form th:action="@{/member/register}" th:object="${memberSaveForm}" method="post">
+                            <div class="col-md-6 mb-4" th:if="${#fields.hasGlobalErrors()}">
+                                <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">
+                                    글로벌 에러
+                                </p>
+                            </div>
 
-                            <input type="hidden" th:field="${memberId}">
+                            <input type="hidden" th:field="*{duplicatedLoginId}">
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <label class="form-label" for="loginId">로그인 아이디</label>
-                                        <input type="text" id="loginId" th:field="*{loginId}" class="form-control form-control-lg" />
-                                        <label class="form-label" for="loginId">로그인 아이디</label>
+                                        <label class="form-label" for="loginId">아이디</label>
+                                        <input type="text" id="loginId" th:field="*{loginId}" onchange="changedLoginId(this.value)"
+                                               class="form-control form-control-lg" th:errorclass="field-error" >
+                                        <div class="field-error" th:errors="*{loginId}">로그인아이디에러</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <label class="form-label" for="password">password</label>
-                                        <input type="password" id="password" th:field="*{password}" class="form-control form-control-lg" />
-                                        <label class="form-label" for="password">비밀번호</label>
+                                        <input class="btn btn-warning btn-lg" type="button" value="중복체크" th:onclick="duplicateCheck();" />
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-4 d-flex align-items-center">
+                                <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <label class="form-label" for="username">username</label>
-                                        <input type="text" id="username" th:field="*{username}" class="form-control form-control-lg" />
-                                        <label for="username" class="form-label">username</label>
+                                        <label class="form-label" for="password">패스워드</label>
+                                        <input type="password" id="password" th:field="*{password}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{password}">비밀번호에러</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <label class="form-label" for="email">email</label>
-                                        <input type="email" id="email" th:field="*{email}" class="form-control form-control-lg" />
-                                        <label class="form-label" for="email">Email</label>
+                                        <label class="form-label" for="username">이름</label>
+                                        <input type="text" id="username" th:field="*{username}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{username}">이름에러</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="email">이메일</label>
+                                        <input type="email" id="email" th:field="*{email}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{email}">이메일에러</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="mobile">휴대폰</label>
+                                        <input type="text" id="mobile" th:field="*{mobile}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{mobile}">mobile error</div>
                                     </div>
                                 </div>
                             </div>
@@ -92,32 +78,71 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label class="form-label" for="mobile">mobile</label>
-                                        <input type="text" id="mobile" th:field="*{mobile}" class="form-control form-control-lg" />
-                                        <label class="form-label" for="mobile">Phone Number</label>
+                                        <label class="form-label" for="homeNum">전화번호</label>
+                                        <input type="text" id="homeNum" th:field="*{homeNum}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{homeNum}">homeNum error</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-4 pb-2">
-                                    <div class="form-outline">
-                                        <label class="form-label" for="homeNum">homeNum</label>
-                                        <input type="text" id="homeNum" th:field="*{homeNum}" class="form-control form-control-lg" />
-                                        <label class="form-label" for="homeNum">homeNum</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
                                     <label class="form-label" for="gender">성별</label><br>
-                                    <select class="select form-control-lg" id="gender" th:field="*{gender}">
+                                    <select class="select form-control-lg" th:errorclass="field-error" id="gender" th:field="*{gender}">
                                         <option th:each="gender : ${T(shop.soccerUniform.entity.enumtype.Gender).values()}" th:text="${gender}" th:value="${gender}">Subject 1</option>
                                     </select>
-                                    <label class="form-label select-label">Choose option</label>
+                                    <div class="field-error" th:errors="*{gender}">gender error</div>
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="post">우편번호</label>
+                                        <input type="text" id="post" th:field="*{post}" readonly
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{post}">post error</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input class="btn btn-warning btn-lg" type="button" value="주소검색" onclick="daumAddressSearch()" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="addr">주소</label>
+                                        <input type="text" id="addr" th:field="*{addr}" readonly
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{addr}">addr error</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="detailAddr">상세주소</label>
+                                        <input type="text" id="detailAddr" th:field="*{detailAddr}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{detailAddr}">detailAddr error</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="birth">생년월일</label>
+                                        <input type="date" id="birth" th:field="*{birth}"
+                                               class="form-control form-control-lg" th:errorclass="field-error" />
+                                        <div class="field-error" th:errors="*{birth}">birth error</div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="mt-4 pt-2">
-                                <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                <input class="btn btn-primary btn-lg" type="submit" value="회원등록" />
+                                <a class="btn btn-secondary btn-lg" type="button" href="/login">로그인으로</a>
                             </div>
                         </form>
                     </div>
@@ -126,13 +151,103 @@
         </div>
     </div>
 </section>
+
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    let checkedLoginId = '';
+
+    function duplicateCheck() {
+        let checkLoginId = $('#loginId').val();
+        if(checkLoginId != '') {
+            $.ajax({
+            url: '/member/duplicateLoginId',
+            type: 'POST',
+            data: {'checkLoginId': checkLoginId},
+            dataType: 'json',
+            success: function(data) {
+                let result = data['result'];
+                if(result) {
+                    $('#duplicatedLoginId').val(true);
+                    checkedLoginId = $('#loginId').val();
+                    alert(data['message']);
+                } else {
+                    $('#duplicatedLoginId').val(false);
+                    alert(data['message']);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("에러가 발생하였습니다.");
+            }
+          });
+        } else {
+            alert('아이디를 입력해주세요.');
+        }
+    }
+
+    function changedLoginId(changedLoginId) {
+        if(checkedLoginId != '') {
+            if(changedLoginId != checkedLoginId) {
+                $('#duplicatedLoginId').val(false);
+            } else {
+                $('#duplicatedLoginId').val(true);
+            }
+        }
+    }
+
+    function daumAddressSearch() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                    //document.getElementById("sample6_extraAddress").value = extraAddr;
+
+                } else {
+                    //document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('post').value = data.zonecode;
+                document.getElementById("addr").value = addr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("detailAddr").focus();
+            }
+        }).open();
+    }
+</script>
+</body>
 <!-- Footer-->
 <footer class="py-5 bg-dark">
     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
 </footer>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="../js/front/scripts.js"></script>
-</body>
 </html>

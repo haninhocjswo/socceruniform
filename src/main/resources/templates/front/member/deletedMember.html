@@ -1,17 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <title>404 Error - SB Admin</title>
-  <link href="../../css/front/styles.css" rel="stylesheet" />
-  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-</head>
+<head th:replace="~{/front/fragment/frontHeader.html :: frontHeader}"></head>
 <body>
-<nav th:replace="/front/fragment/frontHeader.html :: frontHeader"></nav>
+<nav th:replace="~{/front/fragment/frontNav.html :: frontNav}"></nav>
 <div id="layoutError">
   <div id="layoutError_content">
     <main>

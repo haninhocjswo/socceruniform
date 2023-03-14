@@ -46,6 +46,15 @@ public class MemberRepositoryImpl implements  MemberQueryRepository {
         return new PageImpl<>(members, pageable, count);
     }
 
+    @Override
+    public Long findByLoginId(String loginId) {
+        return queryFactory
+                .select(member.count())
+                .from(member)
+                .where(member.loginId.eq(loginId))
+                .fetchOne();
+    }
+
     public List<MembersDTO> memberList(MemberSearchForm memberSearchForm, Pageable pageable) {
         String searchKey = memberSearchForm.getSearchKey();
         String searchValue = memberSearchForm.getSearchValue();

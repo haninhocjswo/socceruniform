@@ -22,6 +22,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final QUser _super = new QUser(this);
 
+    public final StringPath birth = createString("birth");
+
     //inherited
     public final StringPath email = _super.email;
 

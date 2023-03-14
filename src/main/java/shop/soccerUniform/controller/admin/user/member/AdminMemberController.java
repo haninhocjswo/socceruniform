@@ -2,6 +2,7 @@ package shop.soccerUniform.controller.admin.user.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
@@ -18,6 +20,7 @@ import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.member.MemberService;
 import shop.soccerUniform.util.PageList;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,10 +62,14 @@ public class AdminMemberController {
         return "admin/user/memberForm";
     }
 
-    @PostMapping("/admin/member/edit/{memberId}")
-    public String editMember(@PathVariable(name = "memberId") Long memberId, @ModelAttribute(name = "memberForm") MemberForm memberForm) {
+    @PostMapping("/admin/member/edit")
+    public String editMember(@Valid @ModelAttribute(name = "memberForm") MemberForm memberForm, @NotNull BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            return "admin/user/memberForm";
+        }
+        log.info("memberForm={}", memberForm);
         memberService.updateMember(memberForm);
-        return "redirect:/admin/user/members";
+        return "redirect:/admin/members";
     }
 
     @PostMapping("/admin/member/delete/{memberId}")

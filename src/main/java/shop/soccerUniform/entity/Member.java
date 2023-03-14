@@ -21,6 +21,9 @@ import static lombok.AccessLevel.PROTECTED;
 public class Member extends User {
 
     @Column(nullable = false)
+    private String birth;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -37,14 +40,16 @@ public class Member extends User {
     @OneToMany(mappedBy = "member")
     private List<Point> points = new ArrayList<>();
 
-    public Member(Gender gender, Grade grade, String mobile, String homeNum) {
+    public Member(String birth, Gender gender, Grade grade, String mobile, String homeNum) {
+        this.birth = birth;
         this.gender = gender;
         this.grade = grade;
         this.mobile = mobile;
         this.homeNum = homeNum;
     }
 
-    public void editMember(Gender gender, Grade grade, String mobile, String homeNum) {
+    public void editMember(String birth, Gender gender, Grade grade, String mobile, String homeNum) {
+        if(this.birth != birth) this.birth = birth;
         if(this.gender != gender) this.gender = gender;
         if(this.grade != grade) this.grade = grade;
         if(this.mobile != mobile) this.mobile = mobile;

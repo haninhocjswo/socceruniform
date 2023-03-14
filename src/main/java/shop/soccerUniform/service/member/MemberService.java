@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import shop.soccerUniform.entity.Member;
 import shop.soccerUniform.entity.dto.MemberForm;
+import shop.soccerUniform.entity.dto.MemberSaveForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
 
@@ -12,7 +13,9 @@ import java.util.Map;
 
 public interface MemberService {
 
-    void saveMember(MemberForm memberForm);
+    void saveMember(MemberSaveForm memberSaveForm);
+
+    boolean duplicateLoginId(String loginId);
 
     void updateMember(MemberForm memberForm);
 
