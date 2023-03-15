@@ -11,7 +11,6 @@ import javax.validation.Valid;
 
 @Controller
 public class FrontLoginController {
-
     @GetMapping("/login")
     public String loginForm() {
         return "front/loginForm";

@@ -85,4 +85,5 @@ public class FrontMemberController {
         memberService.updateMember(memberForm);
         return "redirect:/";
     }
+
 }
