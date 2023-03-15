@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/");
 
+        
         return http.build();
     }
 }
