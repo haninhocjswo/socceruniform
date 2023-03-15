@@ -2,16 +2,14 @@ package shop.soccerUniform.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import shop.soccerUniform.login.LoginFailureHandler;
+import shop.soccerUniform.login.LoginFail;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
     @Bean
@@ -22,27 +20,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.cors().disable();
-        http.authorizeRequests()
-                .antMatchers("/member/**").authenticated()
-                .antMatchers("/order/**").authenticated()
-                .antMatchers("/cart/**").authenticated()
-//                .antMatchers("/manager/**").access("hasRole('ROLE_ADMIN')")
-//                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-                .anyRequest().permitAll()
+        http
+                .authorizeRequests()
+                .antMatchers("/member/**")
+                .permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/loginForm")
                 .usernameParameter("loginId")
                 .loginProcessingUrl("/login")
-                .failureHandler(loginFailureHandler())
+                .failureHandler(loginFail())
                 .defaultSuccessUrl("/");
 
         return http.build();
     }
 
     @Bean
-    public LoginFailureHandler loginFailureHandler() {
-        return new LoginFailureHandler();
+    public LoginFail loginFail() {
+        return new LoginFail();
     }
 }

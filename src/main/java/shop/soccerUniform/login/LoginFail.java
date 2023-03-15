@@ -10,10 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class LoginFailureHandler implements AuthenticationFailureHandler {
+public class LoginFail implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.info("LoginFailureHandler onAuthenticationFailure in");
-        log.info("login Fail exception={}", exception.getStackTrace());
+        log.info("exception={}", exception.getMessage());
     }
 }

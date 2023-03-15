@@ -1,6 +1,5 @@
 package shop.soccerUniform.login;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import shop.soccerUniform.entity.User;
@@ -8,12 +7,11 @@ import shop.soccerUniform.entity.User;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Slf4j
-public class PrincipalDetails implements UserDetails {
+public class PrincipalDetail implements UserDetails {
 
     private User user;
 
-    public PrincipalDetails(User user) {
+    public PrincipalDetail(User user) {
         this.user = user;
     }
 
