@@ -11,10 +11,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSaveForm;
-import shop.soccerUniform.service.member.MemberService;
+import shop.soccerUniform.service.user.member.MemberService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +24,12 @@ public class FrontMemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/member/register")
+    @GetMapping("/user/register")
     public String registerForm(@ModelAttribute(name = "memberSaveForm") MemberSaveForm memberSaveForm, Model model) {
         return "front/member/joinForm";
     }
 
-    @PostMapping("/member/register")
+    @PostMapping("/user/register")
     public String registerMember(@Valid @ModelAttribute(name = "memberSaveForm") MemberSaveForm memberSaveForm, BindingResult bindingResult, Model model) {
         if(!memberSaveForm.isDuplicatedLoginId()) {
             bindingResult.reject("loginId", "아이디 중복체크가 필요합니다.");
@@ -52,10 +51,9 @@ public class FrontMemberController {
         return "redirect:/home";
     }
 
-    @PostMapping("/member/duplicateLoginId")
+    @PostMapping("/user/duplicateLoginId")
     public ResponseEntity<Map<String, Object>> duplicateLoginId(@RequestParam(name = "checkLoginId") String checkLoginId) {
         Map<String, Object> ajaxMap = new HashMap<>();
-
         boolean result = memberService.duplicateLoginId(checkLoginId);
         ajaxMap.put("result", result);
         if(result) {

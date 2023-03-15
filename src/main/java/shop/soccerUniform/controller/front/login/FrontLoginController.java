@@ -11,13 +11,9 @@ import javax.validation.Valid;
 
 @Controller
 public class FrontLoginController {
-    @GetMapping("/login")
+    @GetMapping("/loginForm")
     public String loginForm() {
         return "front/loginForm";
     }
 
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult) {
-        return "redirect:/";
-    }
 }

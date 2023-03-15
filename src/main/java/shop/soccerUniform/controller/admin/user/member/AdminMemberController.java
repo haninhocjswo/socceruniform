@@ -17,7 +17,7 @@ import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
 import shop.soccerUniform.entity.enumtype.UserState;
-import shop.soccerUniform.service.member.MemberService;
+import shop.soccerUniform.service.user.member.MemberService;
 import shop.soccerUniform.util.PageList;
 
 import javax.validation.Valid;

@@ -25,7 +25,7 @@ import shop.soccerUniform.entity.enumtype.OptionType;
 import shop.soccerUniform.entity.enumtype.UserState;
 import shop.soccerUniform.service.category.CategoryService;
 import shop.soccerUniform.service.item.ItemService;
-import shop.soccerUniform.service.manager.ManagerService;
+import shop.soccerUniform.service.user.manager.ManagerService;
 import shop.soccerUniform.util.PageList;
 
 import javax.validation.Valid;

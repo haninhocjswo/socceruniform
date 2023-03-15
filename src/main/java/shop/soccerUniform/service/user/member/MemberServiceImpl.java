@@ -1,9 +1,10 @@
-package shop.soccerUniform.service.member;
+package shop.soccerUniform.service.user.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.Address;
@@ -29,15 +30,15 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
-
     private final AddressRepository addressRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     @Override
     public void saveMember(MemberSaveForm memberSaveForm) {
         Member member = new Member(memberSaveForm.getBirth(), memberSaveForm.getGender(), Grade.BRONZE,
                 memberSaveForm.getMobile(), memberSaveForm.getHomeNum());
-        member.addUser(memberSaveForm.getLoginId(), memberSaveForm.getPassword(), memberSaveForm.getUsername(),
+        member.addUser(memberSaveForm.getLoginId(), bCryptPasswordEncoder.encode(memberSaveForm.getPassword()), memberSaveForm.getUsername(),
                 memberSaveForm.getEmail(), Role.ROLE_MEMBER, UserState.ABLE);
         member.addDate(LocalDateTime.now(), LocalDateTime.now());
         memberRepository.save(member);
