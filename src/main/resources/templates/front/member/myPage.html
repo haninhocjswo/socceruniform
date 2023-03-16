@@ -19,29 +19,19 @@
                 </p>
               </div>
 
-
               <input type="hidden" th:field="*{memberId}">
+              <input type="hidden" th:field="*{grade}">
+              <input type="hidden" th:field="*{state}">
 
               <div class="row">
                 <div class="col-md-6 mb-4">
                   <div class="form-outline">
                     <label class="form-label" for="loginId">아이디</label>
-                    <input type="text" id="loginId" th:field="*{loginId}" onchange="changedLoginId(this.value)"
+                    <input type="text" id="loginId" th:field="*{loginId}"
                            class="form-control form-control-lg" th:errorclass="field-error" >
                     <div class="field-error" th:errors="*{loginId}">로그인아이디에러</div>
                   </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                  <div class="form-outline">
-                    <label class="form-label" for="password">패스워드</label>
-                    <input type="password" id="password" th:field="*{password}"
-                           class="form-control form-control-lg" th:errorclass="field-error" />
-                    <div class="field-error" th:errors="*{password}">비밀번호에러</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
                 <div class="col-md-6 mb-4">
                   <div class="form-outline">
                     <label class="form-label" for="username">이름</label>
@@ -50,6 +40,27 @@
                     <div class="field-error" th:errors="*{username}">이름에러</div>
                   </div>
                 </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <label class="form-label" for="password">비밀번호</label>
+                    <input type="password" id="password" th:field="*{password}"
+                           class="form-control form-control-lg" th:errorclass="field-error" />
+                    <div class="field-error" th:errors="*{password}">비밀번호에러</div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <label class="form-label" for="passwordCheck">비밀번호 확인</label>
+                    <input type="password" id="passwordCheck" th:field="*{passwordCheck}"
+                           class="form-control form-control-lg" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
                 <div class="col-md-6 mb-4">
                   <div class="form-outline">
                     <label class="form-label" for="email">이메일</label>
@@ -58,9 +69,6 @@
                     <div class="field-error" th:errors="*{email}">이메일에러</div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
                 <div class="col-md-6 mb-4 pb-2">
                   <div class="form-outline">
                     <label class="form-label" for="mobile">휴대폰</label>
@@ -69,6 +77,9 @@
                     <div class="field-error" th:errors="*{mobile}">mobile error</div>
                   </div>
                 </div>
+              </div>
+
+              <div class="row">
                 <div class="col-md-6 mb-4 pb-2">
                   <div class="form-outline">
                     <label class="form-label" for="homeNum">전화번호</label>
@@ -77,16 +88,19 @@
                     <div class="field-error" th:errors="*{homeNum}">homeNum error</div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
                 <div class="col-md-6 mb-4 pb-2">
                   <label class="form-label" for="gender">성별</label><br>
-                  <select class="select form-control-lg" th:errorclass="field-error" id="gender" th:field="*{gender}">
-                    <option th:each="gender : ${T(shop.soccerUniform.entity.enumtype.Gender).values()}" th:text="${gender}" th:value="${gender}">Subject 1</option>
+                  <select class="select form-control form-control-lg" th:errorclass="field-error" id="gender" th:field="*{gender}">
+                    <option th:each="gender : ${T(shop.soccerUniform.entity.enumtype.Gender).values()}"
+                            th:text="${gender}"
+                            th:value="${gender}"
+                            th:selected="${gender} eq *{gender}">gender</option>
                   </select>
                   <div class="field-error" th:errors="*{gender}">gender error</div>
                 </div>
+              </div>
+
+              <div class="row">
                 <div class="col-md-6 mb-4 pb-2">
                   <div class="form-outline">
                     <label class="form-label" for="birth">생년월일</label>

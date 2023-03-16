@@ -2,14 +2,10 @@ package shop.soccerUniform.service.user.member;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import shop.soccerUniform.entity.Member;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.entity.dto.MemberSaveForm;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
-
-import java.util.List;
-import java.util.Map;
 
 public interface MemberService {
 
@@ -23,6 +19,7 @@ public interface MemberService {
 
     Page<MembersDTO> members(MemberSearchForm memberSearchForm, Pageable pageable);
 
-    MemberForm findMember(Long memberId);
+    MemberForm memberFindById(Long memberId);
 
+    MemberForm memberFindByLoginId(String loginId);
 }

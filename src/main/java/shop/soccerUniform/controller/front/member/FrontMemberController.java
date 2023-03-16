@@ -14,6 +14,7 @@ import shop.soccerUniform.entity.dto.MemberSaveForm;
 import shop.soccerUniform.service.user.member.MemberService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,9 +67,10 @@ public class FrontMemberController {
         return responseEntity;
     }
 
-    @GetMapping("/member/myPage/{memberId}")
-    public String myPage(@PathVariable(name = "memberId") Long memberId, Model model) {
-        MemberForm member = memberService.findMember(memberId);
+    @GetMapping("/member/myPage")
+    public String myPage(Principal principal, Model model) {
+        MemberForm member = memberService.memberFindByLoginId(principal.getName());
+        log.info("get memberForm={}", member);
         model.addAttribute("memberForm", member);
         return "front/member/myPage";
     }
@@ -79,7 +81,17 @@ public class FrontMemberController {
     }
 
     @PostMapping("/member/edit")
-    public String editMember(@ModelAttribute(name = "memberForm") MemberForm memberForm) {
+    public String editMember(@Valid @ModelAttribute(name = "memberForm") MemberForm memberForm, BindingResult bindingResult) {
+        log.info("memberForm={}", memberForm);
+        if(!memberForm.getPassword().equals(memberForm.getPasswordCheck())) {
+            bindingResult.reject("passwordCheck", "비밀번호가 일치하지 않습니다.");
+        }
+
+        if(bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult);
+            return "front/member/myPage";
+        }
+
         memberService.updateMember(memberForm);
         return "redirect:/";
     }

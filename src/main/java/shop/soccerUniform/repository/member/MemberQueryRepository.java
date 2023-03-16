@@ -6,11 +6,12 @@ import shop.soccerUniform.entity.Member;
 import shop.soccerUniform.entity.dto.MemberSearchForm;
 import shop.soccerUniform.entity.dto.MembersDTO;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 public interface MemberQueryRepository {
 
     Page<MembersDTO> members(MemberSearchForm memberSearchForm, Pageable pageable);
-    Long findByLoginId(String loginId);
+    Long memberCountFindByLoginId(String loginId);
+
+    Optional<Member> findByLoginId(String loginId);
 }

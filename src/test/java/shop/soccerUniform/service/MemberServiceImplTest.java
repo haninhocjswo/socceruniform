@@ -68,7 +68,7 @@ class MemberServiceImplTest {
 
     @Test
     void findById_notNull() {
-        MemberForm member = memberService.findMember(1L);
+        MemberForm member = memberService.memberFindById(1L);
 
         assertThat(member.getGrade()).isEqualTo(Grade.BRONZE);
         assertThat(member.getLoginId()).isEqualTo("aaaa");

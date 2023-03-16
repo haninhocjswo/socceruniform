@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.*;
-import shop.soccerUniform.entity.dto.ItemEditForm;
-import shop.soccerUniform.entity.dto.ItemForm;
-import shop.soccerUniform.entity.dto.ItemSaveForm;
-import shop.soccerUniform.entity.dto.ItemSearchForm;
+import shop.soccerUniform.entity.dto.*;
 import shop.soccerUniform.entity.enumtype.OptionType;
 import shop.soccerUniform.repository.category.CategoryRepository;
 import shop.soccerUniform.repository.item.ItemRepository;
@@ -321,6 +318,29 @@ public class ItemServiceImpl implements ItemService{
         }
 
         return itemEditForm;
+    }
+
+    @Override
+    public FrontItemForm showItem(Long itemId) {
+        Optional<Item> itemOptional = itemRepository.findById(itemId);
+        if(itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+            FrontItemForm itemForm = new FrontItemForm();
+            itemForm.setItemId(item.getId());
+            itemForm.setName(item.getName());
+            itemForm.setPrice(item.getPrice());
+            log.info("매니저쿼리나오나=========================");
+            itemForm.setManager(item.getManager());
+            log.info("카테고리쿼리나오나=========================");
+            itemForm.setCategory(item.getCategory());
+
+            itemForm.setItemOptions(item.getItemOptions());
+            itemForm.setItemOptionStocks(item.getItemOptionStocks());
+
+            return itemForm;
+        }
+
+        return null;
     }
 
     @Override

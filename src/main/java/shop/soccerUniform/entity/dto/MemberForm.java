@@ -23,6 +23,8 @@ public class MemberForm {
 
     private String password;
 
+    private String passwordCheck;
+
     @NotBlank(message = "이름은 필수값입니다.")
     private String username;
 

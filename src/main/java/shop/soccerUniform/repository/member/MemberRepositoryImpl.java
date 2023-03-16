@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static shop.soccerUniform.entity.QMember.member;
 
@@ -47,12 +48,21 @@ public class MemberRepositoryImpl implements  MemberQueryRepository {
     }
 
     @Override
-    public Long findByLoginId(String loginId) {
+    public Long memberCountFindByLoginId(String loginId) {
         return queryFactory
                 .select(member.count())
                 .from(member)
                 .where(member.loginId.eq(loginId))
                 .fetchOne();
+    }
+
+    @Override
+    public Optional<Member> findByLoginId(String loginId) {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .where(member.loginId.eq(loginId))
+                .fetchOne();
+        return Optional.ofNullable(findMember);
     }
 
     public List<MembersDTO> memberList(MemberSearchForm memberSearchForm, Pageable pageable) {

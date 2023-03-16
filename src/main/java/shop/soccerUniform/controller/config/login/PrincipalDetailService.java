@@ -1,7 +1,5 @@
-package shop.soccerUniform.login;
+package shop.soccerUniform.controller.config.login;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.soccerUniform.entity.User;
 import shop.soccerUniform.repository.user.UserRepository;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class PrincipalDetailService implements UserDetailsService {
@@ -23,7 +20,6 @@ public class PrincipalDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        log.info("loginId={}", loginId);
         User user = userRepository.findByLoginId(loginId);
         if(user != null) {
             return new PrincipalDetail(user);

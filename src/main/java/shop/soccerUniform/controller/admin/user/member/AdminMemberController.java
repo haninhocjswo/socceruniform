@@ -57,7 +57,7 @@ public class AdminMemberController {
 
     @GetMapping("/admin/member/{memberId}")
     public String memberForm(@PathVariable(name = "memberId") Long memberId, Model model) {
-        MemberForm member = memberService.findMember(memberId);
+        MemberForm member = memberService.memberFindById(memberId);
         model.addAttribute("memberForm", member);
         return "admin/user/memberForm";
     }

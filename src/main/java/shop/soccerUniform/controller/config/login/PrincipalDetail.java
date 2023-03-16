@@ -1,12 +1,15 @@
-package shop.soccerUniform.login;
+package shop.soccerUniform.controller.config.login;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import shop.soccerUniform.entity.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Getter
 public class PrincipalDetail implements UserDetails {
 
     private User user;

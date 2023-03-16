@@ -31,14 +31,14 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
     private final AddressRepository addressRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bcryptEncoder;
 
     @Transactional
     @Override
     public void saveMember(MemberSaveForm memberSaveForm) {
         Member member = new Member(memberSaveForm.getBirth(), memberSaveForm.getGender(), Grade.BRONZE,
                 memberSaveForm.getMobile(), memberSaveForm.getHomeNum());
-        member.addUser(memberSaveForm.getLoginId(), bCryptPasswordEncoder.encode(memberSaveForm.getPassword()), memberSaveForm.getUsername(),
+        member.addUser(memberSaveForm.getLoginId(), bcryptEncoder.encode(memberSaveForm.getPassword()), memberSaveForm.getUsername(),
                 memberSaveForm.getEmail(), Role.ROLE_MEMBER, UserState.ABLE);
         member.addDate(LocalDateTime.now(), LocalDateTime.now());
         memberRepository.save(member);
@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
     public boolean duplicateLoginId(String loginId) {
         boolean flag = false;
 
-        Long count = memberRepository.findByLoginId(loginId);
+        Long count = memberRepository.memberCountFindByLoginId(loginId);
         if(count == 0) {
             flag = true;
         }
@@ -70,10 +70,11 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public void updateMember(MemberForm memberForm) {
-        Member member = memberRepository.findById(memberForm.getMemberId()).get();
-        if(member != null) {
+        Optional<Member> optionalMember = memberRepository.findById(memberForm.getMemberId());
+        if(optionalMember.isPresent()) {
+            Member member = optionalMember.get();
             member.editMember(memberForm.getBirth(), memberForm.getGender(), member.getGrade(), member.getMobile(), member.getHomeNum());
-            member.editUser(memberForm.getPassword(), memberForm.getUsername(), memberForm.getEmail(), memberForm.getState());
+            member.editUser(bcryptEncoder.encode(memberForm.getPassword()), memberForm.getUsername(), memberForm.getEmail(), memberForm.getState());
             member.editDate(LocalDateTime.now());
         }
     }
@@ -95,25 +96,49 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberForm findMember(Long memberId) {
+    public MemberForm memberFindById(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
+        if(member.isEmpty()) {
+            throw new RuntimeException("요청하신 회원은 존재하지 않습니다.");
+        }
 
         MemberForm memberForm = new MemberForm();
-        if(!member.isEmpty()) {
-            memberForm.setMemberId(member.get().getId());
-            memberForm.setLoginId(member.get().getLoginId());
-            memberForm.setPassword(member.get().getPassword());
-            memberForm.setUsername(member.get().getUsername());
-            memberForm.setEmail(member.get().getEmail());
-            memberForm.setGrade(member.get().getGrade());
-            memberForm.setGender(member.get().getGender());
-            memberForm.setState(member.get().getState());
-            memberForm.setMobile(member.get().getMobile());
-            memberForm.setHomeNum(member.get().getHomeNum());
-            memberForm.setBirth(member.get().getBirth());
-            Point point = pointRepository.findByIdAndState(member.get().getId(), PointState.ABLE);
-            memberForm.setPoint(point.getPoint());
+        memberForm.setMemberId(member.get().getId());
+        memberForm.setLoginId(member.get().getLoginId());
+        memberForm.setPassword(member.get().getPassword());
+        memberForm.setUsername(member.get().getUsername());
+        memberForm.setEmail(member.get().getEmail());
+        memberForm.setGrade(member.get().getGrade());
+        memberForm.setGender(member.get().getGender());
+        memberForm.setState(member.get().getState());
+        memberForm.setMobile(member.get().getMobile());
+        memberForm.setHomeNum(member.get().getHomeNum());
+        memberForm.setBirth(member.get().getBirth());
+        Point point = pointRepository.findByIdAndState(member.get().getId(), PointState.ABLE);
+        memberForm.setPoint(point.getPoint());
+
+        return memberForm;
+    }
+
+    @Override
+    public MemberForm memberFindByLoginId(String loginId) {
+        Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
+        if(optionalMember.isEmpty()) {
+            throw new RuntimeException("요청하신 회원은 존재하지 않습니다.");
         }
+
+        Member member = optionalMember.get();
+        MemberForm memberForm = new MemberForm();
+        memberForm.setMemberId(member.getId());
+        memberForm.setLoginId(member.getLoginId());
+        memberForm.setUsername(member.getUsername());
+        memberForm.setEmail(member.getEmail());
+        memberForm.setGender(member.getGender());
+        memberForm.setGrade(member.getGrade());
+        memberForm.setState(member.getState());
+        memberForm.setBirth(member.getBirth());
+        memberForm.setMobile(member.getMobile());
+        memberForm.setHomeNum(member.getHomeNum());
 
         return memberForm;
     }
