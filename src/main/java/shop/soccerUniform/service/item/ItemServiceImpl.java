@@ -329,10 +329,11 @@ public class ItemServiceImpl implements ItemService{
             itemForm.setItemId(item.getId());
             itemForm.setName(item.getName());
             itemForm.setPrice(item.getPrice());
-            log.info("매니저쿼리나오나=========================");
             itemForm.setManager(item.getManager());
-            log.info("카테고리쿼리나오나=========================");
             itemForm.setCategory(item.getCategory());
+            itemForm.setOrigin(item.getOrigin());
+            itemForm.setManufacturer(item.getManufacturer());
+            itemForm.setDescription(item.getDescription());
 
             itemForm.setItemOptions(item.getItemOptions());
             itemForm.setItemOptionStocks(item.getItemOptionStocks());

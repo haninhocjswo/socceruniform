@@ -1,14 +1,15 @@
 package shop.soccerUniform.controller.front.item;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import shop.soccerUniform.entity.dto.FrontItemForm;
-import shop.soccerUniform.entity.dto.ItemEditForm;
 import shop.soccerUniform.service.item.ItemService;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class FrontItemController {

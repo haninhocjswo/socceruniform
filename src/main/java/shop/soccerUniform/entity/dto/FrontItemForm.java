@@ -19,6 +19,8 @@ public class FrontItemForm {
 
     private String manufacturer;
 
+    private String description;
+
     private Manager manager;
 
     private Category category;

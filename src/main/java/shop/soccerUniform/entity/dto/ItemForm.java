@@ -15,6 +15,8 @@ public class ItemForm {
 
     private Category category;
 
+    private Integer price;
+
     private String manufacturer;
 
     private String name;

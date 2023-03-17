@@ -35,7 +35,6 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
 
     @Override
     public Page<ItemForm> items(ItemSearchForm itemSearchForm, Pageable pageable) {
-        log.info("itemSearchForm={}", itemSearchForm);
         List<ItemForm> items = itemList(itemSearchForm, pageable);
         Long count = countItem(itemSearchForm, pageable);
         return new PageImpl<>(items, pageable, count);
@@ -53,6 +52,7 @@ public class ItemRepositoryImpl implements  ItemQueryRepository {
                         item.manager,
                         item.category,
                         item.name,
+                        item.price,
                         item.manufacturer,
                         item.origin,
                         item.description,
