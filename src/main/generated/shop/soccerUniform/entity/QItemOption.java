@@ -26,6 +26,8 @@ public class QItemOption extends EntityPathBase<ItemOption> {
 
     public final QItem item;
 
+    public final ListPath<ItemOptionValue, QItemOptionValue> itemOptionValues = this.<ItemOptionValue, QItemOptionValue>createList("itemOptionValues", ItemOptionValue.class, QItemOptionValue.class, PathInits.DIRECT2);
+
     public final StringPath optionName = createString("optionName");
 
     public final NumberPath<Integer> optionSort = createNumber("optionSort", Integer.class);

@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -21,6 +24,9 @@ public class ItemOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
+
+    @OneToMany(mappedBy = "itemOption")
+    private List<ItemOptionValue> itemOptionValues = new ArrayList<>();
 
     @Column(name = "OPTION_NAME", nullable = false)
     private String optionName;

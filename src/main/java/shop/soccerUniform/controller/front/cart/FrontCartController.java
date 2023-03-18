@@ -5,10 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import shop.soccerUniform.entity.dto.CartForm;
 import shop.soccerUniform.entity.dto.MemberForm;
+import shop.soccerUniform.service.cart.CartService;
 import shop.soccerUniform.service.user.member.MemberService;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -16,10 +20,14 @@ import java.security.Principal;
 public class FrontCartController {
 
     private final MemberService memberService;
+    private final CartService cartService;
 
     @GetMapping("/cart/carts")
     public String carts(Principal principal, Model model) {
-        // TODO 카트 관련 리스트 뽑아내기
+        List<CartForm> carts = cartService.findCartsByLoginId(principal.getName());
+        if(carts == null) {
+            carts = new ArrayList<>();
+        }
         return "front/cart/carts";
     }
 }

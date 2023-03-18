@@ -39,6 +39,9 @@ public class Item extends DateColumns {
     private List<ItemOption> itemOptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "item")
+    private List<ItemOptionValue> itemOptionValues = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item")
     public List<ItemOptionStock> itemOptionStocks = new ArrayList<>();
 
     private String manufacturer;

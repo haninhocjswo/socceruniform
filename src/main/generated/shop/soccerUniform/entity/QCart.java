@@ -24,9 +24,15 @@ public class QCart extends EntityPathBase<Cart> {
 
     public final QDateColumns _super = new QDateColumns(this);
 
+    public final StringPath firstOptionName = createString("firstOptionName");
+
+    public final StringPath firstOptionValueName = createString("firstOptionValueName");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QItem item;
+
+    public final StringPath itemName = createString("itemName");
 
     public final QMember member;
 
@@ -35,6 +41,12 @@ public class QCart extends EntityPathBase<Cart> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
+
+    public final StringPath secondOptionName = createString("secondOptionName");
+
+    public final StringPath secondOptionValueName = createString("secondOptionValueName");
+
+    public final NumberPath<Integer> stock = createNumber("stock", Integer.class);
 
     public QCart(String variable) {
         this(Cart.class, forVariable(variable), INITS);

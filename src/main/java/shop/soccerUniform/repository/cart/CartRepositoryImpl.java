@@ -1,11 +1,16 @@
 package shop.soccerUniform.repository.cart;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import shop.soccerUniform.entity.Cart;
+import shop.soccerUniform.entity.QCart;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
+import static shop.soccerUniform.entity.QCart.cart;
 
 @Repository
 public class CartRepositoryImpl implements CartQueryRepository {
@@ -19,4 +24,11 @@ public class CartRepositoryImpl implements CartQueryRepository {
         queryFactory = new JPAQueryFactory(em);
     }
 
+    @Override
+    public List<Cart> findByMemberId(Long memberId) {
+        return queryFactory
+                .selectFrom(cart)
+                .join(cart.item).fetchJoin()
+                .fetch();
+    }
 }

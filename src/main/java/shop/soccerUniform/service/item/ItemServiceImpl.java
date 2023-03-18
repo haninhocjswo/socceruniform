@@ -332,11 +332,21 @@ public class ItemServiceImpl implements ItemService{
             itemForm.setManager(item.getManager());
             itemForm.setCategory(item.getCategory());
             itemForm.setOrigin(item.getOrigin());
+            itemForm.setOptionType(item.getOptionType());
             itemForm.setManufacturer(item.getManufacturer());
             itemForm.setDescription(item.getDescription());
 
+            for(ItemOption itemOption : item.getItemOptions()) {
+                itemOption.getOptionName();
+            }
             itemForm.setItemOptions(item.getItemOptions());
-            itemForm.setItemOptionStocks(item.getItemOptionStocks());
+            log.info("중간");
+            for(ItemOptionValue itemOptionValue : item.getItemOptionValues()) {
+                itemOptionValue.getOptionValue();
+            }
+            itemForm.setItemOptionValues(item.getItemOptionValues());
+
+            //itemForm.setItemOptionStocks(item.getItemOptionStocks());
 
             return itemForm;
         }
