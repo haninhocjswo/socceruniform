@@ -5,7 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import shop.soccerUniform.entity.dto.CartForm;
+import shop.soccerUniform.entity.dto.FrontItemForm;
 import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.service.cart.CartService;
 import shop.soccerUniform.service.user.member.MemberService;
@@ -29,5 +32,10 @@ public class FrontCartController {
             carts = new ArrayList<>();
         }
         return "front/cart/carts";
+    }
+
+    @PostMapping("/cart/save")
+    public String saveCart(@ModelAttribute FrontItemForm frontItemForm, Model model) {
+        return "redirect:/cart/carts";
     }
 }

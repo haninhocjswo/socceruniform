@@ -30,6 +30,8 @@ public class FrontItemForm {
 
     private OptionType optionType;
 
+    private Integer totalPrice;
+
     private List<ItemOption> itemOptions = new ArrayList<>();
 
     private List<ItemOptionValue> itemOptionValues = new ArrayList<>();

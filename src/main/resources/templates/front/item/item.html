@@ -7,7 +7,7 @@
 <!-- Product section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
-        <form th:object="${item}" method="post">
+        <form id="selectedItem" th:object="${item}" method="post">
             <input type="hidden" th:field="*{optionType}">
             <input type="hidden" th:field="*{price}">
             <div class="row gx-4 gx-lg-5 align-items-center">
@@ -17,7 +17,7 @@
                     <div class="small mb-1" th:text="'제조사 : ' + ${item.manufacturer}">manufacturer</div>
                     <h1 class="display-5 fw-bolder" th:text="${item.name}">Shop item template</h1>
                     <div class="fs-5 mb-5">
-                        <span class="text-decoration-line-through" th:text="${item.price} + '원'">$45.00</span>
+                        <span class="text-decoration-line-through" th:text="|${#numbers.formatInteger(item.price, 0, 'COMMA')} 원|">$45.00</span>
                         <span>$40.00</span>
                     </div>
                     <p class="lead" th:text="${item.description}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
@@ -50,6 +50,10 @@
 
                     </div>
                     <hr style="height:5px;">
+                    <div class="d-flex" id="total" style="font-weight:bold;font-size:20px;">
+                        총 상품금액 <input type="text" th:field="*{totalPrice}" style="border:none;outline:none;float:right;text-align:right;" readonly />&nbsp;원
+                    </div>
+                    <hr style="height:5px;">
                     <div class="d-flex">
                         택배배송 | 배송비(기본) : 3,000원 | CJ 택배
                         <br>
@@ -58,12 +62,12 @@
                     </div>
                     <hr style="height:5px;">
                     <div class="d-flex">
-                        <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                        <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="saveCart();">
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
                         </button>
                         &nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-outline-warning flex-shrink-0" type="button">
+                        <button class="btn btn-outline-warning flex-shrink-0" type="button" onclick="goOrder();">
                             <i class="bi bi-journal me-1"></i>
                             Add to order
                         </button>
@@ -187,8 +191,6 @@
 <script src="../js/front/scripts.js"></script>
 <script th:inline="javascript">
 function drawOrderList() {
-
-
     let addHtml = '';
     if($('#optionType').val() == 'SINGLE') {
         let finalField = 'final_' + $('#firstOption option:selected').val() + '_0';
@@ -210,8 +212,8 @@ function drawOrderList() {
             addHtml += '            ' + $('#firstOptionName').text() + ' : ' + $('#firstOption option:selected').text();
             addHtml += '        </div>';
             addHtml += '        <div class="div-right">';
-            addHtml += '            ' + $('#price').val() + ' 원';
-            addHtml += '            <button type="button" class="btn btn-danger" onclick="delOrderStock(' + $('#firstOption option:selected').val() + ', 0">X</button>';
+            addHtml += '            <span id="price_' + $('#firstOption option:selected').val() + '_0">' + $('#price').val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원</span>';
+            addHtml += '            <button type="button" class="btn btn-danger" onclick="delOrderStock(' + $('#firstOption option:selected').val() + ', 0)">X</button>';
             addHtml += '        </div>';
             addHtml += '        <br>';
             addHtml += '        <button type="button" class="btn btn-primary" onclick="minusStock(' + $('#firstOption option:selected').val() + ', 0)">-</button>';
@@ -244,7 +246,7 @@ function drawOrderList() {
             addHtml += '            ' + $('#firstOptionName').text() + ' : ' + $('#firstOption option:selected').text() + ' | ' + $('#secondOptionName').text() + ' : ' + $('#secondOption option:selected').text();
             addHtml += '        </div>';
             addHtml += '        <div class="div-right">';
-            addHtml += '            ' + $('#price').val() + ' 원';
+            addHtml += '            <span id="price_' + $('#firstOption option:selected').val() + '_' + $('#secondOption option:selected').val() + '">' + $('#price').val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원</span>';
             addHtml += '            <button type="button" class="btn btn-danger" onclick="delOrderStock(' + $('#firstOption option:selected').val() + ',' + $('#secondOption option:selected').val() + ')">X</button>';
             addHtml += '        </div>';
             addHtml += '        <br>';
@@ -263,21 +265,28 @@ function plusStock(first, second) {
     let value = first + '_' + second;
     let stockId = 'stock_' + value;
     let finalId = 'final_' + value;
+    let priceId = 'price_' + value;
+    let price = Number($('#price').val());
     let stock = Number($('#' + stockId).val()) + 1;
     let finalValue = value + '_' + stock;
     $('#' + stockId).val(stock);
     $('#' + finalId).val(finalValue);
+    $('#' + priceId).text((price * stock).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " 원");
+    $('#totalPrice').val(1000000);
 }
 
 function minusStock(first, second) {
     let value = first + '_' + second;
     let stockId = 'stock_' + value;
     let finalId = 'final_' + value;
+    let priceId = 'price_' + value;
+    let price = Number($('#price').val());
     let stock = Number($('#' + stockId).val()) - 1;
     let finalValue = value + '_' + stock;
     if(stock > 0) {
         $('#' + stockId).val(stock);
         $('#' + finalId).val(finalValue);
+        $('#' + priceId).text((price * stock).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " 원");
     }
 }
 
@@ -291,6 +300,14 @@ function delOrderStock(first, second) {
         $('.orderList').hide();
         $('#orderListHr').hide();
     }
+}
+
+function saveCart() {
+    $("#selectedItem").attr("action","/cart/save").submit();
+}
+
+function goOrder() {
+    $("#selectedItem").attr("action","/order/order").submit();
 }
 </script>
 </body>
