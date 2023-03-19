@@ -24,19 +24,17 @@ public class FrontItemForm {
 
     private String description;
 
+    private Long memberId;
+
     private Manager manager;
 
     private Category category;
 
     private OptionType optionType;
 
-    private Integer totalPrice;
-
     private List<ItemOption> itemOptions = new ArrayList<>();
 
     private List<ItemOptionValue> itemOptionValues = new ArrayList<>();
 
     private List<ItemOptionStock> itemOptionStocks = new ArrayList<>();
-
-    private Set<String> selectedItem = new HashSet<>();
 }

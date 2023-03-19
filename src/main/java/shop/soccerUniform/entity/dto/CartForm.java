@@ -5,12 +5,15 @@ import lombok.NoArgsConstructor;
 import shop.soccerUniform.entity.Item;
 import shop.soccerUniform.entity.ItemOptionStock;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 public class CartForm {
     private Long cartId;
     private Long memberId;
+    private Long itemId;
     private Item item;
-    private ItemOptionStock itemOptionStock;
-    private String description;
+    private Set<String> selectedItems = new HashSet<>();
 }

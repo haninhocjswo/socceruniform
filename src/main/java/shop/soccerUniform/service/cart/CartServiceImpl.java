@@ -24,6 +24,13 @@ public class CartServiceImpl implements CartService {
     private final MemberRepository memberRepository;
 
     @Override
+    public void saveCart(CartForm cartForm) {
+        if(cartForm.getSelectedItems().size() > 0) {
+
+        }
+    }
+
+    @Override
     public List<CartForm> findCartsByLoginId(String loginId) {
         Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
         List<CartForm> emptyCarts = new ArrayList<>();
@@ -42,6 +49,7 @@ public class CartServiceImpl implements CartService {
             CartForm cartForm = new CartForm();
             cartForm.setCartId(cart.getId());
             cartForm.setItem(cart.getItem());
+            cartForm.setItemId(cart.getItem().getId());
             cartForm.setMemberId(member.getId());
 
             carts.add(cartForm);
