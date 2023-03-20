@@ -15,5 +15,8 @@ public class CartForm {
     private Long memberId;
     private Long itemId;
     private Item item;
+    private String description;
+    private Integer stock;
+    private Integer price;
     private Set<String> selectedItems = new HashSet<>();
 }

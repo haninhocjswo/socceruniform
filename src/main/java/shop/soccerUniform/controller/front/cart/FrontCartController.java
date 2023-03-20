@@ -8,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import shop.soccerUniform.entity.dto.CartForm;
-import shop.soccerUniform.entity.dto.FrontItemForm;
-import shop.soccerUniform.entity.dto.MemberForm;
 import shop.soccerUniform.service.cart.CartService;
 import shop.soccerUniform.service.user.member.MemberService;
 
@@ -23,8 +21,6 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class FrontCartController {
-
-    private final MemberService memberService;
     private final CartService cartService;
 
     @GetMapping("/cart/carts")
@@ -33,16 +29,47 @@ public class FrontCartController {
         if(carts == null) {
             carts = new ArrayList<>();
         }
+        for (CartForm cart : carts) {
+            log.info("cart={}", cart);
+        }
+        model.addAttribute("carts", carts);
+
         return "front/cart/carts";
     }
 
     @PostMapping("/cart/save")
-    public ResponseEntity<Map<String, Object>> saveCart(@RequestBody CartForm cartForm, Model model) {
+    public ResponseEntity<Map<String, Object>> saveCart(CartForm cartForm, Model model) {
         Map<String, Object> ajaxMap = new HashMap<>();
-        // TODO 장바구니 추가
-        log.info("cartForm={}", cartForm);
-        log.info("saveCart~~");
-        ajaxMap.put("result", true);
+        boolean result = cartService.saveCart(cartForm);
+        ajaxMap.put("result", result);
+        if(!result) {
+            ajaxMap.put("message", "장바구니 담기에 실패하였습니다.");
+        }
+        ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+
+        return responseEntity;
+    }
+
+    @PostMapping("/cart/edit")
+    public ResponseEntity<Map<String, Object>> editCart(@RequestParam Long cartId, @RequestParam Integer stock) {
+        Map<String, Object> ajaxMap = new HashMap<>();
+        boolean result = cartService.editCart(cartId, stock);
+        ajaxMap.put("result", result);
+        if(!result) {
+            ajaxMap.put("message", "수량을 수정이 실패하였습니다.");
+        }
+        ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
+        return responseEntity;
+    }
+
+    @PostMapping("/cart/delete")
+    public ResponseEntity<Map<String, Object>> delCart(@RequestParam Long cartId) {
+        Map<String, Object> ajaxMap = new HashMap<>();
+        boolean result = cartService.delCart(cartId);
+        ajaxMap.put("result", result);
+        if(!result) {
+            ajaxMap.put("message", "삭제에 실패하였습니다.");
+        }
         ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<>(ajaxMap, HttpStatus.OK);
         return responseEntity;
     }

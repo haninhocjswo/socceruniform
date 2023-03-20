@@ -312,20 +312,22 @@ function itemSubmit(result) {
     $('#totalPrice').val(resultPrice);
 
     if(result == 'cart') {
-        let f = $('#selectedItem').serialize();
         if($('#memberId').val() == null) {
             location.href='/loginForm';
         }
 
+        let form = $('#selectedItem').serialize();
         $.ajax({
             url: '/cart/save',
             type: 'POST',
-            data: JSON.stringify(f),
+            data: form,
             dataType: 'json',
             success: function(data) {
                 let result = data['result'];
                 if(result) {
                     alert('성공');
+                } else {
+                    alert(data['message']);
                 }
             },
             error: function(request, status, error) {

@@ -27,15 +27,17 @@ public class Cart extends DateColumns {
     @Column(nullable = false)
     private String firstOptionValueName;
 
-    @Column(nullable = false)
     private String secondOptionName;
 
-    @Column(nullable = false)
     private String secondOptionValueName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ITEM_OPTION_STOCK_ID", nullable = false)
+    private ItemOptionStock itemOptionStock;
 
     private Integer stock;
 
@@ -43,14 +45,20 @@ public class Cart extends DateColumns {
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
-    public Cart(String itemName, String firstOptionName, String firstOptionValueName, String secondOptionName, String secondOptionValueName, Item item, Integer stock, Member member) {
+    public Cart(String itemName, ItemOption firstItemOption, ItemOption secondItemOption, ItemOptionValue firstItemOptionValue,
+                ItemOptionValue secondItemOptionValue, Item item, ItemOptionStock itemOptionStock, Integer stock, Member member) {
         this.itemName = itemName;
-        this.firstOptionName = firstOptionName;
-        this.firstOptionValueName = firstOptionValueName;
-        this.secondOptionName = secondOptionName;
-        this.secondOptionValueName = secondOptionValueName;
+        if(firstItemOption != null) this.firstOptionName = firstItemOption.getOptionName();
+        if(secondItemOption != null) this.secondOptionName = secondItemOption.getOptionName();
+        if(firstItemOptionValue != null) this.firstOptionValueName = firstItemOptionValue.getOptionValue();
+        if(secondItemOptionValue != null) this.secondOptionValueName = secondItemOptionValue.getOptionValue();
         this.item = item;
+        this.itemOptionStock = itemOptionStock;
         this.stock = stock;
         this.member = member;
+    }
+
+    public void editStock(Integer stock) {
+        this.stock = stock;
     }
 }

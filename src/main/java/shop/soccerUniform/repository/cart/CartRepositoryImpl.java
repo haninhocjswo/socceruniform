@@ -29,6 +29,7 @@ public class CartRepositoryImpl implements CartQueryRepository {
         return queryFactory
                 .selectFrom(cart)
                 .join(cart.item).fetchJoin()
+                .orderBy(cart.item.name.asc())
                 .fetch();
     }
 }

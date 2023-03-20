@@ -34,6 +34,8 @@ public class QCart extends EntityPathBase<Cart> {
 
     public final StringPath itemName = createString("itemName");
 
+    public final QItemOptionStock itemOptionStock;
+
     public final QMember member;
 
     //inherited
@@ -67,6 +69,7 @@ public class QCart extends EntityPathBase<Cart> {
     public QCart(Class<? extends Cart> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.item = inits.isInitialized("item") ? new QItem(forProperty("item"), inits.get("item")) : null;
+        this.itemOptionStock = inits.isInitialized("itemOptionStock") ? new QItemOptionStock(forProperty("itemOptionStock"), inits.get("itemOptionStock")) : null;
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
     }
 
