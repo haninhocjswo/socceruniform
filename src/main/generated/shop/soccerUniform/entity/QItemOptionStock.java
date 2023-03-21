@@ -22,6 +22,8 @@ public class QItemOptionStock extends EntityPathBase<ItemOptionStock> {
 
     public static final QItemOptionStock itemOptionStock = new QItemOptionStock("itemOptionStock");
 
+    public final StringPath description = createString("description");
+
     public final QItemOptionValue firstOptionValue;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

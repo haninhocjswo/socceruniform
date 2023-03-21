@@ -9,6 +9,7 @@ import shop.soccerUniform.entity.QCart;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Set;
 
 import static shop.soccerUniform.entity.QCart.cart;
 
@@ -43,5 +44,13 @@ public class CartRepositoryImpl implements CartQueryRepository {
                         cart.item.id.eq(itemId),
                         cart.itemOptionStock.id.eq(itemOptionStockId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<Cart> findInCartId(Set<Long> cartIds) {
+        return queryFactory
+                .selectFrom(cart)
+                .where(cart.id.in(cartIds))
+                .fetch();
     }
 }

@@ -4,18 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.soccerUniform.entity.Item;
-import shop.soccerUniform.entity.Member;
+import shop.soccerUniform.entity.*;
+import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.OrderForm;
 import shop.soccerUniform.entity.dto.OrderReceiveForm;
 import shop.soccerUniform.repository.cart.CartRepository;
 import shop.soccerUniform.repository.item.ItemRepository;
+import shop.soccerUniform.repository.itemOptionStock.ItemOptionStockRepository;
+import shop.soccerUniform.repository.itemOptionValue.ItemOptionValueRepository;
 import shop.soccerUniform.repository.member.MemberRepository;
 import shop.soccerUniform.repository.order.OrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -27,20 +30,50 @@ public class OrderServiceImpl implements OrderService{
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
     private final ItemRepository itemRepository;
+    private final ItemOptionValueRepository itemOptionValueRepository;
+    private final ItemOptionStockRepository itemOptionStockRepository;
 
     @Override
     public OrderForm receivedItem(OrderReceiveForm orderReceiveForm) {
-        OrderForm orderForm = new OrderForm();
+        if(orderReceiveForm.getSelectedItems().size() == 0) return new OrderForm();
 
         Optional<Member> memberOptional = memberRepository.findById(orderReceiveForm.getMemberId());
-        if(memberOptional.isEmpty()) return orderForm;
+        if(memberOptional.isEmpty()) return new OrderForm();
+
+        Set<String> selectedItems = orderReceiveForm.getSelectedItems();
+        List<ItemForm> itemForms = new ArrayList<>();
+        for (String selectedItem : selectedItems) {
+            Optional<Item> itemOptional = itemRepository.findById(orderReceiveForm.getItemId());
+            if(itemOptional.isEmpty()) return new OrderForm();
+            Item item = itemOptional.get();
+            ItemForm itemForm = new ItemForm();
+            itemForm.setItemId(item.getId());
+            itemForm.setName(item.getName());
+            itemForm.setPrice(item.getPrice());
+            itemForm.setCategory(item.getCategory());
+            itemForm.setOrigin(item.getOrigin());
+            itemForm.setManufacturer(item.getManufacturer());
+            itemForm.setDescription(item.getDescription());
+            itemForm.setOptionType(item.getOptionType());
+
+            String[] infoSplit = selectedItem.split("_");
+            if(infoSplit.length != 3) return new OrderForm();
+            Optional<ItemOptionValue> firstItemOptionValueOptional = itemOptionValueRepository.findById(Long.parseLong(infoSplit[0]));
+            if(firstItemOptionValueOptional.isEmpty()) return new OrderForm();
+            Optional<ItemOptionValue> secondItemOptionValueOptional = itemOptionValueRepository.findById(Long.parseLong(infoSplit[1]));
+            if(secondItemOptionValueOptional.isEmpty()) return new OrderForm();
+            Optional<ItemOptionStock> itemOptionStockOptional =
+                    itemOptionStockRepository.findByFirstOptionValueAndSecondOptionValue(firstItemOptionValueOptional.get(), secondItemOptionValueOptional.get());
+            if(itemOptionStockOptional.isEmpty()) return new OrderForm();
+            itemForm.setItemOptionStock(itemOptionStockOptional.get());
+            itemForm.setOrderStock(Integer.parseInt(infoSplit[2]));
+
+            itemForms.add(itemForm);
+        }
+
+        OrderForm orderForm = new OrderForm();
         orderForm.setMember(memberOptional.get());
-
-        Optional<Item> itemOptional = itemRepository.findById(orderReceiveForm.getItemId());
-        if(itemOptional.isEmpty()) return orderForm;
-        Item item = itemOptional.get();
-        //TODO ITEMOPTIONSTOCK 다시 만들어야함 DESCRIPTION 추가해야함 우선순위 1번째 -> 주문폼 작성해야함 우선순위 2번째
-
+        orderForm.setItems(itemForms);
         orderForm.setResultFlag(true);
 
         return orderForm;
@@ -48,7 +81,39 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public OrderForm receivedCart(OrderReceiveForm orderReceiveForm) {
+        Optional<Member> memberOptional = memberRepository.findById(orderReceiveForm.getMemberId());
+        if(memberOptional.isEmpty()) return new OrderForm();
+
+        Set<Long> cartIds = orderReceiveForm.getCartIds();
+        if(cartIds.size() == 0) return new OrderForm();
+        List<Cart> carts = cartRepository.findInCartId(cartIds);
+        List<ItemForm> itemForms = new ArrayList<>();
+        for (Cart cart : carts) {
+            Optional<Item> itemOptional = itemRepository.findById(cart.getItem().getId());
+            if(itemOptional.isEmpty()) return new OrderForm();
+            Item item = itemOptional.get();
+            ItemForm itemForm = new ItemForm();
+            itemForm.setItemId(item.getId());
+            itemForm.setName(item.getName());
+            itemForm.setPrice(item.getPrice());
+            itemForm.setCategory(item.getCategory());
+            itemForm.setOrigin(item.getOrigin());
+            itemForm.setManufacturer(item.getManufacturer());
+            itemForm.setDescription(item.getDescription());
+            itemForm.setOptionType(item.getOptionType());
+            itemForm.setOrderStock(cart.getStock());
+            Optional<ItemOptionStock> itemOptionStockOptional = itemOptionStockRepository.findById(cart.getItemOptionStock().getId());
+            if(itemOptionStockOptional.isEmpty()) return new OrderForm();
+            itemForm.setItemOptionStock(itemOptionStockOptional.get());
+
+            itemForms.add(itemForm);
+        }
+
         OrderForm orderForm = new OrderForm();
+        orderForm.setMember(memberOptional.get());
+        orderForm.setItems(itemForms);
+        orderForm.setResultFlag(true);
+
         return orderForm;
     }
 }

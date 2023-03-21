@@ -31,9 +31,11 @@ public class ItemForm {
 
     private ItemState state;
 
+    private Integer orderStock;
+
     private List<ItemOption> itemOptions = new ArrayList<>();
 
     private List<ItemOptionValue> itemOptionValues = new ArrayList<>();
 
-    private ItemOptionStock itemOptionStocks;
+    private ItemOptionStock itemOptionStock;
 }

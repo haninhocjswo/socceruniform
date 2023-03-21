@@ -75,13 +75,16 @@ public class ItemServiceImpl implements ItemService{
             // ITEM_OPTION_STOCK 생성
             List<ItemOptionValue> itemOptionValues = itemOptionValueRepository.findByItemOptionId(firstItemOption.getId());
             String itemOptionStockName = "";
+            String valueName = "";
             for(int i = 0; i < itemOptionValues.size(); i++) {
                 itemOptionStockName = "stock_" + (i+1) + "_0";
+                valueName = "valueName1_" + (i+1);
                 stockSort = (i+1) + "_0";
                 if(formMap.get(itemOptionStockName) == null) throw new RuntimeException("상품 재고를 확인해주세요");
 
+                String stockDescription = itemSaveForm.getFirstOptionName() + " : " + formMap.get(valueName);
                 itemOptionStockRepository.save(new ItemOptionStock(item, itemOptionValues.get(i), null,
-                        stockSort, (Integer) formMap.get(itemOptionStockName)));
+                        stockSort, (Integer) formMap.get(itemOptionStockName), stockDescription));
             }
         }
 
@@ -118,6 +121,7 @@ public class ItemServiceImpl implements ItemService{
             List<ItemOptionValue> itemOption1Values = itemOptionValueRepository.findByItemOptionId(firstItemOption.getId());
             List<ItemOptionValue> itemOption2Values = itemOptionValueRepository.findByItemOptionId(secondItemOption.getId());
             String itemOptionStockName = "";
+            String stockDescription = "";
             for(int i = 0; i < itemOption1Values.size(); i++) {
                 for(int k = 0; k < itemOption2Values.size(); k++) {
                     itemOptionStockName = "stock_" + (i+1) + "_" + (k+1);
@@ -126,8 +130,10 @@ public class ItemServiceImpl implements ItemService{
                         throw new RuntimeException("상품 재고를 확인해주세요");
                     }
 
+                    stockDescription = firstItemOption.getOptionName() + " : " + itemOption1Values.get(i).getOptionValue() + " | " +
+                            secondItemOption.getOptionName() + " : " + itemOption2Values.get(k).getOptionValue();
                     itemOptionStockRepository.save(new ItemOptionStock(item, itemOption1Values.get(i), itemOption2Values.get(k),
-                            stockSort, (Integer) formMap.get(itemOptionStockName)));
+                            stockSort, (Integer) formMap.get(itemOptionStockName), stockDescription));
                 }
             }
         }
@@ -197,8 +203,9 @@ public class ItemServiceImpl implements ItemService{
                     throw new RuntimeException("상품 재고를 확인해주세요");
                 }
 
+                String stockDescription = firstItemOption.getOptionName() + " : " + itemOptionValues.get(i).getOptionValue();
                 itemOptionStockRepository.save(new ItemOptionStock(item, itemOptionValues.get(i), null,
-                        stockSort, (Integer) itemEditFormMap.get(itemOptionStockName)));
+                        stockSort, (Integer) itemEditFormMap.get(itemOptionStockName), stockDescription));
             }
         }
 
@@ -234,6 +241,7 @@ public class ItemServiceImpl implements ItemService{
             List<ItemOptionValue> itemOption1Values = itemOptionValueRepository.findByItemOptionId(firstItemOption.getId());
             List<ItemOptionValue> itemOption2Values = itemOptionValueRepository.findByItemOptionId(secondItemOption.getId());
             String itemOptionStockName = "";
+            String stockDescription = "";
             for(int i = 0; i < itemOption1Values.size(); i++) {
                 for(int k = 0; k < itemOption2Values.size(); k++) {
                     itemOptionStockName = "stock_" + (i+1) + "_" + (k+1);
@@ -242,8 +250,10 @@ public class ItemServiceImpl implements ItemService{
                         throw new RuntimeException("상품 재고를 확인해주세요");
                     }
 
+                    stockDescription = firstItemOption.getOptionName() + " : " + itemOption1Values.get(i).getOptionValue() + " | "
+                            + secondItemOption.getOptionName() + " : " + itemOption2Values.get(k).getOptionValue();
                     itemOptionStockRepository.save(new ItemOptionStock(item, itemOption1Values.get(i), itemOption2Values.get(k),
-                            stockSort, (Integer) itemEditFormMap.get(itemOptionStockName)));
+                            stockSort, (Integer) itemEditFormMap.get(itemOptionStockName), stockDescription));
                 }
             }
         }

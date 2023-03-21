@@ -36,11 +36,15 @@ public class ItemOptionStock {
     @Column(nullable = false)
     private Integer stock;
 
-    public ItemOptionStock(Item item, ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, String sort, Integer stock) {
+    @Column(nullable = false)
+    private String description;
+
+    public ItemOptionStock(Item item, ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, String sort, Integer stock, String description) {
         this.item = item;
         this.firstOptionValue = firstOptionValue;
         this.secondOptionValue = secondOptionValue;
         this.sort = sort;
         this.stock = stock;
+        this.description = description;
     }
 }
