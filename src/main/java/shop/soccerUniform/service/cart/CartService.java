@@ -8,5 +8,6 @@ public interface CartService {
     public boolean saveCart(CartForm cartForm);
     public boolean editCart(Long cartId, Integer stock);
     public boolean delCart(Long cartId);
+    public boolean overlapCheck(CartForm cartForm);
     public List<CartForm> findCartsByLoginId(String loginId);
 }

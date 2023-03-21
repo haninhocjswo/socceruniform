@@ -67,9 +67,7 @@ public class ItemServiceImpl implements ItemService{
             String itemOptionValueName = "";
             for(int i = 1; i <= itemSaveForm.getItemOption1ValueSize(); i++) {
                 itemOptionValueName = "valueName1_" + i;
-                if(formMap.get(itemOptionValueName) == null) {
-                    throw new RuntimeException("상품옵션 종류명을 확인해주세요");
-                }
+                if(formMap.get(itemOptionValueName) == null) throw new RuntimeException("상품옵션 종류명을 확인해주세요");
 
                 itemOptionValueRepository.save(new ItemOptionValue(item, firstItemOption, String.valueOf(formMap.get(itemOptionValueName)), i));
             }
@@ -80,9 +78,7 @@ public class ItemServiceImpl implements ItemService{
             for(int i = 0; i < itemOptionValues.size(); i++) {
                 itemOptionStockName = "stock_" + (i+1) + "_0";
                 stockSort = (i+1) + "_0";
-                if(formMap.get(itemOptionStockName) == null) {
-                    throw new RuntimeException("상품 재고를 확인해주세요");
-                }
+                if(formMap.get(itemOptionStockName) == null) throw new RuntimeException("상품 재고를 확인해주세요");
 
                 itemOptionStockRepository.save(new ItemOptionStock(item, itemOptionValues.get(i), null,
                         stockSort, (Integer) formMap.get(itemOptionStockName)));

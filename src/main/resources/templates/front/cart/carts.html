@@ -7,43 +7,73 @@
 <nav th:replace="~{/front/fragment/frontNav.html :: frontNav}">
 </nav>
 <!-- Product section-->
-<section class="py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-12">
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center"
-                        th:each="cart : ${carts}">
-                        <div class="col-md-1" style="text-align:center;"><input type="checkbox" th:value="${cart.cartId}" style="width:20px;height:20px;" /></div>
-                        <div class="col-md-1"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
-                        <div class="col-md-3" th:text="${cart.description}">description</div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary" type="button" th:onclick="minusStock([[cart.cartId]]);">-</button>
-                            <input type="number" class="text-center stock" th:id="'cart-stock-' + ${cart.cartId}" th:value="${cart.stock}" />
-                            <button class="btn btn-primary" type="button" th:onclick="plusStock([[${cart.cartId}]]);">+</button>
-                        </div>
-                        <div class="col-md-2"><span th:text="${#numbers.formatInteger(cart.price, 3, 'COMMA') + ' 원'}" style="font-size:30px;"></span></div>
-                        <button class="btn-lg btn-warning edit-cart" th:onclick="editCart([[${cart.cartId}]]);">수정</button>
-                        <button class="btn-lg btn-danger delete-cart" th:onclick="delCart([[${cart.cartId}]]);">X</button>
-                    </li>
-                </ul>
+<form method="get" action="/order/order">
+    <input type="hidden" name="memberId" th:value="${memberId}" />
+    <input type="hidden" name="req" value="cart" />
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-12">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center" id="liTop">
+                            <div class="col-md-1" style="text-align:center;"><input type="checkbox" id="allCk" style="width:20px;height:20px;" onclick="allCheck();" /></div>
+                            <div class="col-md-1" style="text-align:right;">사진</div>
+                            <div class="col-md-3" style="text-align:center;">상품명</div>
+                            <div class="col-md-3" style="text-align:center;">수량</div>
+                            <div class="col-md-2" style="text-align:center;">가격</div>
+                            <div class="col-md-2" style="text-align:center;"></div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            th:each="cart : ${carts}"
+                            th:id="'cart-item-' + ${cart.cartId}">
+                            <div class="col-md-1" style="text-align:center;"><input type="checkbox" class="check-id" style="width:20px;height:20px;"
+                                                                                    th:id="'cartId_' + ${cart.cartId}"
+                                                                                    th:name="cartIds[]"
+                                                                                    th:value="${cart.cartId}"
+                                                                                    th:onclick="checkClick();" /></div>
+                            <div class="col-md-1"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+                            <div class="col-md-3" th:text="${cart.description}">description</div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" type="button" th:onclick="minusStock([[${cart.cartId}]]);">-</button>
+                                <input type="number" class="text-center stock" th:id="'cart-stock-' + ${cart.cartId}" th:value="${cart.stock}" />
+                                <button class="btn btn-primary" type="button" th:onclick="plusStock([[${cart.cartId}]]);">+</button>
+                            </div>
+                            <input type="hidden" th:id="'onePrice_' + ${cart.cartId}" th:value="${cart.onePrice}">
+                            <div class="col-md-2"><span th:id="'price_' + ${cart.cartId}" th:text="${#numbers.formatInteger(cart.price, 3, 'COMMA') + ' 원'}" style="font-size:30px;"></span></div>
+                            <button type="button" class="btn-lg btn-warning edit-cart" th:onclick="|location.href='/item/${cart.itemId}'|">상품보기</button>
+                            <button type="button" class="btn-lg btn-danger delete-cart" th:onclick="delCart([[${cart.cartId}]]);">X</button>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center" id="emptyCart" th:if="${#lists.isEmpty(carts)}">
+                            <div class="col-md-12" style="text-align:center;">장바구니가 비었습니다.</div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="col-md-7" style="text-align:center;"></div>
+                            <div class="col-md-2" style="text-align:center;">
+                                <button type="submit" class="btn btn-secondary" onclick="order();">주문하기</button>
+                            </div>
+                            <div class="col-md-3" style="text-align:right;font-size:35px;" id="totalPrice">
+                                총 0 원
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</form>
+
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
 <script src="../../js/front/scripts.js"></script>
 <script th:inline="javascript">
 function editCart(cartId) {
-    let selectedId = 'cart-stock-' + cartId;
-    let cartStockId = $('#' + selectedId).val();
+    let cartStock = $('#' + 'cart-stock-' + cartId).val();
 
     $.ajax({
         url: '/cart/edit',
         type: 'POST',
-        data: {'cartId': cartId, 'stock': cartStockId},
+        data: {'cartId': cartId, 'stock': cartStock},
         dataType: 'json',
         success: function(data) {
             let result = data['result'];
@@ -52,6 +82,8 @@ function editCart(cartId) {
             }
         },
         error: function(data) {
+            alert('수정에 실패하였습니다.');
+            location.reload();
         }
     });
 }
@@ -66,6 +98,15 @@ function delCart(cartId) {
             let result = data['result'];
             if(!result) {
                 alert(data['message']);
+            } else {
+                $('#' + 'cart-item-' + cartId).remove();
+                if($("li[id*='cart-item-']").length == 0) {
+                    let emptyLi = '';
+                    emptyLi += '<li class="list-group-item d-flex justify-content-between align-items-center" id="emptyCart">';
+                    emptyLi += '    <div class="col-md-12" style="text-align:center;">장바구니가 비었습니다.</div>';
+                    emptyLi += '</li>';
+                    $('#liTop').after(emptyLi);
+                }
             }
         },
         error: function(data) {
@@ -74,11 +115,75 @@ function delCart(cartId) {
 }
 
 function plusStock(cartId) {
+    let beforeCartStock = Number($('#' + 'cart-stock-' + cartId).val()) + 1;
+    $('#' + 'cart-stock-' + cartId).val(beforeCartStock);
 
+    let onePrice = Number($('#' + 'onePrice_' + cartId).val());
+    let resultPrice = onePrice * beforeCartStock;
+    $('#' + 'price_' + cartId).text(resultPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
+    editCart(cartId);
+
+    if($('#' + 'cartId_' + cartId).is(':checked')) {
+        calculateTotalPrice();
+    }
 }
 
 function minusStock(cartId) {
+    let beforeCartStock = Number($('#' + 'cart-stock-' + cartId).val()) - 1;
+    if(beforeCartStock > 0) {
+        $('#' + 'cart-stock-' + cartId).val(beforeCartStock);
 
+        let onePrice = Number($('#' + 'onePrice_' + cartId).val());
+        let resultPrice = onePrice * beforeCartStock;
+        $('#' + 'price_' + cartId).text(resultPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원');
+        editCart(cartId);
+
+        if($('#' + 'cartId_' + cartId).is(':checked')) {
+            calculateTotalPrice();
+        }
+    }
+}
+
+function calculateTotalPrice() {
+    let totalPrice = 0;
+    $('.check-id:checked').each(function(i) {
+        let onePrice = $('#' + 'onePrice_' + this.value).val();
+        let stock = $('#' + 'cart-stock-' + this.value).val();
+        totalPrice += Number(onePrice) * Number(stock);
+    });
+    $('#totalPrice').text('총 ' + totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' 원 ');
+
+    if($('.check-id:checked').length == 0) {
+        $('#totalPrice').text('총 0 원');
+    }
+}
+
+function allCheck() {
+    var checked = $('#allCk').is(':checked');
+
+    if(checked) {
+        $('input:checkbox').prop('checked', true);
+    } else {
+        $('input:checkbox').prop('checked', false);
+    }
+
+    calculateTotalPrice();
+}
+
+function checkClick() {
+    if($('.check-id:checked').length == $('.check-id').length) {
+        $('#allCk').prop('checked', true);
+    } else {
+        $('#allCk').prop('checked', false);
+    }
+    calculateTotalPrice();
+}
+
+function order() {
+    if($('.check-id:checked').length == 0) {
+        alert("주문할 상품을 선택해주세요.");
+        return false;
+    }
 }
 </script>
 </body>

@@ -7,10 +7,11 @@
 <!-- Product section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
-        <form id="selectedItem" th:object="${item}" method="post">
+        <form id="selectedItem" th:object="${item}" method="get">
             <input type="hidden" th:field="*{optionType}" />
             <input type="hidden" th:field="*{price}" />
             <input type="hidden" th:field="*{itemId}" />
+            <input type="hidden" name="req" value="item" />
             <input type="hidden" sec:authorize="isAuthenticated()" id="memberId" name="memberId" th:value="${loginUser.id}" />
             <div class="row gx-4 gx-lg-5 align-items-center">
                 <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
@@ -325,14 +326,13 @@ function itemSubmit(result) {
             success: function(data) {
                 let result = data['result'];
                 if(result) {
-                    alert('성공');
+                    alert('장바구니 담기에 성공하였습니다.');
                 } else {
                     alert(data['message']);
                 }
             },
             error: function(request, status, error) {
-                alert(request.responseText);
-                console.log(request);
+                location.href='/loginForm';
             }
         });
     }
@@ -345,7 +345,7 @@ function itemSubmit(result) {
 function calculateTotalPrice() {
     let totalPriceText = '';
     if($('[id*=price_]').length > 0) {
-        let totalPriceText = $('[id*=price_]').text().replace(/\,/g, "");
+        totalPriceText = $('[id*=price_]').text().replace(/\,/g, "");
         let totalPriceLIst = totalPriceText.split(' 원');
         let total = 0;
         if(totalPriceLIst.length > 0) {

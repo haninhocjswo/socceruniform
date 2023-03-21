@@ -108,18 +108,37 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public boolean overlapCheck(CartForm cartForm) {
+        for(String description : cartForm.getSelectedItems()) {
+            String[] descriptionSplit = description.split("_");
+
+            Optional<ItemOptionValue> firstOptionValueOptional = itemOptionValueRepository.findById(Long.parseLong(descriptionSplit[0]));
+            if(firstOptionValueOptional.isEmpty()) return false;
+            ItemOptionValue firstOptionValue = firstOptionValueOptional.get();
+            Optional<ItemOptionValue> secondOptionValueOptional = itemOptionValueRepository.findById(Long.parseLong(descriptionSplit[1]));
+            ItemOptionValue secondOptionValue = null;
+            if(secondOptionValueOptional.isPresent()) secondOptionValue = secondOptionValueOptional.get();
+
+            Optional<ItemOptionStock> itemOptionStockOptional =
+                    itemOptionStockRepository.findByFirstOptionValueAndSecondOptionValue(firstOptionValue, secondOptionValue);
+            if(itemOptionStockOptional.isEmpty()) return false;
+            ItemOptionStock itemOptionStock = itemOptionStockOptional.get();
+
+            Long countCart = cartRepository.cartFindOverlap(cartForm.getMemberId(), cartForm.getItemId(), itemOptionStock.getId());
+            if(countCart > 0) return false;
+        }
+        return true;
+    }
+
+    @Override
     public List<CartForm> findCartsByLoginId(String loginId) {
         Optional<Member> memberOptional = memberRepository.findByLoginId(loginId);
         List<CartForm> carts = new ArrayList<>();
-        if(memberOptional.isEmpty()) {
-            return carts;
-        }
+        if(memberOptional.isEmpty()) return carts;
 
         Member member = memberOptional.get();
         List<Cart> findCarts = cartRepository.findByMemberId(member.getId());
-        if(findCarts.size() == 0) {
-            return carts;
-        }
+        if(findCarts.size() == 0) return carts;
 
         for (Cart cart : findCarts) {
             CartForm cartForm = new CartForm();
@@ -134,6 +153,7 @@ public class CartServiceImpl implements CartService {
             }
             cartForm.setDescription(description);
             cartForm.setStock(cart.getStock());
+            cartForm.setOnePrice(cart.getItem().getPrice());
             cartForm.setPrice(cart.getItem().getPrice() * cartForm.getStock());
 
             carts.add(cartForm);

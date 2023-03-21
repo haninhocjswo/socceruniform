@@ -1,10 +1,12 @@
 package shop.soccerUniform.entity.dto;
 
 import lombok.Data;
-import shop.soccerUniform.entity.Category;
-import shop.soccerUniform.entity.Manager;
+import shop.soccerUniform.entity.*;
 import shop.soccerUniform.entity.enumtype.ItemState;
 import shop.soccerUniform.entity.enumtype.OptionType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ItemForm {
@@ -28,4 +30,10 @@ public class ItemForm {
     private OptionType optionType;
 
     private ItemState state;
+
+    private List<ItemOption> itemOptions = new ArrayList<>();
+
+    private List<ItemOptionValue> itemOptionValues = new ArrayList<>();
+
+    private ItemOptionStock itemOptionStocks;
 }

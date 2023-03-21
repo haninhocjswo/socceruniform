@@ -46,13 +46,9 @@ class CartRepositoryImplTest {
     @Test
     void list() {
         Optional<Member> optionalMember = memberRepository.findByLoginId("member1");
-        log.info("isEmpty={}", optionalMember.isEmpty());
         if(!optionalMember.isEmpty()) {
             Member member = optionalMember.get();
             List<Cart> cartList = cartRepository.findByMemberId(member.getId());
-            for (Cart cart : cartList) {
-                log.info("cart={}", cart);
-            }
         }
     }
 }

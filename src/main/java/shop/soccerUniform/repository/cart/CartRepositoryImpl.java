@@ -32,4 +32,16 @@ public class CartRepositoryImpl implements CartQueryRepository {
                 .orderBy(cart.item.name.asc())
                 .fetch();
     }
+
+    @Override
+    public Long cartFindOverlap(Long memberId, Long itemId, Long itemOptionStockId) {
+        return queryFactory
+                .select(cart.count())
+                .from(cart)
+                .where(
+                        cart.member.id.eq(memberId),
+                        cart.item.id.eq(itemId),
+                        cart.itemOptionStock.id.eq(itemOptionStockId))
+                .fetchOne();
+    }
 }
