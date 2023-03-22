@@ -8,6 +8,7 @@ import shop.soccerUniform.entity.*;
 import shop.soccerUniform.entity.dto.ItemForm;
 import shop.soccerUniform.entity.dto.OrderForm;
 import shop.soccerUniform.entity.dto.OrderReceiveForm;
+import shop.soccerUniform.repository.address.AddressRepository;
 import shop.soccerUniform.repository.cart.CartRepository;
 import shop.soccerUniform.repository.item.ItemRepository;
 import shop.soccerUniform.repository.itemOptionStock.ItemOptionStockRepository;
@@ -28,6 +29,7 @@ public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
+    private final AddressRepository addressRepository;
     private final CartRepository cartRepository;
     private final ItemRepository itemRepository;
     private final ItemOptionValueRepository itemOptionValueRepository;
@@ -39,6 +41,8 @@ public class OrderServiceImpl implements OrderService{
 
         Optional<Member> memberOptional = memberRepository.findById(orderReceiveForm.getMemberId());
         if(memberOptional.isEmpty()) return new OrderForm();
+
+        List<Address> addresses = addressRepository.findByMemberId(memberOptional.get().getId());
 
         Set<String> selectedItems = orderReceiveForm.getSelectedItems();
         List<ItemForm> itemForms = new ArrayList<>();
@@ -73,6 +77,7 @@ public class OrderServiceImpl implements OrderService{
 
         OrderForm orderForm = new OrderForm();
         orderForm.setMember(memberOptional.get());
+        orderForm.setAddresses(addresses);
         orderForm.setItems(itemForms);
         orderForm.setResultFlag(true);
 
@@ -83,6 +88,8 @@ public class OrderServiceImpl implements OrderService{
     public OrderForm receivedCart(OrderReceiveForm orderReceiveForm) {
         Optional<Member> memberOptional = memberRepository.findById(orderReceiveForm.getMemberId());
         if(memberOptional.isEmpty()) return new OrderForm();
+
+        List<Address> addresses = addressRepository.findByMemberId(memberOptional.get().getId());
 
         Set<Long> cartIds = orderReceiveForm.getCartIds();
         if(cartIds.size() == 0) return new OrderForm();
@@ -102,6 +109,7 @@ public class OrderServiceImpl implements OrderService{
             itemForm.setDescription(item.getDescription());
             itemForm.setOptionType(item.getOptionType());
             itemForm.setOrderStock(cart.getStock());
+
             Optional<ItemOptionStock> itemOptionStockOptional = itemOptionStockRepository.findById(cart.getItemOptionStock().getId());
             if(itemOptionStockOptional.isEmpty()) return new OrderForm();
             itemForm.setItemOptionStock(itemOptionStockOptional.get());
@@ -111,6 +119,7 @@ public class OrderServiceImpl implements OrderService{
 
         OrderForm orderForm = new OrderForm();
         orderForm.setMember(memberOptional.get());
+        orderForm.setAddresses(addresses);
         orderForm.setItems(itemForms);
         orderForm.setResultFlag(true);
 

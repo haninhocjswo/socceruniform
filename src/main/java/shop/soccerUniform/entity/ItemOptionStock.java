@@ -2,6 +2,7 @@ package shop.soccerUniform.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.soccerUniform.entity.enumtype.UseYn;
 
 import javax.persistence.*;
 
@@ -39,6 +40,10 @@ public class ItemOptionStock {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UseYn useYn;
+
     public ItemOptionStock(Item item, ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, String sort, Integer stock, String description) {
         this.item = item;
         this.firstOptionValue = firstOptionValue;
@@ -46,5 +51,19 @@ public class ItemOptionStock {
         this.sort = sort;
         this.stock = stock;
         this.description = description;
+        this.useYn = UseYn.Y;
+    }
+
+    public void editItemOptionStock(ItemOptionValue firstOptionValue, ItemOptionValue secondOptionValue, String sort, Integer stock, String description, UseYn useYn) {
+        this.firstOptionValue = firstOptionValue;
+        this.secondOptionValue = secondOptionValue;
+        this.sort = sort;
+        this.stock = stock;
+        this.description = description;
+        this.useYn = UseYn.Y;
+    }
+
+    public void delItemOptionStock() {
+        useYn = UseYn.N;
     }
 }
