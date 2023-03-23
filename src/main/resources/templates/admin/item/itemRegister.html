@@ -126,63 +126,8 @@
                     <button class="btn btn-info" id="addOptionValue2Btn" type="button" onclick="addSecondOption();" style="display:none;">옵션2종류 추가</button>
                     <button class="btn btn-danger" id="removeOptionValue2Btn" type="button" onclick="removeSecondOption();" style="display:none;">옵션2종류 제거</button>
                   </div>
-                  <!-- 옵션타입이 SINGLE일 때 시작 -->
-                  <div class="row mb-3 option-value-stock" id="singleType" style="display:none;">
-                    <div class="col-md-12">
-                      <table class="table table-borderless" id="singleTable">
-                        <colgroup>
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                        </colgroup>
-                        <tr class="option-value-1-list">
-                          <th style="width:100px;">옵션1종류</th>
-                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
-                        </tr>
-                        <tr class="option-stock-list">
-                          <th>재고</th>
-                          <td><input type="number" name="stock_1_0" style="width:100px;" placeholder="재고" /></td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
-                  <!-- 옵션타입이 SINGLE일 때 종료 -->
-                  <!-- 옵션타입이 DOUBLE일 때 시작 -->
-                  <div class="row mb-3 option-value-stock" id="doubleType" style="display:none;">
-                    <p style="color:red;">첫번째 옵션은 가로, 두번째 옵션은 세로입니다.</p>
-                    <div class="col-md-12">
-                      <table class="table table-borderless" id="doubleTable">
-                        <colgroup>
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                          <col width="100">
-                        </colgroup>
-                        <tr class="option-value-1-list">
-                          <th></th>
-                          <td><input type="text" name="valueName1_1" style="width:100px;" placeholder="옵션1종류" value="" /></td>
-                        </tr>
-                        <tr class="option-stock-list option-value-2-list" id="optionValue2_1">
-                          <th><input type="text" name="valueName2_1" style="width:100px;" placeholder="옵션2종류" /></th>
-                          <td><input type="number" name="stock_1_1" style="width:100px;" placeholder="재고" /></td>
-                        </tr>
-                      </table>
-                    </div>
+                  <div class="row mb-3 option-table">
+
                   </div>
                   <!-- 옵션타입이 DOUBLE일 때 종료 -->
                   <div class="mt-4 mb-0">
@@ -206,18 +151,17 @@
 <script src="../../js/admin/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script th:inline="javascript">
-  /*<![CDATA[*/
   function changeOptionType(optionType) {
     //초기화
+    $('.option-table').empty();
     $('#optionName1').hide();
     $('#optionName2').hide();
     $('#addOptionValue1Btn').hide();
     $('#removeOptionValue1Btn').hide();
     $('#addOptionValue2Btn').hide();
     $('#removeOptionValue2Btn').hide();
-    $('#singleType').hide();
-    $('#doubleType').hide();
 
+    let addHtml = '';
     if(optionType == 'SINGLE') {
       $('#optionName1').show();
       $('#optionName2').hide();
@@ -225,8 +169,35 @@
       $('#removeOptionValue1Btn').show();
       $('#addOptionValue2Btn').hide();
       $('#removeOptionValue2Btn').hide();
-      $('#singleType').show();
-      $('#doubleType').hide();
+
+      addHtml += '<div class="col-md-12">';
+      addHtml += '  <table class="table table-borderless">';
+      addHtml += '    <colgroup>';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '    </colgroup>';
+      addHtml += '    <tbody id="table-body">';
+      addHtml += '      <tr class="option-value-1-list">';
+      addHtml += '        <th style="width:100px;">옵션1종류</th>';
+      addHtml += '        <td class="option-value-1" ><input type="text" name="firstOptionValues[]" style="width:100px;" placeholder="옵션1종류" value="" /></td>';
+      addHtml += '      </tr>';
+      addHtml += '      <tr class="option-stock-list">';
+      addHtml += '        <th>재고</th>';
+      addHtml += '        <td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
+      addHtml += '      </tr>';
+      addHtml += '    </tbody>';
+      addHtml += '  </table>';
+      addHtml += '</div>';
+      $('.option-table').append(addHtml);
     } else if(optionType == 'DOUBLE') {
       $('#optionName1').show();
       $('#optionName2').show();
@@ -234,8 +205,36 @@
       $('#removeOptionValue1Btn').show();
       $('#addOptionValue2Btn').show();
       $('#removeOptionValue2Btn').show();
-      $('#singleType').hide();
-      $('#doubleType').show();
+
+      addHtml += '<p style="color:red;">첫번째 옵션은 가로, 두번째 옵션은 세로입니다.</p>';
+      addHtml += '<div class="col-md-12">';
+      addHtml += '  <table class="table table-borderless" id="doubleTable">';
+      addHtml += '    <colgroup>';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '      <col width="100">';
+      addHtml += '    </colgroup>';
+      addHtml += '    <tbody id="table-body">';
+      addHtml += '      <tr class="option-value-1-list">';
+      addHtml += '        <th></th>';
+      addHtml += '        <td class="option-value-1" ><input type="text" name="firstOptionValues[]" style="width:100px;" placeholder="옵션1종류" value="" /></td>';
+      addHtml += '      </tr>';
+      addHtml += '      <tr class="option-stock-list option-value-2-list">';
+      addHtml += '        <th class="option-value-2" ><input type="text" name="secondOptionValues[]" style="width:100px;" placeholder="옵션2종류" /></th>';
+      addHtml += '        <td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
+      addHtml += '      </tr>';
+      addHtml += '    </tbody>';
+      addHtml += '  </table>';
+      addHtml += '</div>';
+      $('.option-table').append(addHtml);
     } else {
       $('#optionName1').hide();
       $('#optionName2').hide();
@@ -243,105 +242,56 @@
       $('#removeOptionValue1Btn').hide();
       $('#addOptionValue2Btn').hide();
       $('#removeOptionValue2Btn').hide();
-      $('#singleType').hide();
-      $('#doubleType').hide();
     }
   }
 
   function addFirstOption() {
-    let optionType = $('#optionType').val();
-    let optionValue1Size = '';
-    let addOptionValue = '';
-
-    if(optionType == 'SINGLE') {
-      optionValue1Size = $('#singleTable .option-value-1-list').children('td').length;
-
-      if(optionValue1Size <= 9) {
-        addOptionValue = '<td><input type="text" name="valueName1_' + (optionValue1Size + 1) + '" style="width:100px;" placeholder="옵션1종류" /></td>';
-        $('#singleTable .option-value-1-list').append(addOptionValue);
-
-        addStock = '<td><input type="number" name="stock_' + (optionValue1Size + 1) + '_0" style="width:100px;" placeholder="재고" /></td>';
-        $('#singleTable .option-stock-list').append(addStock);
-        $('#itemOption1ValueSize').val(optionValue1Size + 1);
-      } else {
-        alert('옵션종류는 최대 10개까지입니다.');
-      }
-    } else if(optionType == 'DOUBLE') {
-      optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length;
-
-      if(optionValue1Size <= 9) {
-        addOptionValue = '<td><input type="text" name="valueName1_' + (optionValue1Size + 1) + '" style="width:100px;" placeholder="옵션1종류" /></td>';
-        $('#doubleType .option-value-1-list').append(addOptionValue);
-
-        let optionValue2Size = $('#doubleType .option-value-2-list').length;
-        for(let k = 1; k <= optionValue2Size; k++) {
-          addStock = '<td><input type="number" name="stock_' + (optionValue1Size + 1) + '_' + k + '" style="width:100px;" placeholder="재고" /></td>';
-          $('#doubleType tr:nth-child(' + (k+1) + ')').append(addStock);
-        }
-        $('#itemOption1ValueSize').val(optionValue1Size + 1);
-      } else {
-        alert('옵션종류는 최대 10개까지입니다.');
-      }
-    } else {
-      alert('옵션타입을 선택해주세요.');
+    if($('.option-value-1').length > 9) {
+      alert('옵션값은 10개가 최대치입니다.');
+      return false;
     }
+
+    let addOptionValue = '<td class="option-value-1" ><input type="text" name="firstOptionValues[]" style="width:100px;" placeholder="옵션1종류" value="" /></td>';
+    $('.option-value-1-list').append(addOptionValue);
+
+    let addOptionStock = '<td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
+    $('.option-stock-list').append(addOptionStock);
   }
 
   function addSecondOption() {
-    let optionType = $('#optionType').val();
-
-    if(optionType == 'DOUBLE') {
-      let optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length;
-      let optionValue2Size = $('#doubleType .option-value-2-list').length;
-      let addOptionValue = '';
-
-      if(optionValue2Size <= 9) {
-        addOptionValue += '<tr class="option-stock-list option-value-2-list" id="optionValue2_' + (optionValue2Size + 1) + '">';
-        addOptionValue += '  <th><input type="text" name="valueName2_' + (optionValue2Size + 1) + '" style="width:100px;" placeholder="옵션2종류" /></th>';
-        for(let i = 1; i <= optionValue1Size; i++) {
-          addOptionValue += ' <td><input type="number" name="stock_' + i + '_' + (optionValue2Size + 1) + '" style="width:100px;" placeholder="재고" /></td>';
-        }
-        addOptionValue += '</tr>>';
-
-        $('#doubleType table').append(addOptionValue);
-        $('#itemOption2ValueSize').val(optionValue2Size + 1);
-      } else {
-        alert('옵션종류는 최대 10개까지입니다.');
-      }
+    if($('.option-value-2').length > 9) {
+      alert('옵션값은 10개가 최대치입니다.');
+      return false;
     }
+
+    let addOptionValue = '';
+    addOptionValue += '    <tr class="option-stock-list option-value-2-list">';
+    addOptionValue += '      <th class="option-value-2" ><input type="text" name="secondOptionValues[]" style="width:100px;" placeholder="옵션2종류" /></th>';
+    addOptionValue += '      <td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
+    addOptionValue += '    </tr>';
+    $('#table-body').append(addOptionValue);
+
+    let optionValue1Length = $('.option-value-1').length;
+    let optionValue2Length = $('.option-value-2').length;
+    for(let i = 0; i < optionValue2Length; i++) {
+      //console.log($('.option-value-2-list')[i].childElementCount);
+      //TODO 아이템 폼 페이지 두번째 옵션값 추가 버튼 진행 중...
+    }
+    let addOptionStock = '<td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
+    $('.option-stock-list').append(addOptionStock);
   }
 
   function removeFirstOption() {
-    let optionType = $('#optionType').val();
-
-    if(optionType == 'SINGLE') {
-      let optionValue1Size = $('#singleTable .option-value-1-list').children('td').length + 1;
-
-      $('#singleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
-      $('#singleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
-      $('#itemOption1ValueSize').val(optionValue1Size - 2);
-    } else if(optionType == 'DOUBLE') {
-      let optionValue1Size = $('#doubleTable .option-value-1-list').children('td').length + 1;
-
-      $('#doubleTable .option-value-1-list td:nth-child(' + optionValue1Size + ')').remove();
-      $('#doubleTable .option-stock-list td:nth-child(' + optionValue1Size + ')').remove();
-      $('#itemOption1ValueSize').val(optionValue1Size - 2);
+    if($('.option-value-1').length <= 1) {
+      alert('최소한의 옵션값은 필요합니다.');
     }
   }
 
   function removeSecondOption() {
-    let optionType = $('#optionType').val();
-
-    if(optionType == 'DOUBLE') {
-      let optionValue2Size = $('#doubleTable .option-value-2-list').length;
-
-      if(optionValue2Size > 1) {
-        $('#optionValue2_' + optionValue2Size).remove();
-      }
-      $('#itemOption2ValueSize').val(optionValue2Size - 1);
+    if($('.option-value-2').length <= 1) {
+      alert('최소한의 옵션값은 필요합니다.');
     }
   }
-  /*]]>*/
 </script>
 <script src="../../js/admin/datatables-simple-demo.js"></script>
 </body>
