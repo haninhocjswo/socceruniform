@@ -120,7 +120,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row mb-3 option-name" id="optionValues">
+                  <div class="row mb-3 option-name" id="firstOptionValues" style="display:none;">
+                    <div class="field-error">옵션값을 입력하실 때 따옴표를 기준으로 입력해주세요. 예) 옵션값,옵션값,옵션값</div>
                     <div class="col-md-12">
                       <div class="form-floating mb-3 mb-md-0">
                         <input class="form-control" id="option1Values" name="option1Values" type="text" />
@@ -128,7 +129,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row mb-3 option-name">
+                  <div class="row mb-3 option-name" id="secondOptionValues" style="display:none;">
                     <div class="col-md-12">
                       <div class="form-floating mb-3 mb-md-0">
                         <input class="form-control" id="option2Values" name="option2Values" type="text" />
@@ -136,16 +137,14 @@
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <button class="btn btn-info" id="addOptionValue1Btn" type="button" onclick="addFirstOption();" style="display:none;">옵션1종류 추가</button>
-                    <button class="btn btn-danger" id="removeOptionValue1Btn" type="button" onclick="removeFirstOption();" style="display:none;">옵션1종류 제거</button>
-                    <button class="btn btn-info" id="addOptionValue2Btn" type="button" onclick="addSecondOption();" style="display:none;">옵션2종류 추가</button>
-                    <button class="btn btn-danger" id="removeOptionValue2Btn" type="button" onclick="removeSecondOption();" style="display:none;">옵션2종류 제거</button>
+                  <div class="mt-4 mb-0" id="applyOption" style="display:none;">
+                    <div class="d-flex justify-content-center">
+                      <input type="button" class="btn btn-success form-control" value="옵션 적용하기" onclick="applyOption();" />
+                    </div>
                   </div>
-                  <div class="row mb-3 option-table">
-
+                  <div class="list-group" id="optionValueStocks">
+                    <li class="list-group-item">A second item</li>
                   </div>
-                  <!-- 옵션타입이 DOUBLE일 때 종료 -->
                   <div class="mt-4 mb-0">
                     <div class="d-flex justify-content-center">
                       <input type="submit" class="btn btn-warning" value="등록" />
@@ -167,154 +166,43 @@
 <script src="../../js/admin/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script th:inline="javascript">
-  function changeOptionType(optionType) {
-    //초기화
-    $('.option-table').empty();
-    $('#optionName1').hide();
+function changeOptionType(optionType) {
+  $('#optionName1').hide();
+  $('#optionName2').hide();
+  $('#firstOptionValues').hide();
+  $('#secondOptionValues').hide();
+  $('#applyOption').hide();
+
+  if(optionType == 'SINGLE') {
+    $('#optionName1').show();
     $('#optionName2').hide();
-    $('#addOptionValue1Btn').hide();
-    $('#removeOptionValue1Btn').hide();
-    $('#addOptionValue2Btn').hide();
-    $('#removeOptionValue2Btn').hide();
-
-    let addHtml = '';
-    if(optionType == 'SINGLE') {
-      $('#optionName1').show();
-      $('#optionName2').hide();
-      $('#addOptionValue1Btn').show();
-      $('#removeOptionValue1Btn').show();
-      $('#addOptionValue2Btn').hide();
-      $('#removeOptionValue2Btn').hide();
-
-      addHtml += '<div class="col-md-12">';
-      addHtml += '  <table class="table table-borderless">';
-      addHtml += '    <colgroup>';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '    </colgroup>';
-      addHtml += '    <tbody id="table-body">';
-      addHtml += '      <tr class="option-value-1-list">';
-      addHtml += '        <th style="width:100px;">옵션1종류</th>';
-      addHtml += '        <td class="option-value-1" ><input type="text" name="firstOptionValues[]" style="width:100px;" placeholder="옵션1종류" value="" /></td>';
-      addHtml += '      </tr>';
-      addHtml += '      <tr class="option-stock-list">';
-      addHtml += '        <th>재고</th>';
-      addHtml += '        <td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
-      addHtml += '      </tr>';
-      addHtml += '    </tbody>';
-      addHtml += '  </table>';
-      addHtml += '</div>';
-      $('.option-table').append(addHtml);
-    } else if(optionType == 'DOUBLE') {
-      $('#optionName1').show();
-      $('#optionName2').show();
-      $('#addOptionValue1Btn').show();
-      $('#removeOptionValue1Btn').show();
-      $('#addOptionValue2Btn').show();
-      $('#removeOptionValue2Btn').show();
-
-      addHtml += '<p style="color:red;">첫번째 옵션은 가로, 두번째 옵션은 세로입니다.</p>';
-      addHtml += '<div class="col-md-12">';
-      addHtml += '  <table class="table table-borderless" id="doubleTable">';
-      addHtml += '    <colgroup>';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '      <col width="100">';
-      addHtml += '    </colgroup>';
-      addHtml += '    <tbody id="table-body">';
-      addHtml += '      <tr class="option-value-1-list">';
-      addHtml += '        <th></th>';
-      addHtml += '        <td class="option-value-1" ><input type="text" name="firstOptionValues[]" style="width:100px;" placeholder="옵션1종류" value="" /></td>';
-      addHtml += '      </tr>';
-      addHtml += '      <tr class="option-stock-list option-value-2-list">';
-      addHtml += '        <th class="option-value-2" ><input type="text" name="secondOptionValues[]" style="width:100px;" placeholder="옵션2종류" /></th>';
-      addHtml += '        <td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
-      addHtml += '      </tr>';
-      addHtml += '    </tbody>';
-      addHtml += '  </table>';
-      addHtml += '</div>';
-      $('.option-table').append(addHtml);
-    } else {
-      $('#optionName1').hide();
-      $('#optionName2').hide();
-      $('#addOptionValue1Btn').hide();
-      $('#removeOptionValue1Btn').hide();
-      $('#addOptionValue2Btn').hide();
-      $('#removeOptionValue2Btn').hide();
-    }
+    $('#firstOptionValues').show();
+    $('#secondOptionValues').hide();
+    $('#applyOption').show();
   }
 
-  function addFirstOption() {
-    if($('.option-value-1').length > 9) {
-      alert('옵션값은 10개가 최대치입니다.');
+  if(optionType == 'DOUBLE') {
+    $('#optionName1').show();
+    $('#optionName2').show();
+    $('#firstOptionValues').show();
+    $('#secondOptionValues').show();
+    $('#applyOption').show();
+  }
+}
+
+function applyOption() {
+  if($('#firstOptionName').val() == '' || $('#option1Values').val == '') {
+    alert('첫번째 옵션명이나 옵션의 옵션값을 확인해 주세요.');
+    return false;
+  }
+
+  if($('#optionType').val() == 'DOUBLE') {
+    if($('#secondOptionName').val() == '' || $('#option2Values').val == '') {
+      alert('두번째 옵션명이나 옵션의 옵션값을 확인해 주세요.');
       return false;
     }
-
-    let addOptionValue = '<td class="option-value-1" ><input type="text" name="firstOptionValues[]" style="width:100px;" placeholder="옵션1종류" value="" /></td>';
-    $('.option-value-1-list').append(addOptionValue);
-
-    let addOptionStock = '<td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
-    $('.option-stock-list').append(addOptionStock);
   }
-
-  function addSecondOption() {
-    if($('.option-value-2').length > 9) {
-      alert('옵션값은 10개가 최대치입니다.');
-      return false;
-    }
-
-    let addOptionValue = '';
-    addOptionValue += '    <tr class="option-stock-list option-value-2-list">';
-    addOptionValue += '      <th class="option-value-2" ><input type="text" name="secondOptionValues[]" style="width:100px;" placeholder="옵션2종류" /></th>';
-    addOptionValue += '      <td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
-    addOptionValue += '    </tr>';
-    $('#table-body').append(addOptionValue);
-
-    let addOptionStock = '<td class="option-value-stock" ><input type="number" name="optionValueStocks[]" style="width:100px;" placeholder="재고" /></td>';
-    let optionValue1Length = $('.option-value-1').length;
-    let optionValue2Length = $('.option-value-2').length;
-    for(let i = 0; i < optionValue2Length; i++) {
-      let size = $('.option-value-2-list')[i].childElementCount - 1;
-      if(size < optionValue1Length) {
-        console.log('size=' + size + ' | optionValue1Length=' + optionValue1Length);
-        const current = $('.option-value-2-list')[i];
-        for(let k = 0; k < (optionValue1Length - size); k++) {
-          $('.option-value-2-list')[i].push(addOptionStock);
-        }
-      } else {
-        continue;
-      }
-    }
-  }
-
-  function removeFirstOption() {
-    if($('.option-value-1').length <= 1) {
-      alert('최소한의 옵션값은 필요합니다.');
-    }
-  }
-
-  function removeSecondOption() {
-    if($('.option-value-2').length <= 1) {
-      alert('최소한의 옵션값은 필요합니다.');
-    }
-  }
+}
 </script>
 <script src="../../js/admin/datatables-simple-demo.js"></script>
 </body>
