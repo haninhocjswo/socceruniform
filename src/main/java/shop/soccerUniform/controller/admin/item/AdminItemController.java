@@ -95,87 +95,47 @@ public class AdminItemController {
 
     @PostMapping("/admin/item/register")
     public String itemRegister(@Valid @ModelAttribute(name = "itemSaveForm") ItemSaveForm itemSaveForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
+        if(!StringUtils.hasText(itemSaveForm.getFirstOptionName())) {
+            bindingResult.reject("firstOptionName", "첫번째 옵션을 확인해주세요.");
+        }
 
+        int option1Length = itemSaveForm.getOption1Values().split(",").length;
+        int option2Length = itemSaveForm.getOption2Values().split(",").length;
+        if(option1Length <= 0 || !StringUtils.hasText(itemSaveForm.getOption1Values())) {
+            bindingResult.reject("option1Values", "옵션1 옵션값들을 확인해주세요.");
+        }
+        if(itemSaveForm.getOptionType() == OptionType.DOUBLE) {
+            if(!StringUtils.hasText(itemSaveForm.getSecondOptionName())) {
+                bindingResult.reject("secondOptionName", "두번째 옵션을 확인해주세요.");
+            }
+            if(option2Length <= 0 || !StringUtils.hasText(itemSaveForm.getOption2Values())) {
+                bindingResult.reject("option2Values", "옵션2 옵션값들을 확인해주세요.");
+            }
+            if(option1Length*option2Length != itemSaveForm.getItemStocks().size()) {
+                bindingResult.reject("optionStock", "옵션값과 재고가 맞지 않습니다. 확인해주세요.");
+            }
+        } else {
+            if(option1Length != itemSaveForm.getItemStocks().size()) {
+                bindingResult.reject("optionStock", "옵션값과 재고가 맞지 않습니다. 확인해주세요.");
+            }
+        }
 
+        if(bindingResult.hasErrors()) {
+            return "admin/item/itemRegister";
+        }
+
+        try {
+            itemService.saveItem(itemSaveForm);
+        } catch (RuntimeException e) {
+            bindingResult.reject("savedError", e.getMessage());
+            return "admin/item/itemRegister";
+        }
 
         return "redirect:/admin/items";
     }
 
     @PostMapping("/admin/item/edit")
     public String editItem(@Valid @ModelAttribute(name = "itemEditForm") ItemEditForm itemEditForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
-        if(!StringUtils.hasText(itemEditForm.getFirstOptionName())) {
-            bindingResult.reject("firstOptionName", "옵션1명은 필수값입니다.");
-        }
-
-        Map<String, Object> itemEditFormMap = new HashMap<>();
-        Field[] fields = itemEditForm.getClass().getDeclaredFields();
-        String firstValueName = "";
-        String secondValueName = "";
-
-        for (Field field : fields) {
-            if(field.get(itemEditForm) != null) {
-                itemEditFormMap.put(field.getName(), field.get(itemEditForm));
-            }
-        }
-
-        if(itemEditForm.getOptionType() == OptionType.SINGLE) {
-            String singleStockName = "";
-            for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
-                singleStockName = "stock_" + (i+1) + "_0";
-
-                if(itemEditFormMap.get(singleStockName) == null) {
-                    bindingResult.reject(singleStockName, "재고를 확인해주세요.");
-                    break;
-                }
-            }
-        }
-
-        ArrayList<String> stockKeyList = itemEditFormMap.keySet().stream()
-                .filter(m -> m.contains("stock_"))
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        for (String key : stockKeyList) {
-            if(itemEditFormMap.get(key) != null) {
-                if((Integer) itemEditFormMap.get(key) < 0) {
-                    bindingResult.reject("stockMinus", "재고값은 마이너스가 될 수 없습니다.");
-                }
-            }
-        }
-
-        firstValueName = "";
-        if(itemEditForm.getOptionType() == OptionType.DOUBLE) {
-            if(itemEditForm.getValueName2_1() == null) {
-                bindingResult.reject("valueName2_1", "옵션2값은 필수입니다.");
-            }
-
-            String doubleStockName = "";
-            for(int i = 0; i < itemEditForm.getItemOption1ValueSize(); i++) {
-                for(int k = 0; k < itemEditForm.getItemOption2ValueSize(); k++) {
-                    doubleStockName = "stock_" + (i+1) + "_" + (k+1);
-
-                    if(itemEditFormMap.get(doubleStockName) == null) {
-                        log.info("itemEditForm.getItemOption1ValueSize()={}", itemEditForm.getItemOption1ValueSize());
-                        log.info("itemEditForm.getItemOption2ValueSize()={}", itemEditForm.getItemOption2ValueSize());
-                        log.info("bindingResult={}", bindingResult);
-                        bindingResult.reject(doubleStockName, "재고를 확인해주세요.");
-                        break;
-                    }
-                }
-            }
-        }
-
-        //필드에러
-        if(bindingResult.hasErrors()) {
-            log.info("bindingResult={}", bindingResult);
-            List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
-            List<Category> categories = categoryService.findByDepths(3);
-
-            model.addAttribute("managers", managers);
-            model.addAttribute("categories", categories);
-            return "admin/item/itemForm";
-        }
-
-        itemService.editItem(itemEditForm, itemEditForm.getItemId());
 
         return "redirect:/admin/items";
     }

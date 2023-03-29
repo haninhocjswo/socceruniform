@@ -14,35 +14,39 @@ import java.util.List;
 public class ItemSaveForm {
 
     @NotBlank(message = "상품명은 필수값입니다.")
-    public String name;
+    private String name;
 
     @NotNull(message = "가격은 필수값입니다.")
-    public Integer price;
+    private Integer price;
 
     @NotNull(message = "입점업체를 선택해주세요.")
-    public Long managerId;
+    private Long managerId;
 
     @NotNull(message = "카테고리는 필수값입니다.")
     @Min(value = 1, message = "카테고리를 선택해주세요.")
-    public Long categoryId;
+    private Long categoryId;
 
     @NotBlank(message = "제조사는 필수값입니다.")
-    public String manufacturer;
+    private String manufacturer;
 
     @NotBlank(message = "원산지는 필수값입니다.")
-    public String origin;
+    private String origin;
 
     @NotNull(message = "상품옵션 유형을 선택해주세요.")
-    public OptionType optionType;
+    private OptionType optionType;
 
     @NotNull(message = "상품상태를 선택해주세요.")
-    public ItemState state;
+    private ItemState state;
 
-    public String description;
+    private String description;
 
-    public String itemOption1Values;
+    private String firstOptionName;
 
-    public String itemOption2Values;
+    private String secondOptionName;
 
-    public List<String> itemStocks = new ArrayList<>();
+    private String option1Values;
+
+    private String option2Values;
+
+    private List<String> itemStocks = new ArrayList<>();
 }
