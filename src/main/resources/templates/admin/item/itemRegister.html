@@ -107,43 +107,43 @@
                     </div>
                   </div>
                   <div class="row mb-3 option-name">
-                    <div class="col-md-6" style="display:none;" id="optionName1">
+                    <div class="col-md-6" id="optionName1" th:style="${#strings.isEmpty(itemSaveForm.firstOptionName) ? 'display:none' : 'display:block'}" >
                       <div class="form-floating mb-3 mb-md-0">
-                        <input class="form-control" id="firstOptionName" name="firstOptionName" type="text" />
+                        <input class="form-control" id="firstOptionName" th:field="*{firstOptionName}" type="text" />
                         <label for="firstOptionName">옵션1명</label>
                       </div>
                     </div>
-                    <div class="col-md-6" style="display:none;" id="optionName2">
+                    <div class="col-md-6" style="display:none;" id="optionName2" th:style="${#strings.isEmpty(itemSaveForm.secondOptionName) ? 'display:none' : 'display:block'}">
                       <div class="form-floating">
-                        <input class="form-control" id="secondOptionName" name="secondOptionName" type="text" />
+                        <input class="form-control" id="secondOptionName" th:field="*{secondOptionName}" type="text" />
                         <label for="secondOptionName">옵션2명</label>
                       </div>
                     </div>
                   </div>
-                  <div class="row mb-3 option-name" id="firstOptionValues" style="display:none;">
+                  <div class="row mb-3 option-name" id="firstOptionValues" th:style="${#strings.isEmpty(itemSaveForm.option1Values) ? 'display:none' : 'display:block'}">
                     <div class="field-error">옵션값을 입력하실 때 따옴표를 기준으로 입력해주세요. 예) 옵션값,옵션값,옵션값</div>
                     <div class="col-md-12">
                       <div class="form-floating mb-3 mb-md-0">
-                        <input class="form-control" id="option1Values" name="option1Values" type="text" />
+                        <input class="form-control" id="option1Values" th:field="*{option1Values}" type="text" />
                         <label for="option1Values">옵션1 옵션값</label>
                       </div>
                     </div>
                   </div>
-                  <div class="row mb-3 option-name" id="secondOptionValues" style="display:none;">
+                  <div class="row mb-3 option-name" id="secondOptionValues" th:style="${#strings.isEmpty(itemSaveForm.option2Values) ? 'display:none' : 'display:block'}">
                     <div class="col-md-12">
                       <div class="form-floating mb-3 mb-md-0">
-                        <input class="form-control" id="option2Values" name="option2Values" type="text" />
+                        <input class="form-control" id="option2Values" th:field="*{option2Values}" type="text" />
                         <label for="option2Values">옵션2 옵션값</label>
                       </div>
                     </div>
                   </div>
-                  <div class="mt-4 mb-0" id="applyOption" style="display:none;">
+                  <div class="mt-4 mb-0" id="applyOption" th:style="${#strings.isEmpty(itemSaveForm.option1Values) ? 'display:none' : 'display:block'}">
                     <div class="d-flex justify-content-center">
                       <input type="button" class="btn btn-success form-control" value="옵션 적용하기" onclick="applyOption();" />
                     </div>
                   </div>
                   &nbsp;
-                  <div class="list-group" id="stock-list">
+                  <div class="list-group" id="stock-list" style="display:none;">
                     <li class="list-group-item">
                       <div class="col-md-2 inline-block-text-center">옵션명1</div>
                       <div class="col-md-2 inline-block-text-center">옵션값</div>
@@ -180,6 +180,7 @@ function changeOptionType(optionType) {
   $('#firstOptionValues').hide();
   $('#secondOptionValues').hide();
   $('#applyOption').hide();
+  $('#stock-list').hide();
 
   if(optionType == 'SINGLE') {
     $('#optionName1').show();
@@ -187,6 +188,7 @@ function changeOptionType(optionType) {
     $('#firstOptionValues').show();
     $('#secondOptionValues').hide();
     $('#applyOption').show();
+    $('#stock-list').show();
   }
 
   if(optionType == 'DOUBLE') {
@@ -195,6 +197,7 @@ function changeOptionType(optionType) {
     $('#firstOptionValues').show();
     $('#secondOptionValues').show();
     $('#applyOption').show();
+    $('#stock-list').show();
   }
 }
 

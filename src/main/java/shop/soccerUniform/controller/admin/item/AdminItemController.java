@@ -121,6 +121,11 @@ public class AdminItemController {
         }
 
         if(bindingResult.hasErrors()) {
+            List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
+            List<Category> categories = categoryService.findByDepths(3);
+
+            model.addAttribute("managers", managers);
+            model.addAttribute("categories", categories);
             return "admin/item/itemRegister";
         }
 
