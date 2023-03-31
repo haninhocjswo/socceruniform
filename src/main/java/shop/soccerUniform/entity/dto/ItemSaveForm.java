@@ -48,5 +48,7 @@ public class ItemSaveForm {
 
     private String option2Values;
 
-    private List<String> itemStocks = new ArrayList<>();
+    private List<ItemOptionStockForm> itemStocks = new ArrayList<>();
+
+    private List<String> strList = new ArrayList<>();
 }

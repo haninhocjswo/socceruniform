@@ -63,18 +63,13 @@ public class ItemServiceImpl implements ItemService{
             }
 
             List<ItemOptionValue> optionValues = itemOptionValueRepository.findByItemOptionId(savedItemOption.getId());
-            List<String> itemStocks = itemSaveForm.getItemStocks();
+            List<ItemOptionStockForm> itemStocks = itemSaveForm.getItemStocks();
             if(itemStocks.size() <= 0) throw new RuntimeException("옵션의 재고값을 확인해주세요.");
-            for (String itemStock : itemStocks) {
-                String[] optionInfoList = itemStock.split("_");
-                if(optionInfoList.length != 3) throw new RuntimeException("데이터가 잘못되었습니다.");
-                if(!StringUtils.hasText(optionInfoList[0])) throw new RuntimeException("옵션1 옵션값의 데이터가 잘못되었습니다.");
-                if(!optionInfoList[1].equals("0")) throw new RuntimeException("옵션2 옵션값의 데이터가 잘못되었습니다.");
-                if(!StringUtils.hasText(optionInfoList[2])) throw new RuntimeException("옵션의 재고 데이터가 잘못되었습니다.");
-
-                String description = savedItemOption.getOptionName() + " : " + optionValues.get(Integer.parseInt(optionInfoList[0]) - 1).getOptionValue();
-                itemOptionStockRepository.save(new ItemOptionStock(savedItem, optionValues.get(Integer.parseInt(optionInfoList[0]) - 1), null,
-                        optionInfoList[0] + "_" + optionInfoList[1], Integer.parseInt(optionInfoList[2]), description));
+            for (ItemOptionStockForm itemStock : itemStocks) {
+                String[] sortSplitList = itemStock.getSort().split("_");
+                if(sortSplitList.length != 2) throw new RuntimeException("옵션값과 재고의 데이터가 맞지 않습니다.");
+                itemOptionStockRepository.save(new ItemOptionStock(savedItem, optionValues.get(Integer.parseInt(sortSplitList[0]) - 1),
+                        null, itemStock.getSort(), itemStock.getStock(), itemStock.getDescription()));
             }
         }
 
@@ -97,19 +92,15 @@ public class ItemServiceImpl implements ItemService{
 
             List<ItemOptionValue> option1ValueList = itemOptionValueRepository.findByItemOptionId(savedItemOption1.getId());
             List<ItemOptionValue> option2ValueList = itemOptionValueRepository.findByItemOptionId(savedItemOption2.getId());
-            List<String> itemStocks = itemSaveForm.getItemStocks();
+            List<ItemOptionStockForm> itemStocks = itemSaveForm.getItemStocks();
             if(itemStocks.size() <= 0) throw new RuntimeException("옵션의 재고값을 확인해주세요.");
-            for (String itemStock : itemStocks) {
-                String[] optionInfoList = itemStock.split("_");
-                if(optionInfoList.length != 3) throw new RuntimeException("데이터가 잘못되었습니다.");
-                if(!StringUtils.hasText(optionInfoList[0])) throw new RuntimeException("옵션1 옵션값의 데이터가 잘못되었습니다.");
-                if(!StringUtils.hasText(optionInfoList[1])) throw new RuntimeException("옵션2 옵션값의 데이터가 잘못되었습니다.");
-                if(!StringUtils.hasText(optionInfoList[2])) throw new RuntimeException("옵션의 재고 데이터가 잘못되었습니다.");
-
-                String description = savedItemOption1.getOptionName() + " : " + option1ValueList.get(Integer.parseInt(optionInfoList[0]) -1).getOptionValue()
-                        + " | " + savedItemOption2.getOptionName() + " : " + option2ValueList.get(Integer.parseInt(optionInfoList[1]) - 1).getOptionValue();
-                itemOptionStockRepository.save(new ItemOptionStock(savedItem, option1ValueList.get(Integer.parseInt(optionInfoList[0]) - 1), option2ValueList.get(Integer.parseInt(optionInfoList[1]) - 1),
-                        optionInfoList[0] + "_" + optionInfoList[1], Integer.parseInt(optionInfoList[2]), description));
+            for (ItemOptionStockForm itemStock : itemStocks) {
+                String[] sortSplitList = itemStock.getSort().split("_");
+                log.info("확인1={}", itemStock.getSort());
+                log.info("확인2={}", sortSplitList.length);
+                if(sortSplitList.length != 2) throw new RuntimeException("옵션값과 재고의 데이터가 맞지 않습니다.");
+                itemOptionStockRepository.save(new ItemOptionStock(savedItem, option1ValueList.get(Integer.parseInt(sortSplitList[0]) - 1),
+                        option2ValueList.get(Integer.parseInt(sortSplitList[1]) - 1), itemStock.getSort(), itemStock.getStock(), itemStock.getDescription()));
             }
         }
     }
@@ -161,8 +152,30 @@ public class ItemServiceImpl implements ItemService{
         itemEditForm.setOption2Values(option2Values);
 
         for(ItemOptionStock itemOptionStock : item.getItemOptionStocks()) {
-            String itemOptionStockValue = "";
-            // TODO
+            ItemOptionStockForm stockForm = new ItemOptionStockForm();
+            stockForm.setItemOptionStockId(itemOptionStock.getId());
+            stockForm.setItemId(item.getId());
+            stockForm.setFirstItemOptionId(itemOptionStock.getFirstOptionValue().getId());
+            stockForm.setSecondItemOptionId(itemOptionStock.getSecondOptionValue().getId());
+            stockForm.setAddPrice(0);
+            stockForm.setStock(itemOptionStock.getStock());
+            stockForm.setSort(itemOptionStock.getSort());
+            stockForm.setDescription(itemOptionStock.getDescription());
+            if(item.getOptionType() == OptionType.SINGLE) {
+                String[] descSplit = itemOptionStock.getDescription().split(" : ");
+                stockForm.setFirstOptionName(descSplit[0]);
+                stockForm.setFirstOptionValueName(descSplit[1]);
+            }
+            if(item.getOptionType() == OptionType.DOUBLE) {
+                String[] descSplit = itemOptionStock.getDescription().split(" | ");
+                String[] firstDescSplit = descSplit[0].split(" : ");
+                String[] secondDescSplit = descSplit[1].split(" : ");
+                stockForm.setFirstOptionName(firstDescSplit[0]);
+                stockForm.setFirstOptionValueName(firstDescSplit[1]);
+                stockForm.setSecondOptionName(secondDescSplit[0]);
+                stockForm.setSecondOptionValueName(secondDescSplit[1]);
+            }
+            itemEditForm.getItemStocks().add(stockForm);
         }
 
         return itemEditForm;

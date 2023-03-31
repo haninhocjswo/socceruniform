@@ -151,6 +151,19 @@
                       <div class="col-md-2 inline-block-text-center">옵션값</div>
                       <div class="col-md-2 inline-block-text-center">수량</div>
                     </li>
+                    <li class="list-group-item list-group-item-info" th:each="itemStock : *{itemStocks}">
+                        <div class="col-md-2 inline-block-text-center">옵션명1</div>
+                        <div class="col-md-2 inline-block-text-center">옵션값</div>
+                        <div class="col-md-2 inline-block-text-center">옵션명2</div>
+                        <div class="col-md-2 inline-block-text-center">옵션값</div>
+                        <div class="col-md-2 inline-block-text-center">
+                            <input class="input-inline-block form-control" type="number" style="height: 25px; width: 70px;"
+                                   th:id="'stock_' + ${itemStock.sort}" />
+                        </div>
+                        <input type="hidden" th:id="'sort_' + ${itemStock.sort}" th:name="" th:value="" />
+                        <input type="hidden" th:id="'stocks_' + ${itemStock.sort}" th:name="" th:value="" />
+                        <input type="hidden" th:id="'description_' + ${itemStock.sort}" th:name="" th:value="" />
+                    </li>
                   </div>
                   <div class="mt-4 mb-0">
                     <div class="d-flex justify-content-center">

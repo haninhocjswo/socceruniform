@@ -11,14 +11,23 @@ public class ItemOptionStockForm {
 
     private Long itemId;
 
-    @NotNull(message = "첫번째 옵션값은 필수값입니다.")
     private Long firstItemOptionId;
 
     private Long secondItemOptionId;
 
-    @NotNull(message = "추가금액은 필수값입니다.")
     private Integer addPrice;
 
-    @NotNull(message = "수량은 필수값입니다.")
     private Integer stock;
+
+    private String sort;
+
+    private String firstOptionName;
+
+    private String secondOptionName;
+
+    private String firstOptionValueName;
+
+    private String secondOptionValueName;
+
+    private String description;
 }

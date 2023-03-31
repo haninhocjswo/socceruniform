@@ -17,13 +17,15 @@
               <div class="card-header"><h3 class="text-center font-weight-light my-4">상품등록</h3></div>
               <div class="card-body">
                 <form th:object="${itemSaveForm}" method="post" th:action="@{/admin/item/register}">
+                  <input type="hidden" name="strList[]" value="123" />
+                  <input type="hidden" name="strList[]" value="1234" />
+                  <input type="hidden" name="strList[]" value="1235" />
+                  <input type="hidden" name="strList[]" value="1236" />
                   <div class="row mb-3" th:if="${#fields.hasGlobalErrors()}">
                     <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">
                       글로벌 에러
                     </p>
                   </div>
-                  <input type="hidden" id="itemOption1ValueSize" name="itemOption1ValueSize" value="0" />
-                  <input type="hidden" id="itemOption2ValueSize" name="itemOption2ValueSize" value="0" />
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
@@ -248,11 +250,23 @@ function applyOption() {
         stockInput.onkeyup = function() {stockOnChange(first, 0);};
         stockDiv.appendChild(stockInput);
 
-        let hiddenValue = document.createElement('input');
-        hiddenValue.id = first + '_0';
-        hiddenValue.type = 'hidden';
-        hiddenValue.name = 'itemStocks[]';
-        hiddenValue.value = first + '_0_1';
+        let hiddenSort = document.createElement('input');
+        hiddenSort.id = 'sort_' + first + '_0';
+        hiddenSort.type = 'hidden';
+        hiddenSort.name = 'itemStocks[' + i + '].sort';
+        hiddenSort.value = first + '_0';
+
+        let hiddenStock = document.createElement('input');
+        hiddenStock.id = 'stocks_' + first + '_0';
+        hiddenStock.type = 'hidden';
+        hiddenStock.name = 'itemStocks[' + i + '].stock';
+        hiddenStock.value = '1';
+
+        let hiddenDesc = document.createElement('input');
+        hiddenDesc.id = 'desc_' + first + '_0';
+        hiddenDesc.type = 'hidden';
+        hiddenDesc.name = 'itemStocks[' + i + '].description';
+        hiddenDesc.value = optionName1 + ' : ' + option1Values[i];
 
         let liTag = document.createElement('li');
         liTag.className = 'list-group-item list-group-item-info';
@@ -261,7 +275,9 @@ function applyOption() {
         liTag.append(option2NameDiv);
         liTag.append(option2ValueDiv);
         liTag.append(stockDiv);
-        liTag.append(hiddenValue);
+        liTag.append(hiddenSort);
+        liTag.append(hiddenStock);
+        liTag.append(hiddenDesc);
 
         $('#stock-list').append(liTag);
       }
@@ -281,6 +297,7 @@ function applyOption() {
     $('.list-group-item-info').remove();
 
     let optionName2 = $('#secondOptionName').val();
+    // TODO [인덱스]가 안맞음....
     for(let i = 0; i < option1Values.length; i++) {
       for(let k = 0; k < option2Values.length; k++) {
         if(option1Values[i] != '' && option2Values[k] != '') {
@@ -315,11 +332,23 @@ function applyOption() {
           stockInput.onkeyup = function(){stockOnChange(first, second);};
           stockDiv.appendChild(stockInput);
 
-          let hiddenValue = document.createElement('input');
-          hiddenValue.id = first + '_' + second;
-          hiddenValue.type = 'hidden';
-          hiddenValue.name = 'itemStocks[]';
-          hiddenValue.value = first + '_' + second + '_1';
+          let hiddenSort = document.createElement('input');
+          hiddenSort.id = 'sort_' + first + '_' + second;
+          hiddenSort.type = 'hidden';
+          hiddenSort.name = 'itemStocks[' + (first*second -1) + '].sort';
+          hiddenSort.value = first + '_' + second;
+
+          let hiddenStock = document.createElement('input');
+          hiddenStock.id = 'stocks_' + first + '_' + second;
+          hiddenStock.type = 'hidden';
+          hiddenStock.name = 'itemStocks[' + (first*second -1) + '].stock';
+          hiddenStock.value = '1';
+
+          let hiddenDesc = document.createElement('input');
+          hiddenDesc.id = 'desc_' + first + '_' + second;
+          hiddenDesc.type = 'hidden';
+          hiddenDesc.name = 'itemStocks[' + (first*second -1) + '].description';
+          hiddenDesc.value = optionName1 + " : " + option1Values[i] + " | " + optionName2 + " : " + option2Values[i];
 
           let liTag = document.createElement('li');
           liTag.className = 'list-group-item list-group-item-info';
@@ -328,7 +357,9 @@ function applyOption() {
           liTag.append(option2NameDiv);
           liTag.append(option2ValueDiv);
           liTag.append(stockDiv);
-          liTag.append(hiddenValue);
+          liTag.append(hiddenSort);
+          liTag.append(hiddenStock);
+          liTag.append(hiddenDesc);
 
           $('#stock-list').append(liTag);
         }
@@ -340,7 +371,7 @@ function applyOption() {
 function stockOnChange(first, second) {
   let itemStocksId = first + '_' + second;
   let stock = $('#' + 'stock_' + itemStocksId).val();
-  $('#' + itemStocksId).val(itemStocksId + '_' + stock);
+  $('#' + 'stocks_' + itemStocksId).val(stock);
 }
 </script>
 </body>

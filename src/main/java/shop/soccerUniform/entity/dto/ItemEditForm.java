@@ -52,5 +52,5 @@ public class ItemEditForm {
 
     private String option2Values;
 
-    private List<String> itemStocks = new ArrayList<>();
+    private List<ItemOptionStockForm> itemStocks = new ArrayList<>();
 }
