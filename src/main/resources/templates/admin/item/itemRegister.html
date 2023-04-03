@@ -297,7 +297,6 @@ function applyOption() {
     $('.list-group-item-info').remove();
 
     let optionName2 = $('#secondOptionName').val();
-    // TODO [인덱스]가 안맞음....
     for(let i = 0; i < option1Values.length; i++) {
       for(let k = 0; k < option2Values.length; k++) {
         if(option1Values[i] != '' && option2Values[k] != '') {
@@ -335,19 +334,19 @@ function applyOption() {
           let hiddenSort = document.createElement('input');
           hiddenSort.id = 'sort_' + first + '_' + second;
           hiddenSort.type = 'hidden';
-          hiddenSort.name = 'itemStocks[' + (first*second -1) + '].sort';
+          hiddenSort.name = 'itemStocks[' + (i * option2Values.length + k) + '].sort';
           hiddenSort.value = first + '_' + second;
 
           let hiddenStock = document.createElement('input');
           hiddenStock.id = 'stocks_' + first + '_' + second;
           hiddenStock.type = 'hidden';
-          hiddenStock.name = 'itemStocks[' + (first*second -1) + '].stock';
+          hiddenStock.name = 'itemStocks[' + (i * option2Values.length + k) + '].stock';
           hiddenStock.value = '1';
 
           let hiddenDesc = document.createElement('input');
           hiddenDesc.id = 'desc_' + first + '_' + second;
           hiddenDesc.type = 'hidden';
-          hiddenDesc.name = 'itemStocks[' + (first*second -1) + '].description';
+          hiddenDesc.name = 'itemStocks[' + (i * option2Values.length + k) + '].description';
           hiddenDesc.value = optionName1 + " : " + option1Values[i] + " | " + optionName2 + " : " + option2Values[i];
 
           let liTag = document.createElement('li');

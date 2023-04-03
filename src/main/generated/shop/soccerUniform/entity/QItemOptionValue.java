@@ -32,6 +32,8 @@ public class QItemOptionValue extends EntityPathBase<ItemOptionValue> {
 
     public final NumberPath<Integer> optionValueSort = createNumber("optionValueSort", Integer.class);
 
+    public final EnumPath<shop.soccerUniform.entity.enumtype.UseYn> useYn = createEnum("useYn", shop.soccerUniform.entity.enumtype.UseYn.class);
+
     public QItemOptionValue(String variable) {
         this(ItemOptionValue.class, forVariable(variable), INITS);
     }

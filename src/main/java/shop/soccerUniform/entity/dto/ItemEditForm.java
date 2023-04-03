@@ -44,10 +44,12 @@ public class ItemEditForm {
 
     private String description;
 
+    @NotBlank(message = "첫번째 옵션을 필수값입니다.")
     private String firstOptionName;
 
     private String secondOptionName;
 
+    @NotBlank(message = "옵션1 옵션명은 필수값입니다.")
     private String option1Values;
 
     private String option2Values;

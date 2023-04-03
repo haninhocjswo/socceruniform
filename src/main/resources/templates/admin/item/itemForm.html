@@ -16,14 +16,13 @@
             <div class="card shadow-lg border-0 rounded-lg mt-5">
               <div class="card-header"><h3 class="text-center font-weight-light my-4">상품등록</h3></div>
               <div class="card-body">
-                <form th:object="${itemEditForm}" method="post" th:action="@{/admin/item/register}">
-<!--                  <div class="row mb-3" th:if="${#fields.hasGlobalErrors()}">-->
-<!--                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">-->
-<!--                      글로벌 에러-->
-<!--                    </p>-->
-<!--                  </div>-->
-                  <input type="hidden" id="itemOption1ValueSize" name="itemOption1ValueSize" value="0" />
-                  <input type="hidden" id="itemOption2ValueSize" name="itemOption2ValueSize" value="0" />
+                <form th:object="${itemEditForm}" method="post" th:action="@{/admin/item/edit}">
+                  <div class="row mb-3" th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">
+                      글로벌 에러
+                    </p>
+                  </div>
+                  <input type="hidden" th:field="*{itemId}">
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <div class="form-floating mb-3 mb-md-0">
@@ -151,23 +150,28 @@
                       <div class="col-md-2 inline-block-text-center">옵션값</div>
                       <div class="col-md-2 inline-block-text-center">수량</div>
                     </li>
-                    <li class="list-group-item list-group-item-info" th:each="itemStock : *{itemStocks}">
-                        <div class="col-md-2 inline-block-text-center">옵션명1</div>
-                        <div class="col-md-2 inline-block-text-center">옵션값</div>
-                        <div class="col-md-2 inline-block-text-center">옵션명2</div>
-                        <div class="col-md-2 inline-block-text-center">옵션값</div>
+                    <li class="list-group-item list-group-item-info" th:each="itemStock, itemStockStat : *{itemStocks}">
+                        <div class="col-md-2 inline-block-text-center" th:text="${itemStock.firstOptionName}">옵션명1</div>
+                        <div class="col-md-2 inline-block-text-center" th:text="${itemStock.firstOptionValueName}">옵션값</div>
+                        <div class="col-md-2 inline-block-text-center" th:text="${itemStock.secondOptionName}">옵션명2</div>
+                        <div class="col-md-2 inline-block-text-center" th:text="${itemStock.secondOptionValueName}">옵션값</div>
                         <div class="col-md-2 inline-block-text-center">
                             <input class="input-inline-block form-control" type="number" style="height: 25px; width: 70px;"
-                                   th:id="'stock_' + ${itemStock.sort}" />
+                                   th:id="'stock_' + ${itemStock.sort}"
+                                   th:value="${itemStock.stock}"/>
                         </div>
-                        <input type="hidden" th:id="'sort_' + ${itemStock.sort}" th:name="" th:value="" />
-                        <input type="hidden" th:id="'stocks_' + ${itemStock.sort}" th:name="" th:value="" />
-                        <input type="hidden" th:id="'description_' + ${itemStock.sort}" th:name="" th:value="" />
+                        <input type="hidden" th:id="'sort_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].sort" th:value="${itemStock.sort}" />
+                        <input type="hidden" th:id="'stocks_' + ${itemStock.stock}" th:name="itemStocks[ + ${itemStockStat.index} + ].stock" th:value="${itemStock.stock}" />
+                        <input type="hidden" th:id="'description_' + ${itemStock.description}" th:name="itemStocks[ + ${itemStockStat.index} + ].description" th:value="${itemStock.description}" />
+                        <input type="hidden" th:id="'firstOptionName_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].firstOptionName" th:value="${itemStock.firstOptionName}" />
+                        <input type="hidden" th:id="'secondOptionName_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].secondOptionName" th:value="${itemStock.secondOptionName}" />
+                        <input type="hidden" th:id="'firstOptionValueName_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].firstOptionValueName" th:value="${itemStock.firstOptionValueName}" />
+                        <input type="hidden" th:id="'secondOptionValueName_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].secondOptionValueName" th:value="${itemStock.secondOptionValueName}" />
                     </li>
                   </div>
                   <div class="mt-4 mb-0">
                     <div class="d-flex justify-content-center">
-                      <input type="submit" class="btn btn-warning" value="등록" />
+                      <input type="submit" class="btn btn-warning" value="수정" />
                       &nbsp;
                       <a class="btn btn-secondary" href="/admin/items">목록</a>
                     </div>
@@ -215,19 +219,29 @@ function changeOptionType(optionType) {
 }
 
 function applyOption() {
-  if($('#firstOptionName').val() == '') {
+  if($('#firstOptionName').val().trim() == '') {
     alert('옵션명1을 확인해주세요.');
     return false;
   }
 
-  if($('#option1Values').val() == '' || $('#option1Values').val().indexOf(',') == -1) {
+  if($('#option1Values').val().trim() == '') {
     alert('옵션1 옵션값을 확인해주세요.');
     return false;
   }
   let optionType = $('#optionType').val();
-  let option1Values = $('#option1Values').val().split(',');
-  let option2Values = $('#option2Values').val().split(',');
-  let optionName1 = $('#firstOptionName').val();
+
+  let option1Values = [];
+  if(!$('#option1Values').val().trim().includes(',')) {
+    option1Values[0] = $('#option1Values').val().trim();
+  } else {
+    if(!$('#option1Values').val().trim().endsWith(',')) {
+      option1Values = $('#option1Values').val().trim().split(',');
+    } else {
+      alert('옵션값의 마지막은 쉼표로 끝날 수 없습니다.');
+      return false;
+    }
+  }
+  let optionName1 = $('#firstOptionName').val().trim();
 
   if(optionType == 'SINGLE') {
     $('.list-group-item-info').remove();
@@ -261,11 +275,35 @@ function applyOption() {
         stockInput.onkeyup = function() {stockOnChange(first, 0);};
         stockDiv.appendChild(stockInput);
 
-        let hiddenValue = document.createElement('input');
-        hiddenValue.id = first + '_0';
-        hiddenValue.type = 'hidden';
-        hiddenValue.name = 'itemStocks[]';
-        hiddenValue.value = first + '_0_1';
+        let hiddenSort = document.createElement('input');
+        hiddenSort.id = 'sort_' + first + '_0';
+        hiddenSort.type = 'hidden';
+        hiddenSort.name = 'itemStocks[' + i + '].sort';
+        hiddenSort.value = first + '_0';
+
+        let hiddenStock = document.createElement('input');
+        hiddenStock.id = 'stocks_' + first + '_0';
+        hiddenStock.type = 'hidden';
+        hiddenStock.name = 'itemStocks[' + i + '].stock';
+        hiddenStock.value = '1';
+
+        let hiddenDesc = document.createElement('input');
+        hiddenDesc.id = 'desc_' + first + '_0';
+        hiddenDesc.type = 'hidden';
+        hiddenDesc.name = 'itemStocks[' + i + '].description';
+        hiddenDesc.value = optionName1 + ' : ' + option1Values[i];
+
+        let hiddenFirstOptionName = document.createElement('input');
+        hiddenFirstOptionName.id = 'firstOptionName_' + first + '_0';
+        hiddenFirstOptionName.type = 'hidden';
+        hiddenFirstOptionName.name = 'itemStocks[' + i + '].firstOptionName';
+        hiddenFirstOptionName.value = optionName1;
+
+        let hiddenFirstOptionValueName = document.createElement('input');
+        hiddenFirstOptionValueName.id = 'firstOptionValueName_' + first + '_0';
+        hiddenFirstOptionValueName.type = 'hidden';
+        hiddenFirstOptionValueName.name = 'itemStocks[' + i + '].firstOptionValueName';
+        hiddenFirstOptionValueName.value = option1Values[i];
 
         let liTag = document.createElement('li');
         liTag.className = 'list-group-item list-group-item-info';
@@ -274,7 +312,11 @@ function applyOption() {
         liTag.append(option2NameDiv);
         liTag.append(option2ValueDiv);
         liTag.append(stockDiv);
-        liTag.append(hiddenValue);
+        liTag.append(hiddenSort);
+        liTag.append(hiddenStock);
+        liTag.append(hiddenDesc);
+        liTag.append(hiddenFirstOptionName);
+        liTag.append(hiddenFirstOptionValueName);
 
         $('#stock-list').append(liTag);
       }
@@ -282,18 +324,30 @@ function applyOption() {
   }
 
   if(optionType == 'DOUBLE') {
-    if($('#firstOptionName').val() == '') {
-      alert('옵션명1을 확인해주세요.');
+    if($('#secondOptionName').val().trim() == '') {
+      alert('옵션명2을 확인해주세요.');
       return false;
     }
 
-    if($('#option2Values').val() == '' || $('#option2Values').val().indexOf(',') == -1) {
+    if($('#option2Values').val().trim() == '') {
       alert('옵션2 옵션값을 확인해주세요.');
       return false;
     }
+
+    let option2Values = [];
+    if(!$('#option2Values').val().trim().includes(',')) {
+      option2Values[0] = $('#option2Values').val().trim();
+    } else {
+      if(!$('#option2Values').val().trim().endsWith(',')) {
+        option2Values = $('#option2Values').val().trim().split(',');
+      } else {
+        alert('옵션값의 마지막은 쉼표로 끝날 수 없습니다.');
+        return false;
+      }
+    }
     $('.list-group-item-info').remove();
 
-    let optionName2 = $('#secondOptionName').val();
+    let optionName2 = $('#secondOptionName').val().trim();
     for(let i = 0; i < option1Values.length; i++) {
       for(let k = 0; k < option2Values.length; k++) {
         if(option1Values[i] != '' && option2Values[k] != '') {
@@ -328,11 +382,47 @@ function applyOption() {
           stockInput.onkeyup = function(){stockOnChange(first, second);};
           stockDiv.appendChild(stockInput);
 
-          let hiddenValue = document.createElement('input');
-          hiddenValue.id = first + '_' + second;
-          hiddenValue.type = 'hidden';
-          hiddenValue.name = 'itemStocks[]';
-          hiddenValue.value = first + '_' + second + '_1';
+          let hiddenSort = document.createElement('input');
+          hiddenSort.id = 'sort_' + first + '_' + second;
+          hiddenSort.type = 'hidden';
+          hiddenSort.name = 'itemStocks[' + (i * option2Values.length + k) + '].sort';
+          hiddenSort.value = first + '_' + second;
+
+          let hiddenStock = document.createElement('input');
+          hiddenStock.id = 'stocks_' + first + '_' + second;
+          hiddenStock.type = 'hidden';
+          hiddenStock.name = 'itemStocks[' + (i * option2Values.length + k) + '].stock';
+          hiddenStock.value = '1';
+
+          let hiddenDesc = document.createElement('input');
+          hiddenDesc.id = 'desc_' + first + '_' + second;
+          hiddenDesc.type = 'hidden';
+          hiddenDesc.name = 'itemStocks[' + (i * option2Values.length + k) + '].description';
+          hiddenDesc.value = optionName1 + " : " + option1Values[i] + " | " + optionName2 + " : " + option2Values[k];
+
+          let hiddenFirstOptionName = document.createElement('input');
+          hiddenFirstOptionName.id = 'firstOptionName_' + first + '_' + second;
+          hiddenFirstOptionName.type = 'hidden';
+          hiddenFirstOptionName.name = 'itemStocks[' + (i * option2Values.length + k) + '].firstOptionName';
+          hiddenFirstOptionName.value = optionName1;
+
+          let hiddenFirstOptionValueName = document.createElement('input');
+          hiddenFirstOptionValueName.id = 'firstOptionValueName_' + first + '_' + second;
+          hiddenFirstOptionValueName.type = 'hidden';
+          hiddenFirstOptionValueName.name = 'itemStocks[' + (i * option2Values.length + k) + '].firstOptionValueName';
+          hiddenFirstOptionValueName.value = option1Values[i];
+
+          let hiddenSecondOptionName = document.createElement('input');
+          hiddenSecondOptionName.id = 'firstOptionName_' + first + '_' + second;
+          hiddenSecondOptionName.type = 'hidden';
+          hiddenSecondOptionName.name = 'itemStocks[' + (i * option2Values.length + k) + '].secondOptionName';
+          hiddenSecondOptionName.value = optionName2;
+
+          let hiddenSecondOptionValueName = document.createElement('input');
+          hiddenSecondOptionValueName.id = 'hiddenSecondOptionValueName_' + first + '_' + second;
+          hiddenSecondOptionValueName.type = 'hidden';
+          hiddenSecondOptionValueName.name = 'itemStocks[' + (i * option2Values.length + k) + '].secondOptionValueName';
+          hiddenSecondOptionValueName.value = option2Values[k];
 
           let liTag = document.createElement('li');
           liTag.className = 'list-group-item list-group-item-info';
@@ -341,7 +431,13 @@ function applyOption() {
           liTag.append(option2NameDiv);
           liTag.append(option2ValueDiv);
           liTag.append(stockDiv);
-          liTag.append(hiddenValue);
+          liTag.append(hiddenSort);
+          liTag.append(hiddenStock);
+          liTag.append(hiddenDesc);
+          liTag.append(hiddenFirstOptionName);
+          liTag.append(hiddenFirstOptionValueName);
+          liTag.append(hiddenSecondOptionName);
+          liTag.append(hiddenSecondOptionValueName);
 
           $('#stock-list').append(liTag);
         }
@@ -353,7 +449,7 @@ function applyOption() {
 function stockOnChange(first, second) {
   let itemStocksId = first + '_' + second;
   let stock = $('#' + 'stock_' + itemStocksId).val();
-  $('#' + itemStocksId).val(itemStocksId + '_' + stock);
+  $('#' + 'stocks_' + itemStocksId).val(stock);
 }
 </script>
 </body>

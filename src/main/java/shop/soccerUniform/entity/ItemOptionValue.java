@@ -3,6 +3,7 @@ package shop.soccerUniform.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.soccerUniform.entity.enumtype.UseYn;
 
 import javax.persistence.*;
 
@@ -34,15 +35,23 @@ public class ItemOptionValue {
     @Column(name = "OPTION_VALUE_SORT", nullable = false)
     private Integer optionValueSort;
 
-    public ItemOptionValue(Item item, ItemOption itemOption, String optionValue, Integer optionValueSort) {
+    @Column(name = "USE_YN", nullable = false)
+    private UseYn useYn;
+
+    public ItemOptionValue(Item item, ItemOption itemOption, String optionValue, Integer optionValueSort, UseYn useYn) {
         this.item = item;
         this.itemOption = itemOption;
         this.optionValue = optionValue;
         this.optionValueSort = optionValueSort;
+        this.useYn = useYn;
     }
 
     public void editItemOptionValue(String optionValue, Integer optionValueSort) {
         this.optionValue = optionValue;
         this.optionValueSort = optionValueSort;
+    }
+
+    public void delItemOptionValue() {
+        this.useYn = UseYn.N;
     }
 }

@@ -101,14 +101,14 @@ public class AdminItemController {
 
         int option1Length = itemSaveForm.getOption1Values().split(",").length;
         int option2Length = itemSaveForm.getOption2Values().split(",").length;
-        if(option1Length <= 0 || !StringUtils.hasText(itemSaveForm.getOption1Values())) {
+        if(option1Length < 2 || !StringUtils.hasText(itemSaveForm.getOption1Values())) {
             bindingResult.reject("option1Values", "옵션1 옵션값들을 확인해주세요.");
         }
         if(itemSaveForm.getOptionType() == OptionType.DOUBLE) {
             if(!StringUtils.hasText(itemSaveForm.getSecondOptionName())) {
                 bindingResult.reject("secondOptionName", "두번째 옵션을 확인해주세요.");
             }
-            if(option2Length <= 0 || !StringUtils.hasText(itemSaveForm.getOption2Values())) {
+            if(option2Length < 2 || !StringUtils.hasText(itemSaveForm.getOption2Values())) {
                 bindingResult.reject("option2Values", "옵션2 옵션값들을 확인해주세요.");
             }
             if(option1Length*option2Length != itemSaveForm.getItemStocks().size()) {
@@ -142,6 +142,40 @@ public class AdminItemController {
 
     @PostMapping("/admin/item/edit")
     public String editItem(@Valid @ModelAttribute(name = "itemEditForm") ItemEditForm itemEditForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
+        int option1Length = itemEditForm.getOption1Values().split(",").length;
+        if(option1Length < 2) {
+            bindingResult.reject("option1Values", "옵션1 옵션값들을 확인해주세요.");
+        }
+        int option2Length = itemEditForm.getOption2Values().split(",").length;
+        if(itemEditForm.getOptionType() == OptionType.DOUBLE) {
+            if(!StringUtils.hasText(itemEditForm.getSecondOptionName())) {
+                bindingResult.reject("secondOptionName", "두번째 옵션을 확인해주세요.");
+            }
+            if(option2Length < 2 || !StringUtils.hasText(itemEditForm.getOption2Values())) {
+                bindingResult.reject("option2Values", "옵션2 옵션값들을 확인해주세요.");
+            }
+            if(option1Length*option2Length != itemEditForm.getItemStocks().size()) {
+                bindingResult.reject("optionStock", "옵션값과 재고가 맞지 않습니다. 확인해주세요.");
+            }
+        } else {
+            if(option1Length != itemEditForm.getItemStocks().size()) {
+                bindingResult.reject("optionStock", "옵션값과 재고가 맞지 않습니다. 확인해주세요.");
+            }
+        }
+
+        List<Manager> managers = managerService.findManagersByState(UserState.ABLE);
+        List<Category> categories = categoryService.findByDepths(3);
+        model.addAttribute("managers", managers);
+        model.addAttribute("categories", categories);
+        if(bindingResult.hasErrors()) return "admin/item/itemForm";
+
+        try {
+            itemService.editItem(itemEditForm, itemEditForm.getItemId());
+        } catch (RuntimeException e) {
+            log.info("error={}", e);
+            bindingResult.reject("editError", e.getMessage());
+            return "admin/item/itemForm";
+        }
 
         return "redirect:/admin/items";
     }
