@@ -74,7 +74,7 @@ public class Item extends DateColumns {
         this.state = state;
     }
 
-    public void editItem(String name, Manager manager, Category category, String manufacturer, String origin, String description, Integer price, ItemState state) {
+    public void editItem(String name, Manager manager, Category category, String manufacturer, String origin, String description, Integer price, ItemState state, OptionType optionType) {
         this.name = name;
         this.manager = manager;
         this.category = category;
@@ -83,6 +83,7 @@ public class Item extends DateColumns {
         this.description = description;
         this.price = price;
         this.state = state;
+        this.optionType = optionType;
     }
 
     public void deleteItem() {

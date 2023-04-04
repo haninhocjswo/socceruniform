@@ -60,14 +60,14 @@ public class ItemServiceImpl implements ItemService{
                     .save(new ItemOption(savedItem, itemSaveForm.getFirstOptionName(), 1, UseYn.Y));
 
             String[] option1Values = itemSaveForm.getOption1Values().split(",");
-            if(option1Values.length > 0) throw new RuntimeException("옵션1 옵션값을 확인해주세요.");
+            if(option1Values.length == 0) throw new RuntimeException("옵션1 옵션값을 확인해주세요.");
             for(int i = 0; i < option1Values.length; i++) {
                 itemOptionValueRepository.save(new ItemOptionValue(savedItem, savedItemOption, option1Values[i], i + 1, UseYn.Y));
             }
 
             List<ItemOptionValue> optionValues = itemOptionValueRepository.findByItemOptionId(savedItemOption.getId());
             List<ItemOptionStockForm> itemStocks = itemSaveForm.getItemStocks();
-            if(itemStocks.size() <= 0) throw new RuntimeException("옵션의 재고값을 확인해주세요.");
+            if(itemStocks.size() == 0) throw new RuntimeException("옵션의 재고값을 확인해주세요.");
             for (ItemOptionStockForm itemStock : itemStocks) {
                 String[] sortSplitList = itemStock.getSort().split("_");
                 if(sortSplitList.length != 2) throw new RuntimeException("옵션값과 재고의 데이터가 맞지 않습니다.");
@@ -83,12 +83,12 @@ public class ItemServiceImpl implements ItemService{
                     .save(new ItemOption(savedItem, itemSaveForm.getSecondOptionName(), 2, UseYn.Y));
 
             String[] option1Values = itemSaveForm.getOption1Values().split(",");
-            if(option1Values.length <= 0) throw new RuntimeException("옵션1 옵션값을 확인해주세요.");
+            if(option1Values.length == 0) throw new RuntimeException("옵션1 옵션값을 확인해주세요.");
             for(int i = 0; i < option1Values.length; i++) {
                 itemOptionValueRepository.save(new ItemOptionValue(savedItem, savedItemOption1, option1Values[i], i + 1, UseYn.Y));
             }
             String[] option2Values = itemSaveForm.getOption2Values().split(",");
-            if(option2Values.length <= 0) throw new RuntimeException("옵션2 옵션값을 확인해주세요.");
+            if(option2Values.length == 0) throw new RuntimeException("옵션2 옵션값을 확인해주세요.");
             for(int k = 0; k < option2Values.length; k++) {
                 itemOptionValueRepository.save(new ItemOptionValue(savedItem, savedItemOption2, option2Values[k], k + 1, UseYn.Y));
             }
@@ -96,7 +96,7 @@ public class ItemServiceImpl implements ItemService{
             List<ItemOptionValue> option1ValueList = itemOptionValueRepository.findByItemOptionId(savedItemOption1.getId());
             List<ItemOptionValue> option2ValueList = itemOptionValueRepository.findByItemOptionId(savedItemOption2.getId());
             List<ItemOptionStockForm> itemStocks = itemSaveForm.getItemStocks();
-            if(itemStocks.size() <= 0) throw new RuntimeException("옵션의 재고값을 확인해주세요.");
+            if(itemStocks.size() == 0) throw new RuntimeException("옵션의 재고값을 확인해주세요.");
             for (ItemOptionStockForm itemStock : itemStocks) {
                 String[] sortSplitList = itemStock.getSort().split("_");
                 if(sortSplitList.length != 2) throw new RuntimeException("옵션값과 재고의 데이터가 맞지 않습니다.");
@@ -108,12 +108,12 @@ public class ItemServiceImpl implements ItemService{
 
     @Transactional
     @Override
-    public void editItem(ItemEditForm itemEditForm, Long itemId) throws IllegalAccessException {
+    public void editItem(ItemEditForm itemEditForm, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
-        Manager manager = managerRepository.findById(itemEditForm.getManagerId()).orElseThrow(() -> new RuntimeException("입점업체를 찾을 수 없습니다."));
-        Category category = categoryRepository.findById(itemEditForm.getCategoryId()).orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
-        item.editItem(itemEditForm.getName(), manager, category, itemEditForm.getManufacturer(), itemEditForm.getOrigin(), itemEditForm.getDescription(),
-                itemEditForm.getPrice(), itemEditForm.getState());
+        Manager manager = managerRepository.findById(itemEditForm.getManagerId()).orElseThrow(() -> new RuntimeException("입점업체가 존재하지 않습니다."));
+        Category category = categoryRepository.findById(itemEditForm.getCategoryId()).orElseThrow(() -> new RuntimeException("카테고리가 존재하지 않습니다."));
+        item.editItem(itemEditForm.getName(), manager, category, itemEditForm.getManufacturer(), itemEditForm.getOrigin(), itemEditForm.getDescription(), itemEditForm.getPrice(), itemEditForm.getState(), itemEditForm.getOptionType());
+        item.editDate(LocalDateTime.now());
 
         List<ItemOption> itemOptions = item.getItemOptions();
         ItemOption firstOption = null;
@@ -129,63 +129,59 @@ public class ItemServiceImpl implements ItemService{
             }
         }
 
-        if(firstOption == null) throw new RuntimeException("첫번째 옵션이 존재하지 않습니다.");
-
-        List<ItemOptionValue> originalFirstOptionValues = new ArrayList<>();
-        String[] editFirstOptionValueNames = itemEditForm.getOption1Values().split(",");
-        switch (itemEditForm.getOptionType()) {
-            case SINGLE:
-                if(secondOption != null) {  // DOUBLE -> SINGLE로 변경 시 두번째 옵션관련 삭제처리
-                    secondOption.delOption(UseYn.N);
-                    List<ItemOptionValue> delOptionValues = secondOption.getItemOptionValues();
-                    for (ItemOptionValue delOptionValue : delOptionValues) {
-                        delOptionValue.delItemOptionValue();
-                    }
-                    List<ItemOptionStock> delOptionStocks = item.getItemOptionStocks();
-                    for (ItemOptionStock delOptionStock : delOptionStocks) {
-                        delOptionStock.delItemOptionStock();
-                    }
+        // ItemOptionValue와 ItemOptionStock 삭제
+        List<ItemOptionValue> delFirstOptionValues = firstOption.getItemOptionValues();
+        if(delFirstOptionValues.size() > 0) {
+            for (ItemOptionValue firstOptionValue : delFirstOptionValues) {
+                firstOptionValue.delItemOptionValue();
+            }
+        }
+        if(itemEditForm.getOptionType() == OptionType.DOUBLE && secondOption != null) {
+            List<ItemOptionValue> delSecondOptionValues = secondOption.getItemOptionValues();
+            if(delSecondOptionValues.size() > 0) {
+                for (ItemOptionValue secondOptionValue : delSecondOptionValues) {
+                    secondOptionValue.delItemOptionValue();
                 }
+            }
+        }
 
-                originalFirstOptionValues = itemOptionValueRepository.findByItemOptionId(firstOption.getId());
-                this.editItemOptionValue(originalFirstOptionValues, editFirstOptionValueNames, item, firstOption);
-                Map<String, ItemOptionValue> itemOptionValueMap = itemOptionValueRepository.findByItemOptionId(firstOption.getId()).stream()
-                        .collect(Collectors.toMap(itemOptionValue -> itemOptionValue.getOptionValueSort() + "_0", itemOptionValue -> itemOptionValue));
+        List<ItemOptionStock> delItemOptionStocks = itemOptionStockRepository.findByItemId(itemId);
+        if(delItemOptionStocks.size() > 0) {
+            for (ItemOptionStock delItemOptionStock : delItemOptionStocks) {
+                delItemOptionStock.delItemOptionStock();
+            }
+        }
 
-                List<ItemOptionStockForm> editItemOptionStock = itemEditForm.getItemStocks();
-                for (ItemOptionStockForm itemOptionStockForm : editItemOptionStock) {
-                    itemOptionStockRepository.save(new ItemOptionStock(item, itemOptionValueMap.get(itemOptionStockForm.getSort()), null,
-                            itemOptionStockForm.getSort(), itemOptionStockForm.getStock(), itemOptionStockForm.getDescription()));
-                }
+        // 입력받은 데이터로 생성
+        String[] option1ValueNames = itemEditForm.getOption1Values().split(",");
+        if(option1ValueNames.length == 0) throw new RuntimeException("옵션1 옵션값을 확인해주세요.");
+        for(int i = 0; i < option1ValueNames.length; i++) {
+            ItemOptionValue savedItemOptionValue = itemOptionValueRepository.save(new ItemOptionValue(item, firstOption, option1ValueNames[i], i + 1, UseYn.Y));
+        }
+        if(itemEditForm.getOptionType() == OptionType.DOUBLE && secondOption != null) {
+            String[] option2ValueNames = itemEditForm.getOption2Values().split(",");
+            if(option2ValueNames.length == 0) throw new RuntimeException("옵션2 옵션값을 확인해주세요.");
+            for(int i = 0; i < option2ValueNames.length; i++) {
+                itemOptionValueRepository.save(new ItemOptionValue(item, secondOption, option2ValueNames[i], i + 1, UseYn.Y));
+            }
+        }
 
-                break;
-            case DOUBLE:
-                if(secondOption == null) {  // SINGLE -> DOUBLE 변경 시 두번째 옵션 추가
-                    secondOption = itemOptionRepository.save(new ItemOption(item, itemEditForm.getSecondOptionName(), 2, UseYn.Y));
-                }
-
-                originalFirstOptionValues = firstOption.getItemOptionValues();
-                this.editItemOptionValue(originalFirstOptionValues, editFirstOptionValueNames, item, firstOption);
-                List<ItemOptionValue> originalSecondOptionValues = secondOption.getItemOptionValues();
-                String[] editSecondOptionValueNames = itemEditForm.getOption2Values().split(",");
-                this.editItemOptionValue(originalSecondOptionValues, editSecondOptionValueNames, item, secondOption);
-
-                //기존 stock 데이터 삭제
-                List<ItemOptionStock> delOptionStocks = itemOptionStockRepository.findByItemId(item.getId());
-                for (ItemOptionStock delOptionStock : delOptionStocks) {
-                    delOptionStock.delItemOptionStock();
-                }
-
-                Map<String, List<ItemOptionValue>> optionValueListMap = new HashMap<>();
-                List<ItemOptionValue> option1Values = itemOptionValueRepository.findByItemOptionId(firstOption.getId());
-                List<ItemOptionValue> option2Values = itemOptionValueRepository.findByItemOptionId(secondOption.getId());
-                for(ItemOptionStockForm itemOptionStock : itemEditForm.getItemStocks()) {
-                    String[] sortSplit = itemOptionStock.getSort().split("_");
-                    itemOptionStockRepository.save(new ItemOptionStock(item, option1Values.get(Integer.parseInt(sortSplit[0]) - 1),
-                            option2Values.get(Integer.parseInt(sortSplit[1]) - 1), itemOptionStock.getSort(), itemOptionStock.getStock(), itemOptionStock.getDescription()));
-                }
-
-                break;
+        List<ItemOptionValue> firstOptionValues = itemOptionValueRepository.findByItemOptionId(firstOption.getId());
+        if(firstOptionValues.size() == 0) throw new RuntimeException("옵션1 옵션값을 확인해주세요");
+        if(itemEditForm.getOptionType() == OptionType.SINGLE) {
+            for(int i = 0; i < itemEditForm.getItemStocks().size(); i++) {
+                itemOptionStockRepository.save(new ItemOptionStock(item, firstOptionValues.get(i), null, itemEditForm.getItemStocks().get(i).getSort(),
+                        itemEditForm.getItemStocks().get(i).getStock(), itemEditForm.getItemStocks().get(i).getDescription()));
+            }
+        }
+        if(itemEditForm.getOptionType() == OptionType.DOUBLE && secondOption != null) {
+            List<ItemOptionValue> secondOptionValues = itemOptionValueRepository.findByItemOptionId(secondOption.getId());
+            if(secondOptionValues.size() == 0) throw new RuntimeException("옵션2 옵션값을 확인해주세요");
+            for(int i = 0; i < itemEditForm.getItemStocks().size(); i++) {
+                String[] sortSplit = itemEditForm.getItemStocks().get(i).getSort().split("_");
+                itemOptionStockRepository.save(new ItemOptionStock(item, firstOptionValues.get(Integer.parseInt(sortSplit[0]) - 1), secondOptionValues.get(Integer.parseInt(sortSplit[1]) - 1),
+                        itemEditForm.getItemStocks().get(i).getSort(), itemEditForm.getItemStocks().get(i).getStock(), itemEditForm.getItemStocks().get(i).getDescription()));
+            }
         }
     }
 
@@ -198,11 +194,9 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public ItemEditForm detailItem(Long itemId) {
-        Optional<Item> itemOptional = itemRepository.findById(itemId);
-        if(itemOptional.isEmpty()) throw new RuntimeException("해당 상품을 찾을 수 없습니다.");
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
 
         ItemEditForm itemEditForm = new ItemEditForm();
-        Item item = itemOptional.get();
         itemEditForm.setItemId(item.getId());
         itemEditForm.setName(item.getName());
         itemEditForm.setPrice(item.getPrice());
@@ -214,61 +208,68 @@ public class ItemServiceImpl implements ItemService{
         itemEditForm.setState(item.getState());
         itemEditForm.setDescription(item.getDescription());
 
-        for(ItemOption itemOption : item.getItemOptions()) {
-            if(itemOption.getOptionSort() == 1 && itemOption.getUseYn() == UseYn.Y) itemEditForm.setFirstOptionName(itemOption.getOptionName());
-            if(itemOption.getOptionSort() == 2 && itemOption.getUseYn() == UseYn.Y) itemEditForm.setSecondOptionName(itemOption.getOptionName());
+        List<ItemOption> itemOptions = item.getItemOptions();
+        ItemOption firstOption = null;
+        ItemOption secondOption = null;
+        for (ItemOption itemOption : itemOptions) {
+            if(itemOption.getOptionSort() == 1) {
+                itemEditForm.setFirstOptionName(itemOption.getOptionName());
+                firstOption = itemOption;
+            }
+            if(itemOption.getOptionSort() == 2 && itemEditForm.getOptionType() == OptionType.DOUBLE) {
+                itemEditForm.setSecondOptionName(itemOption.getOptionName());
+                secondOption = itemOption;
+            }
         }
 
-        String option1Values = "";
-        String option2Values = "";
-        Map<String, String> valueNameMap = new HashMap<>();
-        for(ItemOptionValue itemOptionValue : item.getItemOptionValues()) {
+        String option1ValueNames = "";
+        String option2ValueNames = "";
+        List<ItemOptionValue> itemOptionValues = item.getItemOptionValues();
+        for (ItemOptionValue itemOptionValue : itemOptionValues) {
             if(itemOptionValue.getUseYn() == UseYn.Y) {
-                if(itemOptionValue.getItemOption().getOptionSort() == 1) {
+                if(firstOption.getId() == itemOptionValue.getItemOption().getId()) {
                     if(itemOptionValue.getOptionValueSort() == 1) {
-                        option1Values += itemOptionValue.getOptionValue();
+                        option1ValueNames += itemOptionValue.getOptionValue();
                     } else {
-                        option1Values += "," + itemOptionValue.getOptionValue();
+                        option1ValueNames += "," + itemOptionValue.getOptionValue();
                     }
-                    valueNameMap.put(itemOptionValue.getItemOption().getOptionSort() + "_" + itemOptionValue.getOptionValueSort(),
-                            itemOptionValue.getOptionValue());
                 }
-                if(itemOptionValue.getItemOption().getOptionSort() == 2) {
-                    if(itemOptionValue.getOptionValueSort() == 1) {
-                        option2Values += itemOptionValue.getOptionValue();
-                    } else {
-                        option2Values += "," + itemOptionValue.getOptionValue();
+                if(item.getOptionType() == OptionType.DOUBLE) {
+                    if(secondOption.getId() == itemOptionValue.getItemOption().getId()) {
+                        if(itemOptionValue.getOptionValueSort() == 1) {
+                            option2ValueNames += itemOptionValue.getOptionValue();
+                        } else {
+                            option2ValueNames += "," + itemOptionValue.getOptionValue();
+                        }
                     }
-                    valueNameMap.put(itemOptionValue.getItemOption().getOptionSort() + "_" + itemOptionValue.getOptionValueSort(),
-                            itemOptionValue.getOptionValue());
                 }
             }
         }
-        itemEditForm.setOption1Values(option1Values);
-        itemEditForm.setOption2Values(option2Values);
+        itemEditForm.setOption1Values(option1ValueNames);
+        if(itemEditForm.getOptionType() == OptionType.DOUBLE) itemEditForm.setOption2Values(option2ValueNames);
 
-        for(ItemOptionStock itemOptionStock : item.getItemOptionStocks()) {
+        String[] option1ValueNameSplit = option1ValueNames.split(",");
+        String[] option2ValueNameSplit = option2ValueNames.split(",");
+        List<ItemOptionStock> itemOptionStocks = item.getItemOptionStocks();
+        List<ItemOptionStockForm> stockForms = new ArrayList<>();
+        for (ItemOptionStock itemOptionStock : itemOptionStocks) {
             if(itemOptionStock.getUseYn() == UseYn.Y) {
                 ItemOptionStockForm stockForm = new ItemOptionStockForm();
-                stockForm.setItemOptionStockId(itemOptionStock.getId());
-                stockForm.setItemId(item.getId());
-                stockForm.setFirstItemOptionId(itemOptionStock.getFirstOptionValue().getId());
-                stockForm.setAddPrice(0);
                 stockForm.setStock(itemOptionStock.getStock());
+                stockForm.setItemOptionStockId(itemOptionStock.getId());
                 stockForm.setSort(itemOptionStock.getSort());
                 stockForm.setDescription(itemOptionStock.getDescription());
-                stockForm.setFirstOptionName(itemEditForm.getFirstOptionName());
-                String[] valueSplit = itemOptionStock.getSort().split("_");
-                stockForm.setFirstOptionValueName(valueNameMap.get("1_" + valueSplit[0]));
+                String[] sortSplit = itemOptionStock.getSort().split("_");
+                stockForm.setFirstOptionName(firstOption.getOptionName());
+                stockForm.setFirstOptionValueName(option1ValueNameSplit[Integer.parseInt(sortSplit[0]) - 1]);
                 if(item.getOptionType() == OptionType.DOUBLE) {
-                    stockForm.setSecondItemOptionId(itemOptionStock.getSecondOptionValue().getId());
-                    stockForm.setSecondOptionName(itemEditForm.getSecondOptionName());
-                    stockForm.setSecondOptionValueName(valueNameMap.get("2_" + valueSplit[1]));
+                    stockForm.setSecondOptionName(secondOption.getOptionName());
+                    stockForm.setSecondOptionValueName(option2ValueNameSplit[Integer.parseInt(sortSplit[1]) - 1]);
                 }
-
-                itemEditForm.getItemStocks().add(stockForm);
+                stockForms.add(stockForm);
             }
         }
+        itemEditForm.setItemStocks(stockForms);
 
         return itemEditForm;
     }
@@ -306,25 +307,5 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public Page<ItemForm> items(ItemSearchForm itemSearchForm, Pageable pageable) {
         return itemRepository.items(itemSearchForm, pageable);
-    }
-
-    public void editItemOptionValue(List<ItemOptionValue> original, String[] edit, Item item, ItemOption itemOption) {
-        int maxSize = original.size() >= edit.length ? original.size() : edit.length;
-        for(int i = 0; i < maxSize; i++) {
-            if(i+1 <= original.size() && i+1 <= edit.length) {
-                //edit
-                original.get(i).editItemOptionValue(edit[i], i+1);
-            }
-
-            if(i+1 > original.size()) {
-                //create
-                itemOptionValueRepository.save(new ItemOptionValue(item, itemOption, edit[i], i+1, UseYn.Y));
-            }
-
-            if(i+1 > edit.length) {
-                //delete
-                original.get(i).delItemOptionValue();
-            }
-        }
     }
 }

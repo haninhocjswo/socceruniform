@@ -57,7 +57,7 @@ class ItemRepositoryImplTest {
         Item item = new Item("text", manager, category, "제조사1", "원산지", "설명", OptionType.DOUBLE, 111, ItemState.SOLD);
         Item item1 = itemRepository.findByName("text").get();
         item1.editItem(item.getName(), item.getManager(), item.getCategory(), item.getManufacturer(),
-                item.getOrigin(), item.getDescription(), item.getPrice(), ItemState.SOLD);
+                item.getOrigin(), item.getDescription(), item.getPrice(), ItemState.SOLD, OptionType.DOUBLE);
 
         log.info("flush before");
         em.flush();
