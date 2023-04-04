@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import shop.soccerUniform.entity.ItemOption;
 import shop.soccerUniform.entity.QItemOption;
+import shop.soccerUniform.entity.enumtype.UseYn;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -26,7 +27,9 @@ public class ItemOptionRepositoryImpl implements  ItemOptionQueryRepository {
     public List<ItemOption> findByItemId(Long itemId) {
         return queryFactory
                 .selectFrom(itemOption)
-                .where(itemOption.item.id.eq(itemId))
+                .where(
+                        itemOption.item.id.eq(itemId),
+                        itemOption.useYn.eq(UseYn.Y))
                 .orderBy(itemOption.optionSort.asc())
                 .fetch();
     }

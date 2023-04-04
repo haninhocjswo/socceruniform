@@ -35,6 +35,7 @@ public class ItemOption {
     @Column(name = "OPTION_SORT", nullable = false)
     private Integer optionSort;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "USE_YN", nullable = false)
     private UseYn useYn;
 

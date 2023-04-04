@@ -142,24 +142,25 @@ public class AdminItemController {
 
     @PostMapping("/admin/item/edit")
     public String editItem(@Valid @ModelAttribute(name = "itemEditForm") ItemEditForm itemEditForm, BindingResult bindingResult, Model model) throws IllegalAccessException {
-        int option1Length = itemEditForm.getOption1Values().split(",").length;
-        if(option1Length < 2) {
-            bindingResult.reject("option1Values", "옵션1 옵션값들을 확인해주세요.");
+        if(itemEditForm.getOption1Values().substring(itemEditForm.getOption1Values().length() - 1).equals(",")
+            || !StringUtils.hasText(itemEditForm.getOption1Values())) {
+            bindingResult.reject("option1value", "옵션1 옵션값을 확인해주세요.");
         }
-        int option2Length = itemEditForm.getOption2Values().split(",").length;
+        String[] option1Values = itemEditForm.getOption1Values().split(",");
+        for (String option1Value : option1Values) {
+            if(!StringUtils.hasText(option1Value)) bindingResult.reject("option1value", "옵션1 옵션값을 확인해주세요.");
+        }
         if(itemEditForm.getOptionType() == OptionType.DOUBLE) {
             if(!StringUtils.hasText(itemEditForm.getSecondOptionName())) {
-                bindingResult.reject("secondOptionName", "두번째 옵션을 확인해주세요.");
+                bindingResult.reject("secondOptionName", "옵션2명을 확인해주세요.");
             }
-            if(option2Length < 2 || !StringUtils.hasText(itemEditForm.getOption2Values())) {
-                bindingResult.reject("option2Values", "옵션2 옵션값들을 확인해주세요.");
+            if(itemEditForm.getOption2Values().substring(itemEditForm.getOption2Values().length() - 1).equals(",")
+                || !StringUtils.hasText(itemEditForm.getOption2Values())) {
+                bindingResult.reject("option2value", "옵션2 옵션값을 확인해주세요.");
             }
-            if(option1Length*option2Length != itemEditForm.getItemStocks().size()) {
-                bindingResult.reject("optionStock", "옵션값과 재고가 맞지 않습니다. 확인해주세요.");
-            }
-        } else {
-            if(option1Length != itemEditForm.getItemStocks().size()) {
-                bindingResult.reject("optionStock", "옵션값과 재고가 맞지 않습니다. 확인해주세요.");
+            String[] option2Values = itemEditForm.getOption2Values().split(",");
+            for (String option2Value : option2Values) {
+                if(!StringUtils.hasText(option2Value)) bindingResult.reject("option2value", "옵션2 옵션값을 확인해주세요.");
             }
         }
 
@@ -172,7 +173,7 @@ public class AdminItemController {
         try {
             itemService.editItem(itemEditForm, itemEditForm.getItemId());
         } catch (RuntimeException e) {
-            log.info("error={}", e);
+            e.printStackTrace();
             bindingResult.reject("editError", e.getMessage());
             return "admin/item/itemForm";
         }

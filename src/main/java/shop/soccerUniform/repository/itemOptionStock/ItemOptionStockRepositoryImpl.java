@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import shop.soccerUniform.entity.ItemOptionStock;
 import shop.soccerUniform.entity.ItemOptionValue;
 import shop.soccerUniform.entity.QItemOptionStock;
+import shop.soccerUniform.entity.enumtype.UseYn;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -32,7 +33,9 @@ public class ItemOptionStockRepositoryImpl implements ItemOptionStockQueryReposi
     public List<ItemOptionStock> findByItemId(Long itemId) {
         return queryFactory
                 .selectFrom(itemOptionStock)
-                .where(itemOptionStock.item.id.eq(itemId))
+                .where(
+                        itemOptionStock.item.id.eq(itemId),
+                        itemOptionStock.useYn.eq(UseYn.Y))
                 .orderBy(itemOptionStock.sort.asc())
                 .fetch();
     }

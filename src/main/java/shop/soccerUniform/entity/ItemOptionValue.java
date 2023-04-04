@@ -35,6 +35,7 @@ public class ItemOptionValue {
     @Column(name = "OPTION_VALUE_SORT", nullable = false)
     private Integer optionValueSort;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "USE_YN", nullable = false)
     private UseYn useYn;
 
@@ -52,6 +53,6 @@ public class ItemOptionValue {
     }
 
     public void delItemOptionValue() {
-        this.useYn = UseYn.N;
+        useYn = UseYn.N;
     }
 }

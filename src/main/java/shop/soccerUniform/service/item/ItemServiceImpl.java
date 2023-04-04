@@ -21,6 +21,8 @@ import shop.soccerUniform.repository.manager.ManagerRepository;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -114,31 +116,77 @@ public class ItemServiceImpl implements ItemService{
                 itemEditForm.getPrice(), itemEditForm.getState());
 
         List<ItemOption> itemOptions = item.getItemOptions();
+        ItemOption firstOption = null;
+        ItemOption secondOption = null;
         for (ItemOption itemOption : itemOptions) {
-            if(itemOption.getOptionSort() == 1) itemOption.editOption(itemEditForm.getFirstOptionName());
-            if(itemOption.getOptionSort() == 2) itemOption.editOption(itemEditForm.getSecondOptionName());
-        }
-
-        List<ItemOptionValue> firstOptionValues = itemOptionValueRepository.findByItemOptionId(itemOptions.get(0).getId());
-        String[] firstOptionValueEditList = itemEditForm.getOption1Values().split(",");
-        this.editItemOptionValue(firstOptionValues, firstOptionValueEditList, item, itemOptions.get(0));
-        if(item.getOptionType() == OptionType.DOUBLE) {
-            List<ItemOptionValue> secondOptionValues = itemOptionValueRepository.findByItemOptionId(itemOptions.get(1).getId());
-            String[] secondOptionValueEditList = itemEditForm.getOption2Values().split(",");
-            this.editItemOptionValue(secondOptionValues, secondOptionValueEditList, item, itemOptions.get(1));
-        }
-
-        // TODO ITEM_OPTION_STOCK 다시...
-        List<ItemOptionStock> originalItemOptionStocks = itemOptionStockRepository.findByItemId(item.getId());
-        List<ItemOptionStockForm> editedItemStocks = itemEditForm.getItemStocks();
-        int maxSize = originalItemOptionStocks.size() >= editedItemStocks.size() ? originalItemOptionStocks.size() : editedItemStocks.size();
-        for(int i = 0; i < maxSize; i++) {
-            if(i+1 <= originalItemOptionStocks.size() && i+1 <=editedItemStocks.size()) {
-                //edit
+            if(itemOption.getOptionSort() == 1) {
+                itemOption.editOption(itemEditForm.getFirstOptionName());
+                firstOption = itemOption;
+            }
+            if(itemOption.getOptionSort() == 2) {
+                itemOption.editOption(itemEditForm.getSecondOptionName());
+                secondOption = itemOption;
             }
         }
 
-        System.out.println("zzz");
+        if(firstOption == null) throw new RuntimeException("첫번째 옵션이 존재하지 않습니다.");
+
+        List<ItemOptionValue> originalFirstOptionValues = new ArrayList<>();
+        String[] editFirstOptionValueNames = itemEditForm.getOption1Values().split(",");
+        switch (itemEditForm.getOptionType()) {
+            case SINGLE:
+                if(secondOption != null) {  // DOUBLE -> SINGLE로 변경 시 두번째 옵션관련 삭제처리
+                    secondOption.delOption(UseYn.N);
+                    List<ItemOptionValue> delOptionValues = secondOption.getItemOptionValues();
+                    for (ItemOptionValue delOptionValue : delOptionValues) {
+                        delOptionValue.delItemOptionValue();
+                    }
+                    List<ItemOptionStock> delOptionStocks = item.getItemOptionStocks();
+                    for (ItemOptionStock delOptionStock : delOptionStocks) {
+                        delOptionStock.delItemOptionStock();
+                    }
+                }
+
+                originalFirstOptionValues = itemOptionValueRepository.findByItemOptionId(firstOption.getId());
+                this.editItemOptionValue(originalFirstOptionValues, editFirstOptionValueNames, item, firstOption);
+                Map<String, ItemOptionValue> itemOptionValueMap = itemOptionValueRepository.findByItemOptionId(firstOption.getId()).stream()
+                        .collect(Collectors.toMap(itemOptionValue -> itemOptionValue.getOptionValueSort() + "_0", itemOptionValue -> itemOptionValue));
+
+                List<ItemOptionStockForm> editItemOptionStock = itemEditForm.getItemStocks();
+                for (ItemOptionStockForm itemOptionStockForm : editItemOptionStock) {
+                    itemOptionStockRepository.save(new ItemOptionStock(item, itemOptionValueMap.get(itemOptionStockForm.getSort()), null,
+                            itemOptionStockForm.getSort(), itemOptionStockForm.getStock(), itemOptionStockForm.getDescription()));
+                }
+
+                break;
+            case DOUBLE:
+                if(secondOption == null) {  // SINGLE -> DOUBLE 변경 시 두번째 옵션 추가
+                    secondOption = itemOptionRepository.save(new ItemOption(item, itemEditForm.getSecondOptionName(), 2, UseYn.Y));
+                }
+
+                originalFirstOptionValues = firstOption.getItemOptionValues();
+                this.editItemOptionValue(originalFirstOptionValues, editFirstOptionValueNames, item, firstOption);
+                List<ItemOptionValue> originalSecondOptionValues = secondOption.getItemOptionValues();
+                String[] editSecondOptionValueNames = itemEditForm.getOption2Values().split(",");
+                this.editItemOptionValue(originalSecondOptionValues, editSecondOptionValueNames, item, secondOption);
+
+                //기존 stock 데이터 삭제
+                List<ItemOptionStock> delOptionStocks = itemOptionStockRepository.findByItemId(item.getId());
+                for (ItemOptionStock delOptionStock : delOptionStocks) {
+                    delOptionStock.delItemOptionStock();
+                }
+
+                Map<String, List<ItemOptionValue>> optionValueListMap = new HashMap<>();
+                List<ItemOptionValue> option1Values = itemOptionValueRepository.findByItemOptionId(firstOption.getId());
+                List<ItemOptionValue> option2Values = itemOptionValueRepository.findByItemOptionId(secondOption.getId());
+                for(ItemOptionStockForm itemOptionStock : itemEditForm.getItemStocks()) {
+                    String[] sortSplit = itemOptionStock.getSort().split("_");
+                    itemOptionStockRepository.save(new ItemOptionStock(item, option1Values.get(Integer.parseInt(sortSplit[0]) - 1),
+                            option2Values.get(Integer.parseInt(sortSplit[1]) - 1), itemOptionStock.getSort(), itemOptionStock.getStock(), itemOptionStock.getDescription()));
+                }
+
+                break;
+        }
     }
 
     @Transactional
@@ -167,55 +215,59 @@ public class ItemServiceImpl implements ItemService{
         itemEditForm.setDescription(item.getDescription());
 
         for(ItemOption itemOption : item.getItemOptions()) {
-            if(itemOption.getOptionSort() == 1) itemEditForm.setFirstOptionName(itemOption.getOptionName());
-            if(itemOption.getOptionSort() == 2) itemEditForm.setSecondOptionName(itemOption.getOptionName());
+            if(itemOption.getOptionSort() == 1 && itemOption.getUseYn() == UseYn.Y) itemEditForm.setFirstOptionName(itemOption.getOptionName());
+            if(itemOption.getOptionSort() == 2 && itemOption.getUseYn() == UseYn.Y) itemEditForm.setSecondOptionName(itemOption.getOptionName());
         }
 
         String option1Values = "";
         String option2Values = "";
         Map<String, String> valueNameMap = new HashMap<>();
         for(ItemOptionValue itemOptionValue : item.getItemOptionValues()) {
-            if(itemOptionValue.getItemOption().getOptionSort() == 1) {
-                if(itemOptionValue.getOptionValueSort() == 1) {
-                    option1Values += itemOptionValue.getOptionValue();
-                } else {
-                    option1Values += "," + itemOptionValue.getOptionValue();
+            if(itemOptionValue.getUseYn() == UseYn.Y) {
+                if(itemOptionValue.getItemOption().getOptionSort() == 1) {
+                    if(itemOptionValue.getOptionValueSort() == 1) {
+                        option1Values += itemOptionValue.getOptionValue();
+                    } else {
+                        option1Values += "," + itemOptionValue.getOptionValue();
+                    }
+                    valueNameMap.put(itemOptionValue.getItemOption().getOptionSort() + "_" + itemOptionValue.getOptionValueSort(),
+                            itemOptionValue.getOptionValue());
                 }
-                valueNameMap.put(itemOptionValue.getItemOption().getOptionSort() + "_" + itemOptionValue.getOptionValueSort(),
-                        itemOptionValue.getOptionValue());
-            }
-            if(itemOptionValue.getItemOption().getOptionSort() == 2) {
-                if(itemOptionValue.getOptionValueSort() == 1) {
-                    option2Values += itemOptionValue.getOptionValue();
-                } else {
-                    option2Values += "," + itemOptionValue.getOptionValue();
+                if(itemOptionValue.getItemOption().getOptionSort() == 2) {
+                    if(itemOptionValue.getOptionValueSort() == 1) {
+                        option2Values += itemOptionValue.getOptionValue();
+                    } else {
+                        option2Values += "," + itemOptionValue.getOptionValue();
+                    }
+                    valueNameMap.put(itemOptionValue.getItemOption().getOptionSort() + "_" + itemOptionValue.getOptionValueSort(),
+                            itemOptionValue.getOptionValue());
                 }
-                valueNameMap.put(itemOptionValue.getItemOption().getOptionSort() + "_" + itemOptionValue.getOptionValueSort(),
-                        itemOptionValue.getOptionValue());
             }
         }
         itemEditForm.setOption1Values(option1Values);
         itemEditForm.setOption2Values(option2Values);
 
         for(ItemOptionStock itemOptionStock : item.getItemOptionStocks()) {
-            ItemOptionStockForm stockForm = new ItemOptionStockForm();
-            stockForm.setItemOptionStockId(itemOptionStock.getId());
-            stockForm.setItemId(item.getId());
-            stockForm.setFirstItemOptionId(itemOptionStock.getFirstOptionValue().getId());
-            stockForm.setAddPrice(0);
-            stockForm.setStock(itemOptionStock.getStock());
-            stockForm.setSort(itemOptionStock.getSort());
-            stockForm.setDescription(itemOptionStock.getDescription());
-            stockForm.setFirstOptionName(itemEditForm.getFirstOptionName());
-            String[] valueSplit = itemOptionStock.getSort().split("_");
-            stockForm.setFirstOptionValueName(valueNameMap.get("1_" + valueSplit[0]));
-            if(item.getOptionType() == OptionType.DOUBLE) {
-                stockForm.setSecondItemOptionId(itemOptionStock.getSecondOptionValue().getId());
-                stockForm.setSecondOptionName(itemEditForm.getSecondOptionName());
-                stockForm.setSecondOptionValueName(valueNameMap.get("2_" + valueSplit[1]));
-            }
+            if(itemOptionStock.getUseYn() == UseYn.Y) {
+                ItemOptionStockForm stockForm = new ItemOptionStockForm();
+                stockForm.setItemOptionStockId(itemOptionStock.getId());
+                stockForm.setItemId(item.getId());
+                stockForm.setFirstItemOptionId(itemOptionStock.getFirstOptionValue().getId());
+                stockForm.setAddPrice(0);
+                stockForm.setStock(itemOptionStock.getStock());
+                stockForm.setSort(itemOptionStock.getSort());
+                stockForm.setDescription(itemOptionStock.getDescription());
+                stockForm.setFirstOptionName(itemEditForm.getFirstOptionName());
+                String[] valueSplit = itemOptionStock.getSort().split("_");
+                stockForm.setFirstOptionValueName(valueNameMap.get("1_" + valueSplit[0]));
+                if(item.getOptionType() == OptionType.DOUBLE) {
+                    stockForm.setSecondItemOptionId(itemOptionStock.getSecondOptionValue().getId());
+                    stockForm.setSecondOptionName(itemEditForm.getSecondOptionName());
+                    stockForm.setSecondOptionValueName(valueNameMap.get("2_" + valueSplit[1]));
+                }
 
-            itemEditForm.getItemStocks().add(stockForm);
+                itemEditForm.getItemStocks().add(stockForm);
+            }
         }
 
         return itemEditForm;

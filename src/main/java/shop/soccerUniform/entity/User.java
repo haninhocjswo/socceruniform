@@ -57,10 +57,10 @@ public abstract class User extends DateColumns {
     }
 
     public void editUser(String password, String username, String email, UserState state) {
-        if(StringUtils.hasText(password) && !this.password.equals(password)) this.password = password;
-        if(StringUtils.hasText(username) && !this.username.equals(username)) this.username = username;
-        if(StringUtils.hasText(email) && !this.email.equals(email)) this.email = email;
-        if(state != null && this.state != state) this.state = state;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.state = state;
     }
 
     public void delUser(){

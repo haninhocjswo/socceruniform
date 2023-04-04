@@ -75,18 +75,18 @@ public class Manager extends User {
     }
 
     public void editManager(ManagerDTO managerDTO) {
-        if(companyName != managerDTO.getCompanyName()) companyName = managerDTO.getCompanyName();
-        if(companyNum != managerDTO.getChargeNum()) companyNum = managerDTO.getChargeNum();
-        if(post != managerDTO.getPost()) post = managerDTO.getPost();
-        if(address != managerDTO.getAddress()) address = managerDTO.getAddress();
-        if(detailAddress != managerDTO.getDetailAddress()) detailAddress = managerDTO.getDetailAddress();
-        if(ceoName != managerDTO.getCeoName()) ceoName = managerDTO.getCeoName();
-        if(businessResistNum != managerDTO.getBusinessResistNum()) businessResistNum = managerDTO.getBusinessResistNum();
-        if(chargeName != managerDTO.getChargeName()) chargeName = managerDTO.getChargeName();
-        if(chargePosition != managerDTO.getChargePosition()) chargePosition = managerDTO.getChargePosition();
-        if(chargeNum != managerDTO.getChargeNum()) chargeNum = managerDTO.getChargeNum();
-        if(chargeMobile != managerDTO.getChargeMobile()) chargeMobile = managerDTO.getChargeMobile();
-        if(feePolicyPercent != managerDTO.getFeePolicyPercent()) feePolicyPercent = managerDTO.getFeePolicyPercent();
-        if(deliveryPolicy != managerDTO.getDeliveryPolicy()) deliveryPolicy = managerDTO.getDeliveryPolicy();
+        companyName = managerDTO.getCompanyName();
+        companyNum = managerDTO.getChargeNum();
+        post = managerDTO.getPost();
+        address = managerDTO.getAddress();
+        detailAddress = managerDTO.getDetailAddress();
+        ceoName = managerDTO.getCeoName();
+        businessResistNum = managerDTO.getBusinessResistNum();
+        chargeName = managerDTO.getChargeName();
+        chargePosition = managerDTO.getChargePosition();
+        chargeNum = managerDTO.getChargeNum();
+        chargeMobile = managerDTO.getChargeMobile();
+        feePolicyPercent = managerDTO.getFeePolicyPercent();
+        deliveryPolicy = managerDTO.getDeliveryPolicy();
     }
 }

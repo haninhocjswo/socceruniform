@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.soccerUniform.entity.ItemOptionValue;
 import shop.soccerUniform.entity.QItemOptionValue;
+import shop.soccerUniform.entity.enumtype.UseYn;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -27,7 +28,9 @@ public class ItemOptionValueRepositoryImpl implements ItemOptionValueQueryReposi
     public List<ItemOptionValue> findByItemOptionId(Long itemOptionId) {
         return queryFactory
                 .selectFrom(itemOptionValue)
-                .where(itemOptionValue.itemOption.id.eq(itemOptionId))
+                .where(
+                        itemOptionValue.itemOption.id.eq(itemOptionId),
+                        itemOptionValue.useYn.eq(UseYn.Y))
                 .orderBy(itemOptionValue.optionValueSort.asc())
                 .fetch();
     }

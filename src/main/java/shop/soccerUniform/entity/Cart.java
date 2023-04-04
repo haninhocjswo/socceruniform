@@ -48,10 +48,10 @@ public class Cart extends DateColumns {
     public Cart(String itemName, ItemOption firstItemOption, ItemOption secondItemOption, ItemOptionValue firstItemOptionValue,
                 ItemOptionValue secondItemOptionValue, Item item, ItemOptionStock itemOptionStock, Integer stock, Member member) {
         this.itemName = itemName;
-        if(firstItemOption != null) this.firstOptionName = firstItemOption.getOptionName();
-        if(secondItemOption != null) this.secondOptionName = secondItemOption.getOptionName();
-        if(firstItemOptionValue != null) this.firstOptionValueName = firstItemOptionValue.getOptionValue();
-        if(secondItemOptionValue != null) this.secondOptionValueName = secondItemOptionValue.getOptionValue();
+        this.firstOptionName = firstItemOption.getOptionName();
+        this.secondOptionName = secondItemOption.getOptionName();
+        this.firstOptionValueName = firstItemOptionValue.getOptionValue();
+        this.secondOptionValueName = secondItemOptionValue.getOptionValue();
         this.item = item;
         this.itemOptionStock = itemOptionStock;
         this.stock = stock;

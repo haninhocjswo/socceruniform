@@ -222,6 +222,7 @@ function applyOption() {
     $('.list-group-item-info').remove();
     for(let i = 0; i < option1Values.length; i++) {
       if(option1Values[i] != '') {
+        $('#stock-list').show();
         let first = i+1;
 
         let option1NameDiv = document.createElement('div');
@@ -300,6 +301,7 @@ function applyOption() {
     for(let i = 0; i < option1Values.length; i++) {
       for(let k = 0; k < option2Values.length; k++) {
         if(option1Values[i] != '' && option2Values[k] != '') {
+          $('#stock-list').show();
           let first = i+1;
           let second = k+1;
 

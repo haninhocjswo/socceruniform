@@ -2,6 +2,7 @@ package shop.soccerUniform.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.enumtype.UseYn;
 
 import javax.persistence.*;
@@ -65,5 +66,6 @@ public class ItemOptionStock {
 
     public void delItemOptionStock() {
         useYn = UseYn.N;
+        stock = 0;
     }
 }
