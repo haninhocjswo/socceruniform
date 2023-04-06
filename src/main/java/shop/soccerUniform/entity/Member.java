@@ -40,6 +40,9 @@ public class Member extends User {
     @OneToMany(mappedBy = "member")
     private List<Point> points = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Address> addresses = new ArrayList<>();
+
     public Member(String birth, Gender gender, Grade grade, String mobile, String homeNum) {
         this.birth = birth;
         this.gender = gender;

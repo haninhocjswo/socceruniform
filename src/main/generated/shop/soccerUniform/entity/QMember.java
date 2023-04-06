@@ -22,6 +22,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final QUser _super = new QUser(this);
 
+    public final ListPath<Address, QAddress> addresses = this.<Address, QAddress>createList("addresses", Address.class, QAddress.class, PathInits.DIRECT2);
+
     public final StringPath birth = createString("birth");
 
     //inherited

@@ -21,7 +21,6 @@ public class OrderForm {
     private Integer totalPrice;
     private Delivery delivery;
     private Member member;
-    private List<Address> addresses = new ArrayList<>();
     private List<ItemForm> items = new ArrayList<>();
     private Set<Long> cartIds = new HashSet<>();
     private boolean resultFlag = false;

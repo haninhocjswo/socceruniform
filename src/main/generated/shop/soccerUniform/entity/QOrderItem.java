@@ -32,6 +32,8 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final QItem item;
 
+    public final QItemOptionStock itemOptionStock;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
 
@@ -72,6 +74,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
         super(type, metadata, inits);
         this.event = inits.isInitialized("event") ? new QEvent(forProperty("event"), inits.get("event")) : null;
         this.item = inits.isInitialized("item") ? new QItem(forProperty("item"), inits.get("item")) : null;
+        this.itemOptionStock = inits.isInitialized("itemOptionStock") ? new QItemOptionStock(forProperty("itemOptionStock"), inits.get("itemOptionStock")) : null;
         this.order = inits.isInitialized("order") ? new QOrder(forProperty("order"), inits.get("order")) : null;
         this.point = inits.isInitialized("point") ? new QPoint(forProperty("point"), inits.get("point")) : null;
     }

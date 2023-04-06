@@ -27,6 +27,10 @@ public class OrderItem extends DateColumns {
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ITEM_OPTION_STOCK_ID", nullable = false)
+    private ItemOptionStock itemOptionStock;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderState state;
