@@ -7,16 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.*;
 import shop.soccerUniform.entity.dto.CartForm;
+import shop.soccerUniform.entity.enumtype.OptionType;
 import shop.soccerUniform.repository.cart.CartRepository;
 import shop.soccerUniform.repository.item.ItemRepository;
+import shop.soccerUniform.repository.itemOption.ItemOptionRepository;
 import shop.soccerUniform.repository.itemOptionStock.ItemOptionStockRepository;
 import shop.soccerUniform.repository.itemOptionValue.ItemOptionValueRepository;
 import shop.soccerUniform.repository.member.MemberRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,57 +29,42 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
+    private final ItemOptionRepository itemOptionRepository;
     private final ItemOptionValueRepository itemOptionValueRepository;
     private final ItemOptionStockRepository itemOptionStockRepository;
 
     @Transactional
     @Override
     public boolean saveCart(CartForm cartForm) {
-        if(cartForm.getSelectedItems().size() == 0) return false;
+        Member member = memberRepository.findById(cartForm.getMemberId()).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
 
+        if(cartForm.getSelectedItems().length < 1) return false;
+        Item item = itemRepository.findById(cartForm.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품은 판매중인 상품이 아닙니다."));
+
+        List<ItemOption> itemOptions = itemOptionRepository.findByItemId(cartForm.getItemId());
+        if(itemOptions.size() < 1) return false;
+        ItemOption firstOption = itemOptions.get(0);
+        ItemOption secondOption = null;
+        if(item.getOptionType() == OptionType.DOUBLE) {
+            if(itemOptions.size() != 2) return false;
+            secondOption = itemOptions.get(1);
+        }
+
+        List<ItemOptionValue> itemOptionValues = itemOptionValueRepository.findByItemId(cartForm.getItemId());
+        if(itemOptionValues.size() < 1) return false;
+        Map<Long, ItemOptionValue> itemOptionValueMap = itemOptionValues.stream()
+                .collect(Collectors.toMap(ItemOptionValue::getId, Function.identity()));
         for(String selectedItem : cartForm.getSelectedItems()) {
-            Optional<Item> itemOptional = itemRepository.findById(cartForm.getItemId());
-            if(itemOptional.isEmpty()) return false;
-            //Item 뽑기
-            Item item = itemOptional.get();
-            ItemOption firstOption = null;
-            ItemOption secondOption = null;
+            ItemOptionValue secondItemOptionValue = null;
+            String[] selectedItemSplit = selectedItem.split("_");
+            ItemOptionValue firstItemOptionValue = itemOptionValueMap.get(Long.parseLong(selectedItemSplit[0]));
+            if(!selectedItemSplit[1].equals("0")) secondItemOptionValue = itemOptionValueMap.get(Long.parseLong(selectedItemSplit[1]));
+            ItemOptionStock itemOptionStock = itemOptionStockRepository
+                    .findByFirstOptionValueAndSecondOptionValue(firstItemOptionValue, secondItemOptionValue)
+                    .orElseThrow(() -> new RuntimeException("상품 재고의 데이터가 존재하지 않습니다."));
 
-            //ItemOption 뽑기
-            for(ItemOption itemOption : item.getItemOptions()) {
-                if(itemOption.getOptionSort() == 1) firstOption = itemOption;
-                if(itemOption.getOptionSort() == 2) secondOption = itemOption;
-            }
-
-            //ItemOptionValue 뽑기
-            String[] splitSelectedItemInfo = selectedItem.split("_");
-            if(splitSelectedItemInfo.length != 3) return false;
-
-            Optional<ItemOptionValue> firstOptionValueOptional = itemOptionValueRepository.findById(Long.parseLong(splitSelectedItemInfo[0]));
-            if(firstOptionValueOptional.isEmpty()) return false;
-            ItemOptionValue firstOptionValue = firstOptionValueOptional.get();
-
-            Optional<ItemOptionValue> secondOptionValueOptional = itemOptionValueRepository.findById(Long.parseLong(splitSelectedItemInfo[1]));
-            ItemOptionValue secondOptionValue = null;
-            if(secondOptionValueOptional.isEmpty()) {
-                if(!splitSelectedItemInfo[1].equals("0")) return false;
-            } else {
-                secondOptionValue = secondOptionValueOptional.get();
-            }
-
-            //ItemOptionStock 뽑기
-            Optional<ItemOptionStock> itemOptionStockOptional =
-                    itemOptionStockRepository.findByFirstOptionValueAndSecondOptionValue(firstOptionValue, secondOptionValue);
-            if(itemOptionStockOptional.isEmpty()) return false;
-            ItemOptionStock itemOptionStock = itemOptionStockOptional.get();
-
-            //로그인한 유저
-            Optional<Member> memberOptional = memberRepository.findById(cartForm.getMemberId());
-            if(memberOptional.isEmpty()) return false;
-            Member member = memberOptional.get();
-
-            Cart cart = new Cart(item.getName(), firstOption, secondOption, firstOptionValue,
-                    secondOptionValue, item, itemOptionStock, Integer.parseInt(splitSelectedItemInfo[2]), member);
+            Cart cart = new Cart(item.getName(), firstOption, secondOption, firstItemOptionValue, secondItemOptionValue, item,
+                    itemOptionStock, Integer.parseInt(selectedItemSplit[2]), member);
             cart.addDate(LocalDateTime.now(), LocalDateTime.now());
             cartRepository.save(cart);
         }

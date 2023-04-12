@@ -70,7 +70,6 @@ public class FrontMemberController {
     @GetMapping("/member/myPage")
     public String myPage(Principal principal, Model model) {
         MemberForm member = memberService.memberFindByLoginId(principal.getName());
-        log.info("get memberForm={}", member);
         model.addAttribute("memberForm", member);
         return "front/member/myPage";
     }
@@ -82,13 +81,11 @@ public class FrontMemberController {
 
     @PostMapping("/member/edit")
     public String editMember(@Valid @ModelAttribute(name = "memberForm") MemberForm memberForm, BindingResult bindingResult) {
-        log.info("memberForm={}", memberForm);
         if(!memberForm.getPassword().equals(memberForm.getPasswordCheck())) {
             bindingResult.reject("passwordCheck", "비밀번호가 일치하지 않습니다.");
         }
 
         if(bindingResult.hasErrors()) {
-            log.info("bindingResult={}", bindingResult);
             return "front/member/myPage";
         }
 

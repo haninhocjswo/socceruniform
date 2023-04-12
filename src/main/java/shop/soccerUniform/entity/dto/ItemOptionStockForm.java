@@ -11,15 +11,15 @@ public class ItemOptionStockForm {
 
     private Long itemId;
 
-    private Long firstItemOptionId;
-
-    private Long secondItemOptionId;
-
     private Integer addPrice;
 
     private Integer stock;
 
     private String sort;
+
+    private Long firstItemOptionId;
+
+    private Long secondItemOptionId;
 
     private String firstOptionName;
 
@@ -28,6 +28,10 @@ public class ItemOptionStockForm {
     private String firstOptionValueName;
 
     private String secondOptionValueName;
+
+    private Integer firstOptionValueSort;
+
+    private Integer secondOptionValueSort;
 
     private String description;
 }

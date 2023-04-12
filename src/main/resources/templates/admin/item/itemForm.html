@@ -157,11 +157,12 @@
                         <div class="col-md-2 inline-block-text-center" th:text="${itemStock.secondOptionValueName}">옵션값</div>
                         <div class="col-md-2 inline-block-text-center">
                             <input class="input-inline-block form-control" type="number" style="height: 25px; width: 70px;"
+                                   th:onkeyup="|stockOnChange(${itemStock.firstOptionValueSort}, ${itemStock.secondOptionValueSort})|"
                                    th:id="'stock_' + ${itemStock.sort}"
                                    th:value="${itemStock.stock}"/>
                         </div>
                         <input type="hidden" th:id="'sort_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].sort" th:value="${itemStock.sort}" />
-                        <input type="hidden" th:id="'stocks_' + ${itemStock.stock}" th:name="itemStocks[ + ${itemStockStat.index} + ].stock" th:value="${itemStock.stock}" />
+                        <input type="hidden" th:id="'stocks_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].stock" th:value="${itemStock.stock}" />
                         <input type="hidden" th:id="'description_' + ${itemStock.description}" th:name="itemStocks[ + ${itemStockStat.index} + ].description" th:value="${itemStock.description}" />
                         <input type="hidden" th:id="'firstOptionName_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].firstOptionName" th:value="${itemStock.firstOptionName}" />
                         <input type="hidden" th:id="'secondOptionName_' + ${itemStock.sort}" th:name="itemStocks[ + ${itemStockStat.index} + ].secondOptionName" th:value="${itemStock.secondOptionName}" />
@@ -379,7 +380,7 @@ function applyOption() {
           stockInput.className = 'input-inline-block form-control';
           stockInput.type = 'number';
           stockInput.style = 'height:25px;width:70px';
-          stockInput.onkeyup = function(){stockOnChange(first, second);};
+          stockInput.onkeyup = function() {stockOnChange(first, second);};
           stockDiv.appendChild(stockInput);
 
           let hiddenSort = document.createElement('input');

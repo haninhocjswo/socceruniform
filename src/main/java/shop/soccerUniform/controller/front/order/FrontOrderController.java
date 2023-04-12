@@ -22,6 +22,7 @@ public class FrontOrderController {
 
     @GetMapping("/order/order")
     public String orderPage(@ModelAttribute OrderReceiveForm orderReceiveForm, Model model) {
+        // TODO 주문받는 부분 다시
         OrderForm orderForm = new OrderForm();
         if(orderReceiveForm.getReq().equals("item")) orderForm = orderService.receivedItem(orderReceiveForm);
         if(orderReceiveForm.getReq().equals("cart")) orderForm = orderService.receivedCart(orderReceiveForm);

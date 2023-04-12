@@ -12,35 +12,25 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class Cart extends DateColumns {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CART_ID", nullable = false)
     private Long id;
-
     @Column(nullable = false)
     private String itemName;
-
     @Column(nullable = false)
     private String firstOptionName;
-
     @Column(nullable = false)
     private String firstOptionValueName;
-
     private String secondOptionName;
-
     private String secondOptionValueName;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_OPTION_STOCK_ID", nullable = false)
     private ItemOptionStock itemOptionStock;
-
     private Integer stock;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;

@@ -42,4 +42,14 @@ public class ItemOptionValueRepositoryImpl implements ItemOptionValueQueryReposi
                 .where(itemOptionValue.item.id.eq(itemId))
                 .execute();
     }
+
+    @Override
+    public List<ItemOptionValue> findByItemId(Long itemId) {
+        return queryFactory
+                .selectFrom(itemOptionValue)
+                .where(
+                        itemOptionValue.item.id.eq(itemId),
+                        itemOptionValue.useYn.eq(UseYn.Y))
+                .fetch();
+    }
 }

@@ -43,12 +43,13 @@ public class FrontCartController {
         boolean overlapCheck = cartService.overlapCheck(cartForm);
         if(!overlapCheck) {
             ajaxMap.put("result", overlapCheck);
-            ajaxMap.put("message", "장바구니에 이미 존재하는 제품입니다.");
         } else {
-            boolean result = cartService.saveCart(cartForm);
-            ajaxMap.put("result", result);
-            if(!result) {
-                ajaxMap.put("message", "장바구니 담기에 실패하였습니다.");
+            try {
+                boolean result = cartService.saveCart(cartForm);
+                ajaxMap.put("result", result);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                ajaxMap.put("result", false);
             }
         }
 

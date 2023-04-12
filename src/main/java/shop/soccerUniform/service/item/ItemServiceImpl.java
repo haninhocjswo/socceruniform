@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import shop.soccerUniform.entity.*;
 import shop.soccerUniform.entity.dto.*;
+import shop.soccerUniform.entity.enumtype.ItemState;
 import shop.soccerUniform.entity.enumtype.OptionType;
 import shop.soccerUniform.entity.enumtype.UseYn;
 import shop.soccerUniform.repository.category.CategoryRepository;
@@ -266,6 +267,9 @@ public class ItemServiceImpl implements ItemService{
                     stockForm.setSecondOptionName(secondOption.getOptionName());
                     stockForm.setSecondOptionValueName(option2ValueNameSplit[Integer.parseInt(sortSplit[1]) - 1]);
                 }
+                String[] valueSortSplit = itemOptionStock.getSort().split("_");
+                stockForm.setFirstOptionValueSort(Integer.parseInt(valueSortSplit[0]));
+                stockForm.setSecondOptionValueSort(Integer.parseInt(valueSortSplit[1]));
                 stockForms.add(stockForm);
             }
         }
@@ -276,32 +280,33 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public FrontItemForm showItem(Long itemId) {
-        Optional<Item> itemOptional = itemRepository.findById(itemId);
-        if(itemOptional.isPresent()) {
-            Item item = itemOptional.get();
-            FrontItemForm itemForm = new FrontItemForm();
-            itemForm.setItemId(item.getId());
-            itemForm.setName(item.getName());
-            itemForm.setPrice(item.getPrice());
-            itemForm.setManager(item.getManager());
-            itemForm.setCategory(item.getCategory());
-            itemForm.setOrigin(item.getOrigin());
-            itemForm.setOptionType(item.getOptionType());
-            itemForm.setManufacturer(item.getManufacturer());
-            itemForm.setDescription(item.getDescription());
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("상품 정보가 존재하지 않습니다."));
+        if(item.getState() != ItemState.SOLD) throw new RuntimeException("판매가 중지된 상품입니다.");
 
-            for(ItemOption itemOption : item.getItemOptions()) {
-                itemOption.getOptionName();
-            }
-            itemForm.setItemOptions(item.getItemOptions());
-            for(ItemOptionValue itemOptionValue : item.getItemOptionValues()) {
-                itemOptionValue.getOptionValue();
-            }
-            itemForm.setItemOptionValues(item.getItemOptionValues());
+        FrontItemForm itemForm = new FrontItemForm();
+        itemForm.setItemId(item.getId());
+        itemForm.setName(item.getName());
+        itemForm.setPrice(item.getPrice());
+        itemForm.setManager(item.getManager());
+        itemForm.setCategory(item.getCategory());
+        itemForm.setOrigin(item.getOrigin());
+        itemForm.setOptionType(item.getOptionType());
+        itemForm.setManufacturer(item.getManufacturer());
+        itemForm.setDescription(item.getDescription());
 
-            return itemForm;
-        }
-        return null;
+        List<ItemOption> itemOptions = itemOptionRepository.findByItemId(itemId);
+        if(itemOptions.size() == 0) throw new RuntimeException("상품의 옵션이 존재하지 않습니다.");
+        itemForm.setItemOptions(itemOptions);
+
+        List<ItemOptionValue> itemOptionValues = itemOptionValueRepository.findByItemId(itemId);
+        if(itemOptionValues.size() == 0) throw new RuntimeException("상품의 옵션값이 존재하지 않습니다.");
+        itemForm.setItemOptionValues(itemOptionValues);
+
+        List<ItemOptionStock> itemOptionStocks = itemOptionStockRepository.findByItemId(itemId);
+        if(itemOptionStocks.size() == 0) throw new RuntimeException("상품의 옵션 재고값이 존재하지 않습니다.");
+        itemForm.setItemOptionStocks(itemOptionStocks);
+
+        return itemForm;
     }
 
     @Override

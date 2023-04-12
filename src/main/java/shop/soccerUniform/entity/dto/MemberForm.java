@@ -21,6 +21,7 @@ public class MemberForm {
     @NotBlank(message = "아이디는 필수값입니다.")
     private String loginId;
 
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 
     private String passwordCheck;
