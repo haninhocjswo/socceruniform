@@ -15,13 +15,12 @@ public class OrderForm {
     private Long orderId;
     private String orderNum;
     private OrderState state;
+    private List<OrderItemForm> orderItemForms;
     private Integer totalEventSalePrice;
     private Integer totalPointSalePrice;
     private Integer totalSalePrice;
     private Integer totalPrice;
     private Delivery delivery;
     private Member member;
-    private List<ItemForm> items = new ArrayList<>();
-    private Set<Long> cartIds = new HashSet<>();
-    private boolean resultFlag = false;
+
 }

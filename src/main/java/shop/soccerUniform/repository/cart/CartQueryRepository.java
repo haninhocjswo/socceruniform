@@ -9,5 +9,5 @@ import java.util.Set;
 public interface CartQueryRepository {
     public List<Cart> findByMemberId(Long memberId);
     public Long cartFindOverlap(Long memberId, Long itemId, Long itemOptionStockId);
-    public List<Cart> findInCartId(Set<Long> cartIds);
+    public List<Cart> findInCartId(List<Long> cartIds);
 }

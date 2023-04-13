@@ -47,7 +47,7 @@ public class CartRepositoryImpl implements CartQueryRepository {
     }
 
     @Override
-    public List<Cart> findInCartId(Set<Long> cartIds) {
+    public List<Cart> findInCartId(List<Long> cartIds) {
         return queryFactory
                 .selectFrom(cart)
                 .where(cart.id.in(cartIds))

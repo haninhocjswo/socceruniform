@@ -2,7 +2,9 @@ package shop.soccerUniform.entity.dto;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -11,6 +13,6 @@ public class OrderReceiveForm {
     private Long memberId;
     private Long itemId;
     private Integer totalPrice;
-    private Set<String> selectedItems = new HashSet<>();
-    private Set<Long> cartIds = new HashSet<>();
+    private List<String> selectedItems = new ArrayList<>();
+    private List<Long> cartIds = new ArrayList<>();
 }

@@ -8,8 +8,8 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <form id="selectedItem" th:object="${item}" method="get">
-            <input type="hidden" th:field="*{optionType}" />
-            <input type="hidden" th:field="*{price}" />
+            <input type="hidden" th:id="optionType" th:value="${item.optionType}" />
+            <input type="hidden" th:id="price" th:value="${item.price}" />
             <input type="hidden" th:field="*{itemId}" />
             <input type="hidden" name="req" value="item" />
             <input type="hidden" sec:authorize="isAuthenticated()" id="memberId" name="memberId" th:value="${loginUser.id}" />

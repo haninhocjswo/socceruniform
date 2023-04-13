@@ -22,13 +22,15 @@ public class FrontOrderController {
 
     @GetMapping("/order/order")
     public String orderPage(@ModelAttribute OrderReceiveForm orderReceiveForm, Model model) {
-        // TODO 주문받는 부분 다시
         OrderForm orderForm = new OrderForm();
-        if(orderReceiveForm.getReq().equals("item")) orderForm = orderService.receivedItem(orderReceiveForm);
-        if(orderReceiveForm.getReq().equals("cart")) orderForm = orderService.receivedCart(orderReceiveForm);
-        if(!orderForm.isResultFlag()) return "redirect:/";
-
-        model.addAttribute(orderForm);
+        try {
+            if(orderReceiveForm.getReq().equals("cart")) orderForm = orderService.receivedCart(orderReceiveForm);
+            if(orderReceiveForm.getReq().equals("item")) orderForm = orderService.receivedItem(orderReceiveForm);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            if(orderReceiveForm.getReq().equals("cart")) return "redirect:/cart/carts";
+            if(orderReceiveForm.getReq().equals("item")) return "redirect:/item/" + orderReceiveForm.getItemId();
+        }
 
         return "front/order/orderForm";
     }

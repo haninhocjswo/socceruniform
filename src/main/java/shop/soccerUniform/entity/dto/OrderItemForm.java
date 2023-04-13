@@ -22,7 +22,9 @@ public class OrderItemForm {
 
     private Integer price;
 
-    private Integer salePrice;
+    private Integer finalPrice;
+
+    private Integer totalSalePrice;
 
     private Integer eventSalePrice;
 
@@ -35,8 +37,4 @@ public class OrderItemForm {
     private Item item;
 
     private ItemOptionStock itemOptionStock;
-
-    private LocalDateTime regDate;
-
-    private LocalDateTime modDate;
 }
